@@ -1,0 +1,10 @@
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+.form-check {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
