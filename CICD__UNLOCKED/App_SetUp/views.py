@@ -122,15 +122,18 @@ def lecturer(request):
 @login_required
 @csrf_protect
 def admin(request):
-    lecturers = User.objects.filter(is_lecturer=True, is_active=False, is_staff=False)
+    lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
     students = User.objects.filter(is_student=True, is_active=True)
-    admins = User.objects.filter(is_admin=True,
-                                 is_active=False) if request.user.is_superuser else None
+    admins_requests = User.objects.filter(is_admin=True, is_active=False) if request.user.is_superuser else None
+    active_lecturers = User.objects.filter(is_lecturer=True, is_active=True)
+    active_admins = User.objects.filter(is_admin=True, is_active=True)
 
     context = {
-        "lecturers": lecturers,
+        "lecturers_requests": lecturers_requests,
         "students": students,
-        "admins": admins,
+        "admins_requests": admins_requests,
+        "active_lecturers": active_lecturers,
+        "active_admins": active_admins
     }
     return render(request, "admin_page.html",context)
 
