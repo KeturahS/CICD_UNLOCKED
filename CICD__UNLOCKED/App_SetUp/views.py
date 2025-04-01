@@ -41,6 +41,33 @@ def register(request):
 
             user.is_admin = user.is_student = user.is_lecturer = False
 
+            if role == "admin":
+                user.is_admin = True
+                user.is_active = False
+                msg = 'נא להמתין לבדיקת מנהל בכיר, תשובה בעניין הסטטוס תישלח במייל שהוזן על ידך'
+                SuperUserEmail = get_superuser_email()
+                if SuperUserEmail:
+                    send_mail(
+                        'בקשת מנהל חדשה במערכת CiCd_Unlocked - נדרש אישור',  # נושא המייל
+                        '''  
+                        שלום מנהל בכיר יקר,
+
+                        הוגשה בקשת קבלת סטטוס מנהל חדשה במערכת CiCd_Unlocked.
+
+                        אנא היכנס לעמוד הדשבורד כדי לאשר או לסרב לבקשה.
+
+                        חשוב לטפל בבקשה בהקדם האפשרי כדי להבטיח ניהול תקין של המערכת.
+
+                        אם אתה זקוק לעזרה נוספת או שיש לך שאלות, אל תהסס לפנות אלינו.
+
+                        בברכה,  
+                        צוות CiCd_Unlocked  
+                        ''',
+                        settings.EMAIL_HOST_USER,
+                        [SuperUserEmail],
+                        fail_silently=False,
+                    )
+
 
             if role == "lecturer":
                 user.is_lecturer = True
@@ -66,6 +93,9 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
+                    if user.is_admin:
+                        login(request, user)
+                        return redirect('admin')
 
                     if user.is_lecturer:
                         login(request, user)
@@ -73,6 +103,8 @@ def login_view(request):
                 else:
                     if user.is_lecturer:
                         msg = 'בקשתך להירשם כמרצה טרם אושרה, אנא המתן בסבלנות לתשובה מצוות האתר'
+                    if user.is_admin:
+                        msg = 'בקשתך להירשם כמנהל טרם אושרה, אנא המתן בסבלנות לתשובת המנהל הבכיר'
 
                     return render(request, 'login.html')
             else:
@@ -86,4 +118,42 @@ def login_view(request):
 
 def lecturer(request):
     return render(request, 'lecturer.html')
+
+@login_required
+@csrf_protect
+def admin(request):
+    lecturers = User.objects.filter(is_lecturer=True, is_active=False, is_staff=False)
+    students = User.objects.filter(is_student=True, is_active=True)
+    admins = User.objects.filter(is_admin=True,
+                                 is_active=False) if request.user.is_superuser else None
+
+    context = {
+        "lecturers": lecturers,
+        "students": students,
+        "admins": admins,
+    }
+    return render(request, "admin_page.html",context)
+
+
+
+def manage_admins(request):
+    return render(request, "admin_page_admins_section.html")
+
+
+def manage_lecturers(request):
+    return render(request, "admin_page_lecturers_section.html")
+
+
+def manage_students(request):
+    return render(request, "admin_page_students_section.html")
+
+
+def get_superuser_email():
+    # Retrieve the first superuser
+    superuser = User.objects.filter(is_superuser=True).first()
+
+    return superuser.email if superuser else None
+
+
+
 

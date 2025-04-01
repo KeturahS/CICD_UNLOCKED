@@ -25,6 +25,14 @@ SECRET_KEY = 'django-insecure-664_mh1i2l)-jkn*bh&4$0l*eegryv++)7ce8&v@q11vfzq0o3
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server
+EMAIL_PORT = 587  # Port for TLS
+EMAIL_USE_TLS = True  # Enable TLS (recommended for security)
+EMAIL_HOST_USER = 'cicd.unlocked.service@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'frtt bfhb rmxi oaci'  # The app-specific password you just generated
+DEFAULT_FROM_EMAIL = 'cicd.unlocked.service@gmail.com'  # This will be the default email for sending emails
 
 # Application definition
 
@@ -118,3 +126,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'App_SetUp.User'
+
+
+
+
