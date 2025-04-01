@@ -9,8 +9,9 @@ from django.conf import settings
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from App_SetUp.models import User
-from .forms import SignUpForm
+from .models import User
+from .forms import SignUpForm,LoginForm
+
 
 from django.shortcuts import render
 
@@ -54,7 +55,35 @@ def register(request):
 
     return render(request, 'register.html', {'form': form, 'msg': msg})
 
+@csrf_protect
 def login_view(request):
-    return render(request, 'login.html')
+    form = LoginForm(request.POST or None)
+    msg = None
+    if request.method == 'POST':
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
 
-# Create your views here.
+                    if user.is_lecturer:
+                        login(request, user)
+                        return redirect('lecturer')
+                else:
+                    if user.is_lecturer:
+                        msg = 'בקשתך להירשם כמרצה טרם אושרה, אנא המתן בסבלנות לתשובה מצוות האתר'
+
+                    return render(request, 'login.html')
+            else:
+                msg = 'פרטים לא נכונים'
+        else:
+            msg = 'טופס לא תקין'
+    return render(request, 'login.html', {'form': form, 'msg': msg})
+
+
+
+
+def lecturer(request):
+    return render(request, 'lecturer.html')
+
