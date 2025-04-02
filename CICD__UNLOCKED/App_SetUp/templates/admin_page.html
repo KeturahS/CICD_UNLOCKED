@@ -66,32 +66,6 @@
                 </div>
             </div>
 
-            <!-- ניהול סטודנטים -->
-            <div class="card my-4">
-                <div class="card-header">רשימת סטודנטים</div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>שם</th>
-                                <th>אימייל</th>
-                                <th>פעולות</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in students %}
-                            <tr>
-                                <td>{{ student.username }}</td>
-                                <td>{{ student.email }}</td>
-                                <td><button class="btn btn-danger btn-sm">🗑 מחק</button></td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="3" class="text-center">אין סטודנטים רשומים</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
             <!-- ניהול מנהלים (רק לסופר-יוזר) -->
             {% if request.user.is_superuser %}

@@ -14,6 +14,10 @@ urlpatterns = [
     path('admin_page_admins_section/', views.manage_admins, name='manage_admins'),
     path('handle_lecturer_request/', views.handle_lecturer_request, name='handle_lecturer_request'),
     path('handle_admin_request/', views.handle_admin_request, name='handle_admin_request'),
+    path('delete_student/', views.delete_student, name='delete_student'),
+    path('delete_lecturer/', views.delete_lecturer, name='delete_lecturer'),
+    path('delete_admin/', views.delete_admin, name='delete_admin'),
+    path('upgrade_admin/', views.upgrade_admin, name='upgrade_admin'),
 
 
 ]

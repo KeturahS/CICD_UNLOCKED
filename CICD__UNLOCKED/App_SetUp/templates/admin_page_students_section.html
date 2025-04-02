@@ -29,40 +29,7 @@
         </nav>
 
         <!-- תוכן ראשי -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="mt-4">דשבורד אדמין</h2>
-
-            <!-- ניהול מרצים -->
-            <div class="card my-4">
-                <div class="card-header">בקשות הצטרפות של מרצים</div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>שם</th>
-                                <th>אימייל</th>
-                                <th>פעולות</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for lecturer in lecturers %}
-                            <tr>
-                                <td>{{ lecturer.username }}</td>
-                                <td>{{ lecturer.email }}</td>
-                                <td>
-                                    <button class="btn btn-success btn-sm">✔ אשר</button>
-                                    <button class="btn btn-danger btn-sm">✖ סרב</button>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="3" class="text-center">אין בקשות הצטרפות</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ניהול סטודנטים -->
+                   <!-- ניהול סטודנטים -->
             <div class="card my-4">
                 <div class="card-header">רשימת סטודנטים</div>
                 <div class="card-body">
@@ -75,11 +42,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for student in students %}
+                            {% for student in active_students %}
                             <tr>
                                 <td>{{ student.username }}</td>
                                 <td>{{ student.email }}</td>
-                                <td><button class="btn btn-danger btn-sm">🗑 מחק</button></td>
+                                <td>
+                                    <form method="post" action="{% url 'delete_student'%}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="student_email" value="{{ student.email }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">🗑 מחק</button>
+                                    </form>
+                                </td>
                             </tr>
                             {% empty %}
                             <tr><td colspan="3" class="text-center">אין סטודנטים רשומים</td></tr>
@@ -89,44 +62,7 @@
                 </div>
             </div>
 
-            <!-- ניהול מנהלים (רק לסופר-יוזר) -->
-            {% if request.user.is_superuser %}
-            <div class="card my-4">
-                <div class="card-header">בקשות הצטרפות של מנהלים</div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>שם</th>
-                                <th>אימייל</th>
-                                <th>פעולות</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for admin in admins %}
-                            <tr>
-                                <td>{{ admin.username }}</td>
-                                <td>{{ admin.email }}</td>
-                                <td>
-                                    <form method="post" action="{% url 'handle_admin_request' %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="user_email" value="{{ admin.email }}">
-                                        <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">✔ אשר</button>
-                                        <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">✖ סרב</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr><td colspan="3" class="text-center">אין בקשות הצטרפות</td></tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {% endif %}
-
-        </main>
-    </div>
+       </div>
 </div>
 
 </body>
