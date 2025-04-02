@@ -45,13 +45,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for lecturer in lecturers %}
+                            {% for lecturer in lecturers_requests %}
                             <tr>
                                 <td>{{ lecturer.username }}</td>
                                 <td>{{ lecturer.email }}</td>
                                 <td>
-                                    <button class="btn btn-success btn-sm">✔ אשר</button>
-                                    <button class="btn btn-danger btn-sm">✖ סרב</button>
+                                    <form method="post" action="{% url 'handle_lecturer_request' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_email" value="{{ lecturer.email }}">
+                                        <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">✔ אשר</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">✖ סרב</button>
+                                    </form>
                                 </td>
                             </tr>
                             {% empty %}
@@ -103,7 +107,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for admin in admins %}
+                            {% for admin in admins_requests %}
                             <tr>
                                 <td>{{ admin.username }}</td>
                                 <td>{{ admin.email }}</td>
