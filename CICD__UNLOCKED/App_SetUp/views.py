@@ -85,6 +85,7 @@ def register(request):
 
 @csrf_protect
 def login_view(request):
+
     form = LoginForm(request.POST or None)
     msg = None
     if request.method == 'POST':
@@ -129,17 +130,13 @@ def lecturer(request):
 @csrf_protect
 def admin(request):
     lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
-    students = User.objects.filter(is_student=True, is_active=True)
     admins_requests = User.objects.filter(is_admin=True, is_active=False) if request.user.is_superuser else None
-    active_lecturers = User.objects.filter(is_lecturer=True, is_active=True)
-    active_admins = User.objects.filter(is_admin=True, is_active=True)
+
 
     context = {
         "lecturers_requests": lecturers_requests,
-        "students": students,
         "admins_requests": admins_requests,
-        "active_lecturers": active_lecturers,
-        "active_admins": active_admins
+
     }
     return render(request, "admin_page.html",context)
 
@@ -219,15 +216,30 @@ def handle_lecturer_request(request):
 
 
 def manage_admins(request):
-    return render(request, "admin_page_admins_section.html")
+    active_admins = User.objects.filter(is_admin=True, is_active=True)
+
+    context = {
+             "active_admins": active_admins
+    }
+    return render(request, "admin_page_admins_section.html", context)
 
 
 def manage_lecturers(request):
-    return render(request, "admin_page_lecturers_section.html")
+    active_lecturers = User.objects.filter(is_lecturer=True, is_active=True)
+
+    context = {
+        "active_lecturers": active_lecturers
+    }
+    return render(request, "admin_page_lecturers_section.html", context)
 
 
 def manage_students(request):
-    return render(request, "admin_page_students_section.html")
+    active_students = User.objects.filter(is_student=True, is_active=True)
+
+    context = {
+        "active_students": active_students
+    }
+    return render(request, "admin_page_students_section.html", context)
 
 
 def get_superuser_email():
@@ -236,6 +248,36 @@ def get_superuser_email():
 
     return superuser.email if superuser else None
 
+def delete_student(request):
+    if request.method == "POST":
+        user_email = request.POST.get("student_email")
+        user = User.objects.get(email=user_email)
+        user.delete()
+    return redirect("manage_students")
 
 
+def delete_lecturer(request):
+    if request.method == "POST":
+        user_email = request.POST.get("lecturer_email")
+        user = User.objects.get(email=user_email)
+        user.delete()
+    return redirect("manage_lecturers")
 
+
+def delete_admin(request):
+    if request.method == "POST":
+        user_email = request.POST.get("admin_email")
+        user = User.objects.get(email=user_email)
+        user.delete()
+    return redirect("manage_admins")
+
+def upgrade_admin(request):
+    if request.method == "POST":
+        user_email = request.POST.get("admin_email")
+        user = User.objects.get(email=user_email)
+        user.is_admin = True
+        user.is_active = True
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+    return redirect("manage_admins")
