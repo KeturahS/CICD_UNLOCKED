@@ -53,16 +53,26 @@
                                 {%endif%}
                                 {%if not admin.is_superuser%}
                                 <td>
-                                    <form method="post" action="{% url 'delete_admin'%}">
+                                    <form method="post" action="{% url 'delete_admin'%}" onsubmit="return confirmDeletion()">
                                         {% csrf_token %}
                                         <input type="hidden" name="admin_email" value="{{ admin.email }}">
                                         <button type="submit" class="btn btn-danger btn-sm">🗑 מחק</button>
                                     </form>
-                                     <form method="post" action="{% url 'upgrade_admin'%}">
+                                      <script>
+                                        function confirmDeletion() {
+                                            return confirm(" נא לאשר כי ברצונך למחוק את המשתמש. פעולה זו לא ניתנת לביטול.");
+                                        }
+                                    </script>
+                                     <form method="post" action="{% url 'upgrade_admin'%}" onsubmit="return confirmUpgrade()">
                                         {% csrf_token %}
                                         <input type="hidden" name="admin_email" value="{{ admin.email }}">
                                         <button type="submit" class="btn btn-primary btn-sm">🗑 הפוך למנהל בכיר</button>
                                     </form>
+                                     <script>
+                                        function confirmUpgrade() {
+                                            return confirm(" נא לאשר כי ברצונך להפוך את המשתמש למנהל בכיר. פעולה זו לא ניתנת לביטול.");
+                                        }
+                                    </script>
 
                                 </td>
                                 <td>    הרשאות מנהל    </td>

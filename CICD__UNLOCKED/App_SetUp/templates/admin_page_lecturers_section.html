@@ -47,11 +47,16 @@
                                 <td>{{ lecturer.username }}</td>
                                 <td>{{ lecturer.email }}</td>
                                 <td>
-                                    <form method="post" action="{% url 'delete_lecturer'%}">
+                                    <form method="post" action="{% url 'delete_lecturer'%}" onsubmit="return confirmDeletion()">
                                         {% csrf_token %}
                                         <input type="hidden" name="lecturer_email" value="{{ lecturer.email }}">
                                         <button type="submit" class="btn btn-danger btn-sm">🗑 מחק</button>
                                     </form>
+                                      <script>
+                                        function confirmDeletion() {
+                                            return confirm(" נא לאשר כי ברצונך למחוק את המשתמש. פעולה זו לא ניתנת לביטול.");
+                                        }
+                                    </script>
                                 </td>
                             </tr>
                             {% empty %}

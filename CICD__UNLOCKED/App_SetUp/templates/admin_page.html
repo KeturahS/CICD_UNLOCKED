@@ -50,12 +50,27 @@
                                 <td>{{ lecturer.username }}</td>
                                 <td>{{ lecturer.email }}</td>
                                 <td>
-                                    <form method="post" action="{% url 'handle_lecturer_request' %}">
+                                    <form method="post" action="{% url 'handle_lecturer_request' %}" onsubmit="return confirmAction(this)">
                                         {% csrf_token %}
                                         <input type="hidden" name="user_email" value="{{ lecturer.email }}">
                                         <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">✔ אשר</button>
                                         <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">✖ סרב</button>
                                     </form>
+                                    <script>
+                                        function confirmAction(form) {
+                                            var action = form.querySelector('button[type="submit"]:focus').value; // Get the action value (approve or reject)
+                                            var message = "";
+
+                                            if (action === "approve") {
+                                                message = "האם אתה בטוח שברצונך לאשר את הבקשה?";
+                                            } else if (action === "reject") {
+                                                message = "האם אתה בטוח שברצונך לדחות את הבקשה?";
+                                            }
+
+                                            return confirm(message); // Show the confirmation message
+                                        }
+
+                                    </script>
                                 </td>
                             </tr>
                             {% empty %}
@@ -86,7 +101,7 @@
                                 <td>{{ admin.username }}</td>
                                 <td>{{ admin.email }}</td>
                                 <td>
-                                    <form method="post" action="{% url 'handle_admin_request' %}">
+                                    <form method="post" action="{% url 'handle_admin_request' %}" onsubmit="return confirmAction(this)">
                                         {% csrf_token %}
                                         <input type="hidden" name="user_email" value="{{ admin.email }}">
                                         <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">✔ אשר</button>
