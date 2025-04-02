@@ -4,13 +4,12 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
+
+
 class User(AbstractUser):
     is_admin= models.BooleanField('Is admin', default=False)
     is_student = models.BooleanField('Is student', default=False)
     is_lecturer = models.BooleanField('Is lecturer', default=False)
-
-
-
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="student_profile")

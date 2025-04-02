@@ -5,11 +5,16 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    is_admin= models.BooleanField('Is admin', default=False)
-    is_student = models.BooleanField('Is student', default=False)
-    is_lecturer = models.BooleanField('Is lecturer', default=False)
+    class Role(models.TextChoices):
+        ADMIN = 'ADMIN', 'Admin'
+        STUDENT = 'STUDENT', 'Student'
+        LECTURER = 'LECTURER', 'Lecturer'
 
-
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.STUDENT,
+    )
 
 
 class StudentProfile(models.Model):
@@ -22,6 +27,13 @@ class StudentProfile(models.Model):
 
 class LecturerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="lecturer_profile")
+
+    def __str__(self):
+        return f"Lecturer Profile of {self.user.username}"
+
+
+class AdminProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="admin_profile")
 
     def __str__(self):
         return f"Lecturer Profile of {self.user.username}"

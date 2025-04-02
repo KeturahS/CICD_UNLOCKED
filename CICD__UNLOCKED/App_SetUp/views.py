@@ -11,8 +11,9 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import User
 from .forms import SignUpForm,LoginForm
-
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import LecturerProfile, StudentProfile, AdminProfile
 from django.shortcuts import render
 
 
@@ -91,16 +92,20 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
+            print(user)
             if user is not None:
                 if user.is_active:
+                    if user.is_lecturer:
+                        login(request, user)
+                        return redirect('lecturer')
+
                     if user.is_admin:
                         login(request, user)
                         return redirect('admin')
 
-                    if user.is_lecturer:
-                        login(request, user)
-                        return redirect('lecturer')
-                else:
+
+
+                if not user.is_active:
                     if user.is_lecturer:
                         msg = 'בקשתך להירשם כמרצה טרם אושרה, אנא המתן בסבלנות לתשובה מצוות האתר'
                     if user.is_admin:
@@ -108,7 +113,8 @@ def login_view(request):
 
                     return render(request, 'login.html')
             else:
-                msg = 'פרטים לא נכונים'
+               msg = 'פרטים לא נכונים '
+
         else:
             msg = 'טופס לא תקין'
     return render(request, 'login.html', {'form': form, 'msg': msg})
@@ -137,6 +143,79 @@ def admin(request):
     }
     return render(request, "admin_page.html",context)
 
+
+
+@login_required
+def handle_admin_request(request):
+    if request.method == "POST":
+        user_email = request.POST.get("user_email")
+        action = request.POST.get("action")
+
+        if action == "approve":
+            user = User.objects.get(email=user_email)
+            user.is_active = True
+            user.save()
+            send_mail(
+                ' חשבון המנהל שלך אושר על ידי המנהל הבכיר',  # The subject of the email
+                '''
+               החשבון שלך נוצר בהצלחה במערכת CiCd_Unlocked. 🎉
+
+               אנחנו שמחים לקבל אותך במערכת הניהול ומאחלים לך המון הצלחה בעבודה.
+               ''',  # The message of the email
+                settings.EMAIL_HOST_USER,  # Your email address
+                [user.email],  # List of recipients
+                fail_silently=False, )
+
+
+        elif action == "reject":
+            user = User.objects.get(email=user_email)
+            send_mail(
+                'בקשתך להירשם כמנהל סורבה על ידי המנהל הבכיר',  # The subject of the email
+                'פרטי ההרשמה שלך יימחקו',  # The message of the email
+                settings.EMAIL_HOST_USER,  # Your email address
+                [user.email],  # List of recipients
+                fail_silently=False, )
+            user.is_admin = False
+            user.delete()
+        return redirect("admin")
+
+    return redirect("admin")
+
+@login_required
+def handle_lecturer_request(request):
+    if request.method == "POST":
+        user_email = request.POST.get("user_email")
+        action = request.POST.get("action")
+
+        if action == "approve":
+            user = User.objects.get(email=user_email)
+            user.is_active = True
+            user.save()
+            send_mail(
+                ' חשבון המרצה שלך אושר על ידי מנהל המערכת',  # The subject of the email
+                ''' 
+                החשבון שלך נוצר בהצלחה במערכת CiCd_Unlocked. 🎉
+
+                אנחנו שמחים לקבל אותך במערכת הניהול ומאחלים לך המון הצלחה בעבודה.
+                ''',  # The message of the email
+                settings.EMAIL_HOST_USER,  # Your email address
+                [user.email],  # List of recipients
+                fail_silently=False, )
+
+
+        elif action == "reject":
+            user = User.objects.get(email=user_email)
+            send_mail(
+                'בקשתך להירשם כמרצה סורבה על ידי מנהל המערכת',  # The subject of the email
+                'פרטי ההרשמה שלך יימחקו',  # The message of the email
+                settings.EMAIL_HOST_USER,  # Your email address
+                [user.email],  # List of recipients
+                fail_silently=False, )
+            user.is_lecturer = False
+            user.delete()
+        return redirect("admin")
+
+    return redirect("admin")
 
 
 def manage_admins(request):
