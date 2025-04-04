@@ -69,6 +69,29 @@ def register(request):
                         fail_silently=False,
                     )
 
+            elif role == "student":
+                user.is_student = True
+                user.is_active = True
+
+                send_mail(
+                    'החשבון נוצר בהצלחה',  # The subject of the email
+                    '''  
+                    שלום סטודנט יקר,
+
+                    מזל טוב! יצרת חשבון בהצלחה במערכת CiCd_Unlocked. 🎉
+
+                    אנחנו שמחים לקבל אותך במערכת ומאחלים לך המון הצלחה במהלך הלמידה. 
+                    אנו בטוחים שהמערכת תעזור לך להשיג את מטרותיך האקדמיות, ואנחנו כאן כדי לתמוך בך בכל שלב בדרך.
+
+                    בהצלחה,  
+                    צוות CiCd_Unlocked  
+                    ''',  # The body of the email
+                    settings.EMAIL_HOST_USER,  # Your email address
+                    [user.email],  # The recipient's email address
+                    fail_silently=False,
+                )
+                user.save()
+                return render(request, 'index.html')
 
             if role == "lecturer":
                 user.is_lecturer = True
@@ -281,3 +304,4 @@ def upgrade_admin(request):
         user.is_staff = True
         user.save()
     return redirect("manage_admins")
+
