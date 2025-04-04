@@ -127,11 +127,15 @@ def login_view(request):
                         login(request, user)
                         return redirect('admin')
 
+                    if user.is_student:
+                        login(request, user)
+                        return redirect('student')
 
 
                 if not user.is_active:
                     if user.is_lecturer:
                         msg = 'בקשתך להירשם כמרצה טרם אושרה, אנא המתן בסבלנות לתשובה מצוות האתר'
+
                     if user.is_admin:
                         msg = 'בקשתך להירשם כמנהל טרם אושרה, אנא המתן בסבלנות לתשובת המנהל הבכיר'
 
@@ -148,6 +152,9 @@ def login_view(request):
 
 def lecturer(request):
     return render(request, 'lecturer.html')
+
+def student(request):
+    return render(request, 'student.html')
 
 @login_required
 @csrf_protect
@@ -305,3 +312,5 @@ def upgrade_admin(request):
         user.save()
     return redirect("manage_admins")
 
+def password_reset(request):
+    return render(request, "password_reset.html")
