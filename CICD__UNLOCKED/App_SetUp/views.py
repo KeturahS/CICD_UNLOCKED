@@ -330,3 +330,19 @@ def student_profile_view(request):
         profile = None
 
     return render(request, 'student_profile.html', {'profile': profile})
+
+
+@login_required
+def lecturer_profile_view(request):
+    user = request.user
+
+    # בדיקה האם המשתמש הוא סטודנט
+    if not user.is_lecturer:
+        return redirect('login_view')
+
+    try:
+        profile = user.lecturer_profile
+    except LecturerProfile.DoesNotExist:
+        profile = None
+
+    return render(request, 'lecturer_profile.html', {'profile': profile})
