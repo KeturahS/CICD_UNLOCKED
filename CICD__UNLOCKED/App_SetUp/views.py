@@ -314,3 +314,19 @@ def upgrade_admin(request):
 
 def password_reset(request):
     return render(request, "password_reset.html")
+
+
+@login_required
+def student_profile_view(request):
+    user = request.user
+
+    # בדיקה האם המשתמש הוא סטודנט
+    if not user.is_student:
+        return redirect('login_view')
+
+    try:
+        profile = user.student_profile
+    except StudentProfile.DoesNotExist:
+        profile = None
+
+    return render(request, 'student_profile.html', {'profile': profile})
