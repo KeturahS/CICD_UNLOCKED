@@ -15,6 +15,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile
 from django.shortcuts import render
+from .forms import StudentProfileUpdateForm
 
 
 # Create your views here.
@@ -336,7 +337,7 @@ def student_profile_view(request):
 def lecturer_profile_view(request):
     user = request.user
 
-    # בדיקה האם המשתמש הוא סטודנט
+    # בדיקה האם המשתמש הוא מרצה
     if not user.is_lecturer:
         return redirect('login_view')
 
@@ -346,3 +347,22 @@ def lecturer_profile_view(request):
         profile = None
 
     return render(request, 'lecturer_profile.html', {'profile': profile})
+
+
+@login_required
+def update_student_profile(request):
+    user = request.user
+    if not user.is_student:
+        return redirect('login_view')  # למניעת גישה ממי שאינו סטודנט
+
+    profile = user.student_profile
+
+    if request.method == 'POST':
+        form = StudentProfileUpdateForm(request.POST, instance=profile, user=user)
+        if form.is_valid():
+            form.save()
+            return redirect('student_profile')
+    else:
+        form = StudentProfileUpdateForm(instance=profile, user=user)
+
+    return render(request, 'update_student_profile.html', {'form': form})
