@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User
 from django.contrib.auth import get_user_model
 from .models import StudentProfile
+from .models import ContactMessage
 
 class LoginForm(forms.Form):
     username = forms.CharField(
@@ -84,3 +85,16 @@ class StudentProfileUpdateForm(forms.ModelForm):
             user.save()
             profile.save()
         return profile
+
+class ContactMessageForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['category', 'subject', 'message']
+        labels = {
+            'category': 'נושא הפנייה',
+            'subject': 'כותרת',
+            'message': 'תוכן הפנייה',
+        }
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 5}),
+        }

@@ -33,4 +33,22 @@ class AdminProfile(models.Model):
 
 
 
+class ContactMessage(models.Model):
+    CATEGORY_CHOICES = [
+        ('support', 'תמיכה טכנית'),
+        ('lecturer', 'פנייה למרצה'),
+        ('admin', 'פנייה להנהלה'),
+        ('other', 'אחר'),
+    ]
+
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.student.username} - {self.subject} ({self.category})"
+
 

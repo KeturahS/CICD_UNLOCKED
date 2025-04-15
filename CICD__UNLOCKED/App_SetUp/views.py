@@ -16,6 +16,8 @@ from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile
 from django.shortcuts import render
 from .forms import StudentProfileUpdateForm
+from .forms import ContactMessageForm
+from .models import ContactMessage
 
 
 # Create your views here.
@@ -366,3 +368,32 @@ def update_student_profile(request):
         form = StudentProfileUpdateForm(instance=profile, user=user)
 
     return render(request, 'update_student_profile.html', {'form': form})
+
+
+
+
+
+@login_required
+def contact_us(request):
+    user = request.user
+    if not user.is_student:
+        return redirect('login_view')  # רק סטודנטים יכולים לשלוח פנייה
+
+    if request.method == 'POST':
+        form = ContactMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.student = user
+            message.save()
+            return render(request, 'student.html')  # דף הצלחה
+    else:
+        form = ContactMessageForm()
+
+    return render(request, 'contact_us.html', {'form': form})
+
+
+@login_required
+def student_messages_view(request):
+    student = request.user
+    messages = ContactMessage.objects.filter(student=student).order_by('-created_at')
+    return render(request, 'student_contact_messages.html', {'messages': messages})
