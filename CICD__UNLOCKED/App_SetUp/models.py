@@ -31,3 +31,6 @@ class AdminProfile(models.Model):
         return f"Lecturer Profile of {self.user.username}"
 
 
+
+
+
