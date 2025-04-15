@@ -29,3 +29,5 @@ class AdminProfile(models.Model):
 
     def __str__(self):
         return f"Lecturer Profile of {self.user.username}"
+
+

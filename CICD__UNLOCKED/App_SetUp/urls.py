@@ -25,7 +25,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('student/profile/', views.student_profile_view, name='student_profile'),
     path('lecturer/profile/', views.lecturer_profile_view, name='lecturer_profile'),
-    path('student/profile/update/', views.update_student_profile, name='update_student_profile'),
 
 
 ]
