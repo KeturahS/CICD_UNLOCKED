@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from .models import StudentProfile
 from .models import ContactMessage
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(
         widget= forms.TextInput(
@@ -84,6 +85,7 @@ class StudentProfileUpdateForm(forms.ModelForm):
         if commit:
             user.save()
             profile.save()
+
         return profile
 
 class ContactMessageForm(forms.ModelForm):
@@ -98,3 +100,5 @@ class ContactMessageForm(forms.ModelForm):
         widgets = {
             'message': forms.Textarea(attrs={'rows': 5}),
         }
+
+

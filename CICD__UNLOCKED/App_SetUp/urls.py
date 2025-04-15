@@ -26,8 +26,10 @@ urlpatterns = [
     path('student/profile/', views.student_profile_view, name='student_profile'),
     path('lecturer/profile/', views.lecturer_profile_view, name='lecturer_profile'),
     path('student/profile/update/', views.update_student_profile, name='update_student_profile'),
+
     path('contact/', views.contact_us, name='contact_us'),
     path('my-messages/', views.student_messages_view, name='student_messages'),
+
 
 
 ]

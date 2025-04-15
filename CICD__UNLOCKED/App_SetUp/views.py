@@ -16,8 +16,10 @@ from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile
 from django.shortcuts import render
 from .forms import StudentProfileUpdateForm
+
 from .forms import ContactMessageForm
 from .models import ContactMessage
+
 
 
 # Create your views here.
@@ -373,6 +375,7 @@ def update_student_profile(request):
 
 
 
+
 @login_required
 def contact_us(request):
     user = request.user
@@ -397,3 +400,4 @@ def student_messages_view(request):
     student = request.user
     messages = ContactMessage.objects.filter(student=student).order_by('-created_at')
     return render(request, 'student_contact_messages.html', {'messages': messages})
+
