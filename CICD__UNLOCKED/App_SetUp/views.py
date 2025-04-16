@@ -388,7 +388,7 @@ def contact_us(request):
             message = form.save(commit=False)
             message.student = user
             message.save()
-            return render(request, 'student.html')  # דף הצלחה
+            return redirect('student_profile')  # דף הצלחה
     else:
         form = ContactMessageForm()
 
