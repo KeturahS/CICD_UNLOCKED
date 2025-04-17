@@ -10,7 +10,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import User
-from .forms import SignUpForm,LoginForm
+from .forms import SignUpForm, LoginForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile
@@ -19,7 +19,6 @@ from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
 from .models import ContactMessage
-
 
 
 # Create your views here.
@@ -111,9 +110,9 @@ def register(request):
 
     return render(request, 'register.html', {'form': form, 'msg': msg})
 
+
 @csrf_protect
 def login_view(request):
-
     form = LoginForm(request.POST or None)
     msg = None
     if request.method == 'POST':
@@ -136,7 +135,6 @@ def login_view(request):
                         login(request, user)
                         return redirect('student')
 
-
                 if not user.is_active:
                     if user.is_lecturer:
                         msg = 'בקשתך להירשם כמרצה טרם אושרה, אנא המתן בסבלנות לתשובה מצוות האתר'
@@ -146,20 +144,20 @@ def login_view(request):
 
                     return render(request, 'login.html')
             else:
-               msg = 'פרטים לא נכונים '
+                msg = 'פרטים לא נכונים '
 
         else:
             msg = 'טופס לא תקין'
     return render(request, 'login.html', {'form': form, 'msg': msg})
 
 
-
-
 def lecturer(request):
     return render(request, 'lecturer.html')
 
+
 def student(request):
     return render(request, 'student.html')
+
 
 @login_required
 @csrf_protect
@@ -167,14 +165,12 @@ def admin(request):
     lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
     admins_requests = User.objects.filter(is_admin=True, is_active=False) if request.user.is_superuser else None
 
-
     context = {
         "lecturers_requests": lecturers_requests,
         "admins_requests": admins_requests,
 
     }
-    return render(request, "admin_page.html",context)
-
+    return render(request, "admin_page.html", context)
 
 
 @login_required
@@ -212,6 +208,7 @@ def handle_admin_request(request):
         return redirect("admin")
 
     return redirect("admin")
+
 
 @login_required
 def handle_lecturer_request(request):
@@ -254,7 +251,7 @@ def manage_admins(request):
     active_admins = User.objects.filter(is_admin=True, is_active=True)
 
     context = {
-             "active_admins": active_admins
+        "active_admins": active_admins
     }
     return render(request, "admin_page_admins_section.html", context)
 
@@ -283,6 +280,7 @@ def get_superuser_email():
 
     return superuser.email if superuser else None
 
+
 def delete_student(request):
     if request.method == "POST":
         user_email = request.POST.get("student_email")
@@ -306,6 +304,7 @@ def delete_admin(request):
         user.delete()
     return redirect("manage_admins")
 
+
 def upgrade_admin(request):
     if request.method == "POST":
         user_email = request.POST.get("admin_email")
@@ -316,6 +315,7 @@ def upgrade_admin(request):
         user.is_staff = True
         user.save()
     return redirect("manage_admins")
+
 
 def password_reset(request):
     return render(request, "password_reset.html")
@@ -372,10 +372,6 @@ def update_student_profile(request):
     return render(request, 'update_student_profile.html', {'form': form})
 
 
-
-
-
-
 @login_required
 def contact_us(request):
     user = request.user
@@ -400,4 +396,3 @@ def student_messages_view(request):
     student = request.user
     messages = ContactMessage.objects.filter(student=student).order_by('-created_at')
     return render(request, 'student_contact_messages.html', {'messages': messages})
-
