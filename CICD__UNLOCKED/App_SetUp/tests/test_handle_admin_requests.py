@@ -1,0 +1,49 @@
+from django.test import TestCase, Client
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.core import mail
+
+User = get_user_model()
+
+class AdminRequestTests(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        # יצירת מנהל ראשי מחובר
+        self.admin_user = User.objects.create_user( username='adminuser', email='admin@example.com', password='adminpass', is_superuser=True,
+                                                   is_admin=True, is_active=True)
+        self.client.login(username='adminuser', password='adminpass')
+
+
+        # יצירת משתמש שמבקש להיות מנהל
+        self.pending_user = User.objects.create_user( username='pendingadminuser', email='newadmin@example.com', password='pass123', is_active=False,
+                                                     is_admin=True)
+
+    def test_approve_admin_request(self):
+        response = self.client.post(reverse('handle_admin_request'), {
+            'user_email': self.pending_user.email,
+            'action': 'approve'
+        })
+
+        self.pending_user.refresh_from_db()
+        self.assertTrue(self.pending_user.is_active)
+
+        # בדיקת שליחה של מייל
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('אושר על ידי המנהל הבכיר', mail.outbox[0].subject)
+        self.assertRedirects(response, reverse('admin'))
+
+    def test_reject_admin_request(self):
+        response = self.client.post(reverse('handle_admin_request'), {
+            'user_email': self.pending_user.email,
+            'action': 'reject'
+        })
+
+        # המשתמש נמחק
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get(email=self.pending_user.email)
+
+        # בדיקת שליחה של מייל
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('סורבה על ידי המנהל הבכיר', mail.outbox[0].subject)
+        self.assertRedirects(response, reverse('admin'))
