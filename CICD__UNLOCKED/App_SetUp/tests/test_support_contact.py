@@ -5,6 +5,7 @@ from App_SetUp.models import ContactMessage
 
 User = get_user_model()
 
+
 class ContactSupportTest(TestCase):
     def setUp(self):
         self.student_user = User.objects.create_user(

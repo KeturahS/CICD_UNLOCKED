@@ -10,7 +10,7 @@ class AdminUpgradeTests(TestCase):
 
     def setUp(self):
         self.client = Client()
-        # יצירת משתמש רגיל
+
         self.user = User.objects.create_user(
             username='regularAdmin',
             email='regular@example.com',
@@ -18,7 +18,7 @@ class AdminUpgradeTests(TestCase):
             is_active=True,
             is_admin = True
         )
-        # יצירת משתמש מנהל מחובר
+
         self.admin_user = User.objects.create_user(
             username='Superadminuser',
             email='admin@example.com',
@@ -30,7 +30,7 @@ class AdminUpgradeTests(TestCase):
         )
 
     def test_upgrade_admin(self):
-        # כניסה עם המשתמש המנהל
+
         self.client.login(username= 'Superadminuser', email='admin@example.com', password='adminpass')
 
         # בקשת POST לשדרוג המשתמש הרגיל למנהל
