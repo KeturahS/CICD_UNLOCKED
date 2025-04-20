@@ -1,13 +1,13 @@
 import random
 
+from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.core.mail import send_mail
 from django.conf import settings
 
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import User
 from .forms import SignUpForm, LoginForm
@@ -27,6 +27,8 @@ from .models import ContactMessage
 def index(request):
     return render(request, 'index.html')
 
+def terms_view(request):
+    return render(request, 'terms.html')
 
 def register(request):
     msg = None
@@ -95,7 +97,8 @@ def register(request):
                     fail_silently=False,
                 )
                 user.save()
-                return render(request, 'index.html')
+                request.session['username'] = user.username
+                return redirect('student_extra')
 
             if role == "lecturer":
                 user.is_lecturer = True
@@ -319,6 +322,37 @@ def upgrade_admin(request):
 
 def password_reset(request):
     return render(request, "password_reset.html")
+
+#User = get_user_model()
+
+def student_extra(request):
+    msg = None
+    if request.method == 'POST':
+        institution = request.POST.get("institution")
+        target_completion_date = request.POST.get("target_completion_date")
+
+        if not institution or not target_completion_date:
+            msg = "יש למלא את כל השדות"
+            return render(request, 'student_extra.html', {'msg': msg})
+
+        username = request.session.get('username')
+        if not username:
+            msg = "שגיאה בזיהוי המשתמש, נסה להירשם מחדש"
+            return render(request, 'student_extra.html', {'msg': msg})
+
+        user = User.objects.get(username=username)
+
+        profile, created = StudentProfile.objects.get_or_create(user=user)
+        profile.institution = institution
+        profile.target_completion_date = target_completion_date
+        profile.save()
+
+        del request.session['username']
+
+        return redirect('login_view')
+
+    return render(request, 'student_extra.html')
+
 
 
 @login_required

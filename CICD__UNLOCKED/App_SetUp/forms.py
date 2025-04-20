@@ -4,11 +4,13 @@ from .models import User
 from django.contrib.auth import get_user_model
 from .models import StudentProfile
 from .models import ContactMessage
+from django.core.exceptions import ValidationError
+from datetime import date
 
 
 class LoginForm(forms.Form):
     username = forms.CharField(
-        widget= forms.TextInput(
+        widget=forms.TextInput(
             attrs={
                 "class": "form-control"
             }
@@ -23,6 +25,20 @@ class LoginForm(forms.Form):
     )
 
 class SignUpForm(UserCreationForm):
+    firstname = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control"
+            }
+        )
+    )
+    lastname = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control"
+            }
+        )
+    )
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -54,9 +70,21 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'is_admin', 'is_lecturer', 'is_student')
+        fields = ('firstname', 'lastname', 'username', 'email', 'password1', 'password2', 'is_admin', 'is_lecturer', 'is_student')
 
+class StudentExtraForm(forms.Form):
+    institution = forms.CharField(label="שם מוסד לימודים", max_length=100)
+    target_completion_date = forms.DateField(
+        label="תאריך סיום קורס",
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+    agree_terms = forms.BooleanField(label="אני מאשר את תנאי השימוש", required=True)
 
+    def clean_course_completion_date(self):
+        data = self.cleaned_data['target_completion_date']
+        if data < date.today():
+            raise ValidationError("תאריך הסיום לא יכול להיות בעבר")
+        return data
 
 User = get_user_model()
 class StudentProfileUpdateForm(forms.ModelForm):
