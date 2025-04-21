@@ -10,8 +10,18 @@ class User(AbstractUser):
     is_lecturer = models.BooleanField('Is lecturer', default=False)
 
 class StudentProfile(models.Model):
+    INSTITUTION_CHOICES = [
+        ('SCE', 'SCE - המכללה האקדמית להנדסה ע"ש סמי שמעון'),
+        ('TAU', 'אוניברסיטת תל אביב'),
+        ('HUJI', 'האוניברסיטה העברית בירושלים'),
+        ('TECH', 'הטכניון'),
+        ('BIU', 'אוניברסיטת בר אילן'),
+        ('BGU', 'אוניברסיטת בן גוריון'),
+    ]
+
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="student_profile")
-    institution = models.CharField('Institution', max_length=255)
+    institution = models.CharField('Institution', max_length=255, choices=INSTITUTION_CHOICES)
     target_completion_date = models.DateField('Target completion date', blank=True, null=True)
 
     def __str__(self):
@@ -38,7 +48,6 @@ class ContactMessage(models.Model):
         ('support', 'תמיכה טכנית'),
         ('lecturer', 'פנייה למרצה'),
         ('admin', 'פנייה להנהלה'),
-        ('other', 'אחר'),
     ]
 
     student = models.ForeignKey(User, on_delete=models.CASCADE)
