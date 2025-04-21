@@ -25,14 +25,14 @@ class LoginForm(forms.Form):
     )
 
 class SignUpForm(UserCreationForm):
-    firstname = forms.CharField(
+    first_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control"
             }
         )
     )
-    lastname = forms.CharField(
+    last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control"
@@ -70,10 +70,18 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('firstname', 'lastname', 'username', 'email', 'password1', 'password2', 'is_admin', 'is_lecturer', 'is_student')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2', 'is_admin', 'is_lecturer', 'is_student')
 
 class StudentExtraForm(forms.Form):
-    institution = forms.CharField(label="שם מוסד לימודים", max_length=100)
+    INSTITUTION_CHOICES = [
+        ('SCE', 'SCE - המכללה האקדמית להנדסה ע"ש סמי שמעון'),
+        ('TAU', 'אוניברסיטת תל אביב'),
+        ('HUJI', 'האוניברסיטה העברית בירושלים'),
+        ('TECH', 'הטכניון'),
+        ('BIU', 'אוניברסיטת בר אילן'),
+        ('BGU', 'אוניברסיטת בן גוריון'),
+    ]
+    institution = forms.ChoiceField(label="מוסד לימודים", choices=INSTITUTION_CHOICES)
     target_completion_date = forms.DateField(
         label="תאריך סיום קורס",
         widget=forms.DateInput(attrs={'type': 'date'})
@@ -95,6 +103,9 @@ class StudentProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = StudentProfile
         fields = ['institution', 'target_completion_date', 'first_name', 'last_name', 'email']
+        widgets = {
+            'target_completion_date': forms.DateInput(attrs={'type': 'date'})
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
@@ -104,6 +115,11 @@ class StudentProfileUpdateForm(forms.ModelForm):
         self.fields['last_name'].initial = user.last_name
         self.fields['email'].initial = user.email
 
+    def clean_target_completion_date(self):
+        target_date = self.cleaned_data.get('target_completion_date')
+        if target_date and target_date < date.today():
+            raise ValidationError("תאריך הסיום לא יכול להיות תאריך מהעבר")
+        return target_date
     def save(self, commit=True):
         profile = super().save(commit=False)
         user = profile.user
@@ -115,6 +131,8 @@ class StudentProfileUpdateForm(forms.ModelForm):
             profile.save()
 
         return profile
+
+
 
 class ContactMessageForm(forms.ModelForm):
     class Meta:

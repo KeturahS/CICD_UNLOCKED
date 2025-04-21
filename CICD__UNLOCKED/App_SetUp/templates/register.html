@@ -28,13 +28,13 @@
             <form method="post">
               {% csrf_token %}
             <div class="mb-3">
-                <label for="firstname" class="form-label">שם פרטי</label>
-                {{ form.firstname }}
+                <label for="first_name" class="form-label">שם פרטי</label>
+                {{ form.first_name }}
               </div>
 
               <div class="mb-3">
-                <label for="lastname" class="form-label">שם משפחה</label>
-                {{ form.lastname }}
+                <label for="last_name" class="form-label">שם משפחה</label>
+                {{ form.last_name }}
               </div>
 
               <div class="mb-3">

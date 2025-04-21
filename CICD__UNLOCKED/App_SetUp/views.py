@@ -418,7 +418,7 @@ def contact_us(request):
             message = form.save(commit=False)
             message.student = user
             message.save()
-            return redirect('student_profile')  # דף הצלחה
+            return redirect('student')  # דף הצלחה
     else:
         form = ContactMessageForm()
 

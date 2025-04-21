@@ -16,9 +16,17 @@
         {% csrf_token %}
 
         <div class="mb-3">
-          <label class="form-label">מוסד לימודים</label>
-          <input type="text" name="institution" class="form-control" required>
-        </div>
+  <label class="form-label">מוסד לימודים</label>
+  <select name="institution" class="form-select" required>
+    <option value="">בחר מוסד לימודים</option>
+    <option value="SCE">SCE - המכללה האקדמית להנדסה ע"ש סמי שמעון</option>
+    <option value="TAU">אוניברסיטת תל אביב</option>
+    <option value="HUJI">האוניברסיטה העברית בירושלים</option>
+    <option value="TECH">הטכניון</option>
+    <option value="BIU">אוניברסיטת בר אילן</option>
+    <option value="BGU">אוניברסיטת בן גוריון</option>
+  </select>
+</div>
 
         <div class="mb-3">
           <label class="form-label">תאריך סיום משוער</label>
