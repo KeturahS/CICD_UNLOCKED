@@ -19,8 +19,14 @@
                     עמוד התחברות
                 {% endif %}
             </span>
-            <form method="post">
+            <form method="post" autocomplete="off" novalidate>
                 {% csrf_token %}
+
+                 <!-- ✅ Fake fields to trick browser autofill -->
+        <input type="text" name="fake_username" autocomplete="username" style="display: none;">
+        <input type="password" name="fake_password" autocomplete="new-password" style="display: none;">
+
+
                 <div class="mb-3">
                     <label for="username" class="form-label">שם משתמש </label>
                     {{ form.username }}
@@ -29,10 +35,7 @@
                     <label for="password" class="form-label">סיסמה</label>
                     {{ form.password }}
                 </div>
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="rememberMe" checked>
-                    <label class="form-check-label" for="rememberMe">זכור אותי</label>
-                </div>
+
                 <div class="d-flex justify-content-between">
                 <p><a href="{% url 'password_reset' %}">שכחתי סיסמה</a></p>
                     <input type="submit" value="התחבר" class="btn btn-primary">
