@@ -31,6 +31,8 @@ urlpatterns = [
 
     path('contact/', views.contact_us, name='contact_us'),
     path('my-messages/', views.student_messages_view, name='student_messages'),
+    path('admin_page/resolve_request/<int:message_id>/', views.resolve_request, name='resolve_request'),
+    path('lecturer/resolve_request/<int:message_id>/', views.resolve_lecturer_request, name='resolve_lecturer_request'),
 
 
 

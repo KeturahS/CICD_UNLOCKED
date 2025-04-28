@@ -1,7 +1,7 @@
 import random
 
 from django.urls import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 
 from django.contrib.auth import authenticate, login, get_user_model
@@ -155,7 +155,13 @@ def login_view(request):
 
 
 def lecturer(request):
-    return render(request, 'lecturer.html')
+    show_filter = request.GET.get('show')
+    if show_filter == 'open':
+        contact_messages = ContactMessage.objects.filter(is_resolved=False,category='lecturer').order_by('-created_at')
+    else:
+        contact_messages = ContactMessage.objects.filter(category='lecturer').order_by('-created_at')
+
+    return render(request, 'lecturer.html',{'contact_messages': contact_messages,})
 
 
 def student(request):
@@ -165,12 +171,18 @@ def student(request):
 @login_required
 @csrf_protect
 def admin(request):
+    show_filter = request.GET.get('show')
+    if show_filter == 'open':
+        contact_messages = ContactMessage.objects.filter(is_resolved=False,category__in=['support', 'admin']).order_by('-created_at')
+    else:
+        contact_messages = ContactMessage.objects.filter(category__in=['support', 'admin']).order_by('-created_at')
     lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
     admins_requests = User.objects.filter(is_admin=True, is_active=False) if request.user.is_superuser else None
 
     context = {
         "lecturers_requests": lecturers_requests,
         "admins_requests": admins_requests,
+        'contact_messages': contact_messages,
 
     }
     return render(request, "admin_page.html", context)
@@ -383,7 +395,6 @@ def lecturer_profile_view(request):
         profile = user.lecturer_profile
     except LecturerProfile.DoesNotExist:
         profile = None
-
     return render(request, 'lecturer_profile.html', {'profile': profile})
 
 
@@ -430,3 +441,40 @@ def student_messages_view(request):
     student = request.user
     messages = ContactMessage.objects.filter(student=student).order_by('-created_at')
     return render(request, 'student_contact_messages.html', {'messages': messages})
+
+
+@login_required
+def resolve_request(request, message_id):
+    if not request.user.is_admin:
+        return redirect('login_view')
+
+    message = get_object_or_404(ContactMessage, id=message_id)
+    message.is_resolved = True
+    message.save()
+    send_mail(
+        subject='הפנייה שלך טופלה',
+        message=f'שלום {message.student.username}, הפנייה שלך בנושא "{message.subject}" טופלה בהצלחה. תוכל לצפות בעדכון באזור הפניות שלך באתר.',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[message.student.email],
+        fail_silently=False,
+    )
+    return redirect('admin')
+
+
+@login_required
+def resolve_lecturer_request(request, message_id):
+    if not request.user.is_lecturer:
+        return redirect('login_view')
+
+    message = get_object_or_404(ContactMessage, id=message_id)
+    if message.category == 'lecturer':  # רק אם הפנייה נשלחה למרצה
+        message.is_resolved = True
+        message.save()
+        send_mail(
+            subject='הפנייה שלך טופלה',
+            message=f'שלום {message.student.username}, הפנייה שלך בנושא "{message.subject}" טופלה בהצלחה. תוכל לצפות בעדכון באזור הפניות שלך באתר.',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[message.student.email],
+            fail_silently=False,
+        )
+    return redirect('lecturer')  # תחזיר את המרצה לעמוד שלו אחרי הטיפול
