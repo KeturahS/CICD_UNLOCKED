@@ -1,87 +1,105 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>הפניות שלי</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <title>הפניות שלי</title>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Assistant', sans-serif;
+      background: linear-gradient(to bottom right, #eaf3ff, #f7faff);
+      margin: 0;
+      padding: 30px;
+      color: #2c3e50;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.07);
+    }
 
-        h2 {
-            text-align: center;
-        }
+    h2 {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 30px;
+      color: #0d3b66;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-        th, td {
-            padding: 12px;
-            text-align: right;
-            border-bottom: 1px solid #ccc;
-        }
+    th, td {
+      padding: 14px 12px;
+      text-align: right;
+      border-bottom: 1px solid #e0e0e0;
+    }
 
-        th {
-            background-color: #e0e0e0;
-        }
+    th {
+      background-color: #d0e8ff;
+      font-weight: bold;
+      color: #0d3b66;
+    }
 
-        .resolved {
-            color: green;
-            font-weight: bold;
-        }
+    tr:hover {
+      background-color: #f0f8ff;
+      transition: 0.3s ease;
+    }
 
-        .unresolved {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+    .resolved {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .unresolved {
+      color: #dc3545;
+      font-weight: 600;
+    }
+
+    p {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 40px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>הפניות שלי</h2>
+  <h2>הפניות שלי</h2>
 
-    {% if messages %}
-        <table>
-            <thead>
-                <tr>
-                    <th>נושא</th>
-                    <th>קטגוריה</th>
-                    <th>תאריך שליחה</th>
-                    <th>סטטוס</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for msg in messages %}
-                    <tr>
-                        <td>{{ msg.subject }}</td>
-                        <td>{{ msg.get_category_display }}</td>
-                        <td>{{ msg.created_at|date:"d/m/Y H:i" }}</td>
-                        <td class="{% if msg.is_resolved %}resolved{% else %}unresolved{% endif %}">
-                            {% if msg.is_resolved %}טופלה{% else %}ממתינה לטיפול{% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>לא נמצאו פניות.</p>
-    {% endif %}
+  {% if messages %}
+  <table>
+    <thead>
+      <tr>
+        <th>נושא</th>
+        <th>קטגוריה</th>
+        <th>תאריך שליחה</th>
+        <th>סטטוס</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for msg in messages %}
+      <tr>
+        <td>{{ msg.subject }}</td>
+        <td>{{ msg.get_category_display }}</td>
+        <td>{{ msg.created_at|date:"d/m/Y H:i" }}</td>
+        <td class="{% if msg.is_resolved %}resolved{% else %}unresolved{% endif %}">
+          {% if msg.is_resolved %}טופלה{% else %}ממתינה לטיפול{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>לא נמצאו פניות.</p>
+  {% endif %}
 </div>
 
 </body>
