@@ -3,37 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>דשבורד אדמין</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <title>דשבורד אדמין | CiCd Unlocked</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f9ff;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .sidebar {
+            background-color: #e8f0fe;
+            min-height: 100vh;
+            box-shadow: inset -1px 0 0 rgba(0,0,0,.1);
+        }
+
+        .sidebar h4 {
+            color: #003c80;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: #004a99;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: #d8e6fc;
+            border-radius: 10px;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+        }
+
+        .card-header {
+            background-color: #004a99;
+            color: white;
+            font-weight: bold;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+
+        table th {
+            color: #003366;
+        }
+
+        table td {
+            vertical-align: middle;
+        }
+
+        .btn-primary {
+            background-color: #004a99;
+            border: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #003870;
+        }
+
+        .btn-danger {
+            border: none;
+            transition: 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #b30000;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container-fluid">
     <div class="row">
         <!-- תפריט צדדי -->
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="position-sticky">
-                <h4 class="text-center mt-3">שלום {{ request.user.username }}</h4>
-                <br>
-                <h4 class="text-center mt-3">ניהול מערכת</h4>
-                <ul class="nav flex-column p-3">
+        <nav class="col-md-2 d-none d-md-block sidebar p-3">
+            <div class="text-center mt-4">
+                <h4>שלום {{ request.user.username }}</h4>
+                <hr>
+                <h5>ניהול מערכת</h5>
+                <ul class="nav flex-column mt-3">
                     {% if request.user.is_superuser %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_admins' %}">🛠 ניהול מנהלים</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manage_admins' %}">🛠 ניהול מנהלים</a></li>
                     {% endif %}
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'manage_lecturers' %}">📚 ניהול מרצים</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manage_lecturers' %}">📚 ניהול מרצים</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'manage_students' %}">🎓 ניהול סטודנטים</a></li>
-
                 </ul>
             </div>
         </nav>
 
         <!-- תוכן ראשי -->
-                   <!-- ניהול סטודנטים -->
-            <div class="card my-4">
-                <div class="card-header">רשימת מנהלים</div>
+        <main class="col-md-10 px-4 py-4">
+            <div class="card">
+                <div class="card-header">
+                    רשימת מנהלים
+                </div>
                 <div class="card-body">
-                    <table class="table table-striped">
+                    <table class="table table-striped align-middle">
                         <thead>
                             <tr>
                                 <th>שם</th>
@@ -43,50 +111,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for admin in active_admins%}
+                            {% for admin in active_admins %}
                             <tr>
                                 <td>{{ admin.username }}</td>
                                 <td>{{ admin.email }}</td>
-                                {%if admin.is_superuser%}
-                                <td>   </td>
-                                <td>  הרשאות מנהל בכיר    </td>
-                                {%endif%}
-                                {%if not admin.is_superuser%}
-                                <td>
-                                    <form method="post" action="{% url 'delete_admin'%}" onsubmit="return confirmDeletion()">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="admin_email" value="{{ admin.email }}">
-                                        <button type="submit" class="btn btn-danger btn-sm">🗑 מחק</button>
-                                    </form>
-                                      <script>
-                                        function confirmDeletion() {
-                                            return confirm(" נא לאשר כי ברצונך למחוק את המשתמש. פעולה זו לא ניתנת לביטול.");
-                                        }
-                                    </script>
-                                     <form method="post" action="{% url 'upgrade_admin'%}" onsubmit="return confirmUpgrade()">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="admin_email" value="{{ admin.email }}">
-                                        <button type="submit" class="btn btn-primary btn-sm">🗑 הפוך למנהל בכיר</button>
-                                    </form>
-                                     <script>
-                                        function confirmUpgrade() {
-                                            return confirm(" נא לאשר כי ברצונך להפוך את המשתמש למנהל בכיר. פעולה זו לא ניתנת לביטול.");
-                                        }
-                                    </script>
-
-                                </td>
-                                <td>    הרשאות מנהל    </td>
-                                {%endif%}
+                                {% if admin.is_superuser %}
+                                    <td></td>
+                                    <td><span class="text-success fw-bold">הרשאות מנהל בכיר</span></td>
+                                {% else %}
+                                    <td class="d-flex gap-2">
+                                        <form method="post" action="{% url 'delete_admin' %}" onsubmit="return confirm('נא לאשר מחיקת מנהל. פעולה זו אינה ניתנת לביטול!');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="admin_email" value="{{ admin.email }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">🗑 מחק</button>
+                                        </form>
+                                        <form method="post" action="{% url 'upgrade_admin' %}" onsubmit="return confirm('האם להפוך למנהל בכיר? פעולה זו אינה ניתנת לביטול!');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="admin_email" value="{{ admin.email }}">
+                                            <button type="submit" class="btn btn-primary btn-sm">⬆ מנהל בכיר</button>
+                                        </form>
+                                    </td>
+                                    <td><span class="text-primary">הרשאות מנהל</span></td>
+                                {% endif %}
                             </tr>
                             {% empty %}
-                            <tr><td colspan="3" class="text-center">אין מנהלים רשומים</td></tr>
+                            <tr><td colspan="4" class="text-center text-muted">אין מנהלים רשומים כרגע.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
-
-       </div>
+        </main>
+    </div>
 </div>
 
 </body>
