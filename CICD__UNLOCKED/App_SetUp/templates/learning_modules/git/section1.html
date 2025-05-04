@@ -1,0 +1,126 @@
+<section id="section1" style="padding: 30px; max-width: 900px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); display: none;">
+  <h2>1. מה זה Git ו-GitHub ולמה זה חשוב?</h2>
+  <p style="font-size: 1.1em;">
+    Git היא מערכת לניהול גרסאות שמאפשרת למפתחים לעקוב אחרי שינויים בקוד, לעבוד בצורה שיתופית, ולחזור אחורה לגרסאות קודמות במקרה של טעות. GitHub היא פלטפורמה מקוונת שמבוססת על Git ומאפשרת שיתוף פעולה בין מפתחים מכל העולם.
+  </p>
+
+  <div id="player"></div>
+
+  <div id="question1" style="display:none; margin-top: 20px;">
+    <p>מה Git שומר בפועל?</p>
+    <input type="radio" name="q1" value="a"> רק את הקוד הנוכחי<br>
+    <input type="radio" name="q1" value="b"> היסטוריית שינויים וגרסאות<br>
+    <input type="radio" name="q1" value="c"> רק את הקוד של אחרים<br><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
+    <div id="feedback1" style="display:none;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;">המשך צפייה</button>
+  </div>
+
+  <div id="question2" style="display:none; margin-top: 20px;">
+    <p>מה GitHub מוסיפה ל-Git?</p>
+    <input type="radio" name="q2" value="a"> ממשק גרפי וניהול שיתופי<br>
+    <input type="radio" name="q2" value="b"> שפת תכנות<br>
+    <input type="radio" name="q2" value="c"> מערכת הפעלה<br><br>
+    <button onclick="checkAnswer('q2', 'a', 'feedback2')">בדוק תשובה</button>
+    <div id="feedback2" style="display:none;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;">המשך צפייה</button>
+  </div>
+
+  <div style="margin-top: 30px; text-align: left;">
+    <a href="?step=1q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</section>
+
+
+
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player;
+  let videoLoaded = false;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function showSection(id) {
+    // הסתר הכל
+    document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+
+    // אם נכנסנו ל-section1 – טען את הסרטון פעם אחת
+    if (id === 'section1' && !videoLoaded) {
+      loadYouTubePlayer();
+      videoLoaded = true;
+    }
+  }
+
+  function loadYouTubePlayer() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: 'VtjoExU11d4',
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING) {
+      const interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
+
+        if (time >= 30 && !question1Shown) {
+          player.pauseVideo();
+          document.getElementById('question1').style.display = 'block';
+          question1Shown = true;
+        }
+
+        if (time >= 65 && !question2Shown) {
+          player.pauseVideo();
+          document.getElementById('question2').style.display = 'block';
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const radios = document.getElementsByName(qName);
+    const selected = Array.from(radios).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:green'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:red'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "Git שומר את כל היסטוריית השינויים של קוד הפרויקט.";
+      case 'q2': return "GitHub מוסיפה ניהול שיתופי, ממשק גרפי ואחסון בענן.";
+      default: return "";
+    }
+  }
+
+document.addEventListener('DOMContentLoaded', function () {
+  showSection('section1');
+});
+</script>

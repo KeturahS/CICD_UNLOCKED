@@ -1,0 +1,25 @@
+{% extends 'learning_modules/base_learning_module.html' %}
+
+{% block title %}ברוך הבא ללומדת ה־CI/CD{% endblock %}
+
+{% block content %}
+  <div style="max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); text-align: center;">
+    <h1>🎓 ברוך הבא ללומדת ה־CI/CD</h1>
+    <p>
+      בלומדה זו תלמד בצורה אינטראקטיבית על הכלים הנפוצים בעולם הפיתוח המודרני:
+      <strong>Git</strong>, <strong>Jenkins</strong> ו־<strong>Docker</strong>.
+    </p>
+    <p>
+      כל מודול כולל סרטונים קצרים, שאלות לתרגול והסברים שיעזרו לך להבין את התהליך מאחורי Continuous Integration ו־Continuous Deployment.
+    </p>
+    <p>
+      כדי להתחיל, בחר את המודול שמעניין אותך מהתפריט בצד או מהקישורים שלמטה:
+    </p>
+
+    <div style="margin-top: 30px;">
+      <a href="{% url 'git_module' %}" class="btn-next" style="margin: 10px;">🚀 התחל את מודול Git</a>
+      <a href="{% url 'jenkins_module' %}" class="btn-next" style="margin: 10px;">🛠️ עבור למודול Jenkins</a>
+      <a href="{% url 'docker_module' %}" class="btn-next" style="margin: 10px;">📦 עבור למודול Docker</a>
+    </div>
+  </div>
+{% endblock %}

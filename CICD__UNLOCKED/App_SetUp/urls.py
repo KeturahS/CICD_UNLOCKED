@@ -33,5 +33,14 @@ urlpatterns = [
     path('my-messages/', views.student_messages_view, name='student_messages'),
 
 
+    path('learning/', views.learning_home, name='learning_home'),
+    path('modules/git/', views.git_module_view, name='git_module'),
+    path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),
+    path('modules/docker/', views.docker_module_view, name='docker_module'),
+
+
+
+
+    path('placeholder/', views.placeholder_view, name='git_quiz_1'),
 
 ]
