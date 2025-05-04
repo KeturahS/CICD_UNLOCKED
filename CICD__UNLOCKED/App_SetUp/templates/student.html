@@ -66,6 +66,51 @@
             font-size: 18px;
             color: #555;
         }
+
+
+
+        .learning-module {
+    max-width: 600px;
+    margin: 60px auto;
+    background: linear-gradient(to right, #ffffff, #f1f8ff);
+    border: 2px solid #d6eaff;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+.learning-module:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 123, 255, 0.25);
+}
+.learning-module .icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+.learning-module h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #0d3b66;
+}
+.learning-module p {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 20px;
+}
+.start-btn {
+    font-size: 16px;
+    padding: 10px 25px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+}
+.start-btn:hover {
+    background-color: #084cdf;
+}
     </style>
 </head>
 <body>
@@ -80,6 +125,16 @@
         <h2>ברוך הבא למערכת CiCd Unlocked</h2>
         <p>אנא בחר פעולה מתוך התפריט העליון.</p>
     </div>
+
+
+<div class="learning-module" onclick="window.location.href='{% url 'learning_home' %}'">
+    <div class="icon">📘</div>
+    <h3>ברוך הבא ללומדה</h3>
+    <p>למד על Git, Jenkins ו-Docker דרך לומדה אינטראקטיבית, מעשית וידידותית למשתמש.</p>
+    <button class="start-btn">🚀 התחל את הלמידה</button>
+</div>
+
+
 
 </body>
 </html>

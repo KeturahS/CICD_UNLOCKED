@@ -1,0 +1,73 @@
+<!-- base_learning_module.html -->
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}מודול{% endblock %}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background-color: #f9f9f9; }
+    .sidebar {
+      height: 100%;
+      width: 250px;
+      position: fixed;
+      right: -250px;
+      top: 0;
+      background-color: #007bff;
+      color: white;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+    }
+    .sidebar a {
+      padding: 15px 30px;
+      text-decoration: none;
+      font-size: 18px;
+      color: white;
+      display: block;
+    }
+    .sidebar a:hover {
+      background-color: #0056b3;
+    }
+    .openbtn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .content {
+      margin-right: 270px;
+      padding-top: 80px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<button class="openbtn" onclick="toggleSidebar()">☰</button>
+
+<div id="sidebar" class="sidebar">
+  <a href="{% url 'git_module' %}">Git</a>
+  <a href="{% url 'jenkins_module' %}">Jenkins</a>
+  <a href="{% url 'docker_module' %}">Docker</a>
+</div>
+
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+
+<script>
+  function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.right = sidebar.style.right === "0px" ? "-250px" : "0px";
+  }
+</script>
+
+</body>
+</html>

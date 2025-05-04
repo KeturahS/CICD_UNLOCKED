@@ -430,3 +430,31 @@ def student_messages_view(request):
     student = request.user
     messages = ContactMessage.objects.filter(student=student).order_by('-created_at')
     return render(request, 'student_contact_messages.html', {'messages': messages})
+
+
+
+@login_required
+def learning_home(request):
+    if not request.user.is_student:
+        return redirect('login_view')
+    return render(request, 'learning_modules/learning_modules_homePage.html')
+
+
+
+@login_required
+def git_module_view(request):
+    return render(request, 'learning_modules/git_module.html')
+
+@login_required
+def jenkins_module_view(request):
+    return render(request, 'learning_modules/jenkins_module.html')
+
+@login_required
+def docker_module_view(request):
+    return render(request, 'learning_modules/docker_module.html')
+
+
+
+
+def placeholder_view(request):
+    return render(request, 'learning_modules/placeholder.html')
