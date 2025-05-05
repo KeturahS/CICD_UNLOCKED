@@ -1,0 +1,8 @@
+# GitExercises/views.py
+from django.shortcuts import render
+
+def GitExercise1_view(request):
+    return render(request, 'GitExercises/placeholder.html') 
+
+
+# Create your views here.
