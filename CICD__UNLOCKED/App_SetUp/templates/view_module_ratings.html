@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>כל דירוגי הלומדות</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background-color: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>כל דירוגי הלומדות</h1>
+    <table>
+        <tr>
+            <th>סטודנט</th>
+            <th>לומדה</th>
+            <th>דירוג</th>
+            <th>הערה</th>
+            <th>תאריך</th>
+        </tr>
+        {% for rating in ratings %}
+        <tr>
+            <td>{{ rating.student.username }}</td>
+            <td>{{ rating.module_name }}</td>
+            <td>{{ rating.rating }} ★</td>
+            <td>{{ rating.comment }}</td>
+            <td>{{ rating.submitted_at|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">לא נמצאו דירוגים.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a class="back-link" href="/">חזרה לדף הבית</a>
+</body>
+</html>
