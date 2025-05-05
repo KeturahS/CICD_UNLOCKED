@@ -1,7 +1,10 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
+
+
 from . import views
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -42,5 +45,8 @@ urlpatterns = [
 
 
     path('placeholder/', views.placeholder_view, name='git_quiz_1'),
+    path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
+    path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
+
 
 ]
