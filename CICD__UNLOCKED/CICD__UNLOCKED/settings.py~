@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'App_SetUp.apps.AppSetupConfig',
-    'GitExercises',
+    'GitExercises.apps.GitexercisesConfig',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +62,10 @@ ROOT_URLCONF = 'CICD__UNLOCKED.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # כל עוד יש תיקיית templates בכל אפליקציה, לא צריך לשנות את זה
+            BASE_DIR / 'templates',  # תיקיות ששותפות לכל האפליקציות
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

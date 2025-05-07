@@ -37,10 +37,12 @@ urlpatterns = [
     path('modules/git/', views.git_module_view, name='git_module'),
     path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),
     path('modules/docker/', views.docker_module_view, name='docker_module'),
-
-
-
-
-    path('placeholder/', views.placeholder_view, name='git_quiz_1'),
-
+    path('LecturerPages/LecturerTasksAndAssignments/manage_tasks_and_check_assignments.html', views.manage_tasks_and_check_assignments, name='manage_tasks_and_check_assignments'),
+    path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_git.html', views.Lecturer_manage_git, name='Lecturer_manage_git'),
+    path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_docker.html', views.Lecturer_manage_docker, name='Lecturer_manage_docker'),
+    path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_jenkins.html', views.Lecturer_manage_jenkins, name='Lecturer_manage_jenkins'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection1.html', views.GitSection1, name='GitSection1'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection2.html', views.GitSection2, name='GitSection2'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection3.html', views.GitSection3, name='GitSection3'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
 ]

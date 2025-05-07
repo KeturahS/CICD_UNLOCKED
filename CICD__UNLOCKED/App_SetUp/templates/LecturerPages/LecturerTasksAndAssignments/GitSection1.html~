@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול משפטי Git ו-GitHub</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        td form {
+            display: inline;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button.delete {
+            background-color: #dc3545;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>עדכון תרגיל גרירה והתאמה למשפטי Git ו-GitHub</h1>
+<button onclick="history.back()">⬅️ Back</button>
+        <h2>משפטי Git</h2>
+          <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="new_git_sentence" placeholder="הוסף משפט Git חדש">
+            <button type="submit" name="add_git_sentence">הוסף משפט Git</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>משפט</th>
+                    <th>עדכון</th>
+                    <th>מחיקה</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sentence in Git_sentences %}
+                <tr>
+                    <td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="git_sentence_id" value="{{ sentence.id }}">
+                            <input type="text" name="updated_git_sentence" value="{{ sentence.sentence }}">
+                    <td>
+                            <button type="submit" name="update_git_sentence">עדכן</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="git_sentence_id" value="{{ sentence.id }}">
+                            <button type="submit" name="delete_git_sentence" class="delete">מחק</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>משפטי GitHub</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="new_github_sentence" placeholder="הוסף משפט GitHub חדש">
+            <button type="submit" name="add_github_sentence">הוסף משפט GitHub</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>משפט</th>
+                    <th>עדכון</th>
+                    <th>מחיקה</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sentence in GitHub_sentences %}
+                <tr>
+                    <td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="github_sentence_id" value="{{ sentence.id }}">
+                            <input type="text" name="updated_github_sentence" value="{{ sentence.sentence }}">
+                    <td>
+                            <button type="submit" name="update_github_sentence">עדכן</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="github_sentence_id" value="{{ sentence.id }}">
+                            <button type="submit" name="delete_github_sentence" class="delete">מחק</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+    </div>
+</body>
+</html>
