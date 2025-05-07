@@ -32,6 +32,10 @@ from .models import LearningModuleRating
 
 
 
+from django.shortcuts import render, redirect
+from GitExercises.models import GitSentence, GitHubSentence
+from .forms import GitSentenceForm, GitHubSentenceForm
+
 
 # Create your views here.
 
@@ -39,8 +43,10 @@ from .models import LearningModuleRating
 def index(request):
     return render(request, 'index.html')
 
+
 def terms_view(request):
-    return render(request, 'terms.html')
+    return render(request, 'RegisterAndLogin/terms.html')
+
 
 def register(request):
     msg = None
@@ -52,11 +58,11 @@ def register(request):
 
             if User.objects.filter(email=user.email).exists():
                 msg = 'כתובת הדואר האלקטרוני כבר רשומה במערכת, אנא השתמש/י בכתובת אחרת'
-                return render(request, 'register.html', {'form': form, 'msg': msg})
+                return render(request, 'RegisterAndLogin/register.html', {'form': form, 'msg': msg})
 
             if User.objects.filter(username=user.username).exists():
                 msg = 'שם המשתמש כבר קיים במערכת, אנא בחר/י שם משתמש אחר'
-                return render(request, 'register.html', {'form': form, 'msg': msg})
+                return render(request, 'RegisterAndLogin/register.html', {'form': form, 'msg': msg})
 
             user.is_admin = user.is_student = user.is_lecturer = False
 
@@ -123,7 +129,7 @@ def register(request):
     else:
         form = SignUpForm()
 
-    return render(request, 'register.html', {'form': form, 'msg': msg})
+    return render(request, 'RegisterAndLogin/register.html', {'form': form, 'msg': msg})
 
 
 @csrf_protect
@@ -157,21 +163,21 @@ def login_view(request):
                     if user.is_admin:
                         msg = 'בקשתך להירשם כמנהל טרם אושרה, אנא המתן בסבלנות לתשובת המנהל הבכיר'
 
-                    return render(request, 'login.html')
+                    return render(request, 'RegisterAndLogin/login.html')
             else:
                 msg = 'פרטים לא נכונים '
 
         else:
             msg = 'טופס לא תקין'
-    return render(request, 'login.html', {'form': form, 'msg': msg})
+    return render(request, 'RegisterAndLogin/login.html', {'form': form, 'msg': msg})
 
 
 def lecturer(request):
-    return render(request, 'lecturer.html')
+    return render(request, 'LecturerPages/lecturer.html')
 
 
 def student(request):
-    return render(request, 'student.html')
+    return render(request, 'StudentPages/student.html')
 
 
 @login_required
@@ -185,7 +191,7 @@ def admin(request):
         "admins_requests": admins_requests,
 
     }
-    return render(request, "admin_page.html", context)
+    return render(request, "AdminPages/admin_page.html", context)
 
 
 @login_required
@@ -268,7 +274,7 @@ def manage_admins(request):
     context = {
         "active_admins": active_admins
     }
-    return render(request, "admin_page_admins_section.html", context)
+    return render(request, "AdminPages/admin_page_admins_section.html", context)
 
 
 def manage_lecturers(request):
@@ -277,7 +283,7 @@ def manage_lecturers(request):
     context = {
         "active_lecturers": active_lecturers
     }
-    return render(request, "admin_page_lecturers_section.html", context)
+    return render(request, "AdminPages/admin_page_lecturers_section.html", context)
 
 
 def manage_students(request):
@@ -286,7 +292,7 @@ def manage_students(request):
     context = {
         "active_students": active_students
     }
-    return render(request, "admin_page_students_section.html", context)
+    return render(request, "AdminPages/admin_page_students_section.html", context)
 
 
 def get_superuser_email():
@@ -333,9 +339,10 @@ def upgrade_admin(request):
 
 
 def password_reset(request):
-    return render(request, "password_reset.html")
+    return render(request, "PasswordReset/password_reset.html")
 
-#User = get_user_model()
+
+# User = get_user_model()
 
 def student_extra(request):
     msg = None
@@ -345,12 +352,12 @@ def student_extra(request):
 
         if not institution or not target_completion_date:
             msg = "יש למלא את כל השדות"
-            return render(request, 'student_extra.html', {'msg': msg})
+            return render(request, 'RegisterAndLogin/student_extra.html', {'msg': msg})
 
         username = request.session.get('username')
         if not username:
             msg = "שגיאה בזיהוי המשתמש, נסה להירשם מחדש"
-            return render(request, 'student_extra.html', {'msg': msg})
+            return render(request, 'RegisterAndLogin/student_extra.html', {'msg': msg})
 
         user = User.objects.get(username=username)
 
@@ -363,8 +370,7 @@ def student_extra(request):
 
         return redirect('login_view')
 
-    return render(request, 'student_extra.html')
-
+    return render(request, 'RegisterAndLogin/student_extra.html')
 
 
 @login_required
@@ -380,7 +386,7 @@ def student_profile_view(request):
     except StudentProfile.DoesNotExist:
         profile = None
 
-    return render(request, 'student_profile.html', {'profile': profile})
+    return render(request, 'StudentPages/student_profile.html', {'profile': profile})
 
 
 @login_required
@@ -396,7 +402,7 @@ def lecturer_profile_view(request):
     except LecturerProfile.DoesNotExist:
         profile = None
 
-    return render(request, 'lecturer_profile.html', {'profile': profile})
+    return render(request, 'LecturerPages/lecturer_profile.html', {'profile': profile})
 
 
 @login_required
@@ -415,7 +421,7 @@ def update_student_profile(request):
     else:
         form = StudentProfileUpdateForm(instance=profile, user=user)
 
-    return render(request, 'update_student_profile.html', {'form': form})
+    return render(request, 'StudentPages/update_student_profile.html', {'form': form})
 
 
 @login_required
@@ -441,8 +447,7 @@ def contact_us(request):
 def student_messages_view(request):
     student = request.user
     messages = ContactMessage.objects.filter(student=student).order_by('-created_at')
-    return render(request, 'student_contact_messages.html', {'messages': messages})
-
+    return render(request, 'StudentPages/student_contact_messages.html', {'messages': messages})
 
 
 @login_required
@@ -452,14 +457,25 @@ def learning_home(request):
     return render(request, 'learning_modules/learning_modules_homePage.html')
 
 
-
 @login_required
 def git_module_view(request):
-    return render(request, 'learning_modules/git_module.html')
+    git_sentences = list(GitSentence.objects.all())
+    github_sentences = list(GitHubSentence.objects.all())
+
+    # Combine and shuffle the sentences
+    all_sentences = git_sentences + github_sentences
+    random.shuffle(all_sentences)
+
+    context = {
+        'all_sentences': all_sentences,
+    }
+    return render(request, 'learning_modules/git_module.html', context)
+
 
 @login_required
 def jenkins_module_view(request):
     return render(request, 'learning_modules/jenkins_module.html')
+
 
 @login_required
 def docker_module_view(request):
@@ -468,35 +484,98 @@ def docker_module_view(request):
 
 
 
-def placeholder_view(request):
-    return render(request, 'learning_modules/placeholder.html')
+def manage_tasks_and_check_assignments(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/manage_tasks_and_check_assignments.html')
 
 
+def Lecturer_manage_git(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_git.html')
 
 
-@login_required
-def rate_learning_modules(request):
-    if not request.user.is_student:
-        return redirect('login_view')
+def Lecturer_manage_jenkins(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_jenkins.html')
 
-    all_modules = ['Git', 'Jenkins', 'Docker']
-    existing_ratings = LearningModuleRating.objects.filter(student=request.user)
 
+def Lecturer_manage_docker(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_docker.html')
+
+
+def GitSection1(request):
+    git_sentences = GitSentence.objects.all()
+    github_sentences = GitHubSentence.objects.all()
+
+    git_form = GitSentenceForm()
+    github_form = GitHubSentenceForm()
+
+    context = {
+        'Git_sentences': git_sentences,
+        'GitHub_sentences': github_sentences,
+        'git_form': git_form,
+        'github_form': github_form,
+    }
     if request.method == 'POST':
-        for module in all_modules:
-            rating_value = request.POST.get(f'rating_{module}')
-            if rating_value:
-                LearningModuleRating.objects.update_or_create(
-                    student=request.user,
-                    module_title=module,
-                    defaults={'rating': rating_value}
-                )
-        return render(request, 'learning_modules/thank_you.html')
+        if 'add_git_sentence' in request.POST:
+            new_sentence = request.POST.get('new_git_sentence')
+            if new_sentence:  # Ensure the input is not empty
+                GitSentence.objects.create(sentence=new_sentence)
 
-    return render(request, 'learning_modules/rate_learning_modules.html', {
-        'existing_ratings': existing_ratings,
-        'all_modules': all_modules,
-    })
+        elif 'add_github_sentence' in request.POST:
+            new_sentence = request.POST.get('new_github_sentence')
+            if new_sentence:  # Ensure the input is not empty
+                GitHubSentence.objects.create(sentence=new_sentence)
+
+        elif 'update_git_sentence' in request.POST:
+            sentence_id = request.POST.get('git_sentence_id')
+            new_sentence = request.POST.get('updated_git_sentence')
+            if new_sentence:
+                GitSentence.objects.filter(id=sentence_id).update(sentence=new_sentence)
+
+        elif 'update_github_sentence' in request.POST:
+            sentence_id = request.POST.get('github_sentence_id')
+            new_sentence = request.POST.get('updated_github_sentence')
+            if new_sentence:
+                GitHubSentence.objects.filter(id=sentence_id).update(sentence=new_sentence)
+
+        elif 'delete_git_sentence' in request.POST:
+            sentence_id = request.POST.get('git_sentence_id')
+            GitSentence.objects.filter(id=sentence_id).delete()
+
+        elif 'delete_github_sentence' in request.POST:
+            sentence_id = request.POST.get('github_sentence_id')
+            GitHubSentence.objects.filter(id=sentence_id).delete()
+
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection1.html', context)
+def GitSection2(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection2.html')
+def GitSection3(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection3.html')
+def GitSection4(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection4.html')
+
+#
+# @login_required
+# def rate_learning_modules(request):
+#     if not request.user.is_student:
+#         return redirect('login_view')
+#
+#     all_modules = ['Git', 'Jenkins', 'Docker']
+#     existing_ratings = LearningModuleRating.objects.filter(student=request.user)
+#
+#     if request.method == 'POST':
+#         for module in all_modules:
+#             rating_value = request.POST.get(f'rating_{module}')
+#             if rating_value:
+#                 LearningModuleRating.objects.update_or_create(
+#                     student=request.user,
+#                     module_title=module,
+#                     defaults={'rating': rating_value}
+#                 )
+#         return render(request, 'learning_modules/thank_you.html')
+#
+#     return render(request, 'learning_modules/rate_learning_modules.html', {
+#         'existing_ratings': existing_ratings,
+#         'all_modules': all_modules,
+#     })
 
 
 @login_required
@@ -557,7 +636,8 @@ def view_module_ratings(request):
 
 
 
-@login_required
-def view_module_ratings(request):
-    ratings = LearningModuleRating.objects.all()
-    return render(request, 'view_module_ratings.html', {'ratings': ratings})
+#@login_required
+#def view_module_ratings(request):
+ #   ratings = LearningModuleRating.objects.all()
+  #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
+

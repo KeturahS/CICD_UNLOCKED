@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול תרגילי Git</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+        }
+
+        .grid-container {
+            display: grid;
+            gap: 20px;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .grid-item {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .grid-item a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="grid-item">
+            <a href="{% url 'GitSection1' %}">חלק 1: מה זה Git ו-GitHub ולמה זה חשוב?</a>
+        </div>
+        <div class="grid-item">
+            <a href="{% url 'GitSection2' %}"> חלק 2: פקודות Git בסיסיות</a>
+        </div>
+        <div class="grid-item">
+            <a href="{% url 'GitSection3' %}">חלק 3: עבודה עם ענפים (Branches)</a>
+        </div>
+        <div class="grid-item">
+            <a href="{% url 'GitSection4' %}">חלק 4: פקודות מתקדמות ב-Git</a>
+        </div>
+    </div>
+</body>
+</html>

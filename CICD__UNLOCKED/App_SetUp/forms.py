@@ -6,6 +6,8 @@ from .models import StudentProfile
 from .models import ContactMessage
 from django.core.exceptions import ValidationError
 from datetime import date
+from GitExercises.models import GitHubSentence, GitSentence
+
 
 
 class LoginForm(forms.Form):
@@ -151,3 +153,13 @@ class ContactMessageForm(forms.ModelForm):
         }
 
 
+
+class GitSentenceForm(forms.ModelForm):
+    class Meta:
+        model = GitSentence
+        fields = ['sentence']
+
+class GitHubSentenceForm(forms.ModelForm):
+    class Meta:
+        model = GitHubSentence
+        fields = ['sentence']

@@ -25,36 +25,28 @@
 
   {% elif request.GET.step == '1' %}
     {% include 'learning_modules/git/section1.html' %}
-  {% elif request.GET.step == '1q' %}
-    <div style="text-align:center;">
-      <h3>שאלות על נושא 1</h3>
-      <p>🔧 שאלות יופיעו כאן (Placeholder)</p>
-      <a href="?step=2" class="btn-next">➡ המשך לסרטון הבא</a>
-    </div>
+
+{% elif request.GET.step == '1q' %}
+  {% include 'GitExercises/section1_questions.html' with all_sentences=all_sentences %}
+
   {% elif request.GET.step == '2' %}
     {% include 'learning_modules/git/section2.html' %}
+
   {% elif request.GET.step == '2q' %}
-    <div style="text-align:center;">
-      <h3>שאלות על נושא 2</h3>
-      <p>🔧 שאלות יופיעו כאן (Placeholder)</p>
-      <a href="?step=3" class="btn-next">➡ המשך לסרטון הבא</a>
-    </div>
+    {% include 'GitExercises/section2_questions.html' %}
+
   {% elif request.GET.step == '3' %}
     {% include 'learning_modules/git/section3.html' %}
+
   {% elif request.GET.step == '3q' %}
-    <div style="text-align:center;">
-      <h3>שאלות על נושא 3</h3>
-      <p>🔧 שאלות יופיעו כאן (Placeholder)</p>
-      <a href="?step=4" class="btn-next">➡ המשך לסרטון הבא</a>
-    </div>
+    {% include 'GitExercises/section3_questions.html' %}
+
   {% elif request.GET.step == '4' %}
     {% include 'learning_modules/git/section4.html' %}
+
   {% elif request.GET.step == '4q' %}
-    <div style="text-align:center;">
-      <h3>שאלות על נושא 4</h3>
-      <p>🔧 שאלות יופיעו כאן (Placeholder)</p>
-      <p>🎉 סיימת את הלומדה! כל הכבוד!</p>
-    </div>
+    {% include 'GitExercises/section4_questions.html' %}
+
   {% endif %}
 </div>
 {% endblock %}
