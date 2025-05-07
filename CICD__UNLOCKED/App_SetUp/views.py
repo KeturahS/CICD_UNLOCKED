@@ -33,7 +33,7 @@ def index(request):
 
 
 def terms_view(request):
-    return render(request, 'terms.html')
+    return render(request, 'RegisterAndLogin/terms.html')
 
 
 def register(request):
@@ -46,11 +46,11 @@ def register(request):
 
             if User.objects.filter(email=user.email).exists():
                 msg = 'כתובת הדואר האלקטרוני כבר רשומה במערכת, אנא השתמש/י בכתובת אחרת'
-                return render(request, 'register.html', {'form': form, 'msg': msg})
+                return render(request, 'RegisterAndLogin/register.html', {'form': form, 'msg': msg})
 
             if User.objects.filter(username=user.username).exists():
                 msg = 'שם המשתמש כבר קיים במערכת, אנא בחר/י שם משתמש אחר'
-                return render(request, 'register.html', {'form': form, 'msg': msg})
+                return render(request, 'RegisterAndLogin/register.html', {'form': form, 'msg': msg})
 
             user.is_admin = user.is_student = user.is_lecturer = False
 
@@ -151,7 +151,7 @@ def login_view(request):
                     if user.is_admin:
                         msg = 'בקשתך להירשם כמנהל טרם אושרה, אנא המתן בסבלנות לתשובת המנהל הבכיר'
 
-                    return render(request, 'login.html')
+                    return render(request, 'RegisterAndLogin/login.html')
             else:
                 msg = 'פרטים לא נכונים '
 

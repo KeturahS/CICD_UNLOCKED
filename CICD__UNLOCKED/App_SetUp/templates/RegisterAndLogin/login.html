@@ -85,6 +85,10 @@
             <form method="post" autocomplete="off" novalidate>
                 {% csrf_token %}
 
+                <!-- שדות פיקטיביים נגד מילוי אוטומטי -->
+                <input type="text" name="fake_username" autocomplete="username" style="display: none;">
+                <input type="password" name="fake_password" autocomplete="new-password" style="display: none;">
+
                 <div class="mb-3">
                     <label for="username" class="form-label">שם משתמש</label>
                     {{ form.username }}

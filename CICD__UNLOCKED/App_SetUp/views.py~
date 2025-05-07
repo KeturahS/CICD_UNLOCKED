@@ -447,9 +447,15 @@ def learning_home(request):
 
 @login_required
 def git_module_view(request):
+    git_sentences = list(GitSentence.objects.all())
+    github_sentences = list(GitHubSentence.objects.all())
+
+    # Combine and shuffle the sentences
+    all_sentences = git_sentences + github_sentences
+    random.shuffle(all_sentences)
+
     context = {
-        'git_sentences': GitSentence.objects.all(),
-        'github_sentences': GitHubSentence.objects.all(),
+        'all_sentences': all_sentences,
     }
     return render(request, 'learning_modules/git_module.html', context)
 

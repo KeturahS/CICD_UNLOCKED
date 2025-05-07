@@ -77,7 +77,7 @@
     <h3>🗃️ מחסן</h3>
      {% for phrase in all_sentences %}
     <div class="item" draggable="true" ondragstart="drag(event)" id="item-{{ phrase.type|lower }}-{{ forloop.counter }}">
-      {{ phrase.sentence}} {{ phrase.type }}
+      {{ phrase.sentence}} 
     </div>
   {% endfor %}
   </div>
@@ -110,9 +110,9 @@
   ];
 
   allSentences.forEach(sentence => {
-    if (sentence.type === "Git") {
+    if (sentence.type === "git") {
       correctAnswers.git.push(sentence.id);
-    } else if (sentence.type === "GitHub") {
+    } else if (sentence.type === "github") {
       correctAnswers.github.push(sentence.id);
     }
   });
