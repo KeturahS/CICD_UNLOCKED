@@ -19,6 +19,18 @@ from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
 from .models import ContactMessage
+from .models import LearningModuleRating
+from .models import LearningModuleRating
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render
+from .models import LearningModuleRating
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import LearningModuleRating
+
+
+
 
 from django.shortcuts import render, redirect
 from GitExercises.models import GitSentence, GitHubSentence
@@ -470,8 +482,6 @@ def docker_module_view(request):
     return render(request, 'learning_modules/docker_module.html')
 
 
-def placeholder_view(request):
-    return render(request, 'learning_modules/section1_questions.html')
 
 
 def manage_tasks_and_check_assignments(request):
@@ -541,3 +551,93 @@ def GitSection3(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection3.html')
 def GitSection4(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection4.html')
+
+#
+# @login_required
+# def rate_learning_modules(request):
+#     if not request.user.is_student:
+#         return redirect('login_view')
+#
+#     all_modules = ['Git', 'Jenkins', 'Docker']
+#     existing_ratings = LearningModuleRating.objects.filter(student=request.user)
+#
+#     if request.method == 'POST':
+#         for module in all_modules:
+#             rating_value = request.POST.get(f'rating_{module}')
+#             if rating_value:
+#                 LearningModuleRating.objects.update_or_create(
+#                     student=request.user,
+#                     module_title=module,
+#                     defaults={'rating': rating_value}
+#                 )
+#         return render(request, 'learning_modules/thank_you.html')
+#
+#     return render(request, 'learning_modules/rate_learning_modules.html', {
+#         'existing_ratings': existing_ratings,
+#         'all_modules': all_modules,
+#     })
+
+
+@login_required
+def rate_learning_modules(request):
+    if not request.user.is_student:
+        return redirect('login_view')
+
+    if request.method == 'POST':
+        git_rating = request.POST.get('git_rating')
+        git_comment = request.POST.get('git_comment')
+
+        jenkins_rating = request.POST.get('jenkins_rating')
+        jenkins_comment = request.POST.get('jenkins_comment')
+
+        docker_rating = request.POST.get('docker_rating')
+        docker_comment = request.POST.get('docker_comment')
+
+        # יצירת מופעים רק אם המשתמש דירג משהו בפועל
+        if git_rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Git',
+                rating=int(git_rating),
+                comment=git_comment,
+                submitted_at=timezone.now()
+            )
+
+        if jenkins_rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Jenkins',
+                rating=int(jenkins_rating),
+                comment=jenkins_comment,
+                submitted_at=timezone.now()
+            )
+
+        if docker_rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Docker',
+                rating=int(docker_rating),
+                comment=docker_comment,
+                submitted_at=timezone.now()
+            )
+
+        return render(request, 'thank_you.html')  # עמוד תודה פשוט
+
+    return render(request, 'learning_modules/rate_learning_modules.html')
+
+def is_lecturer(user):
+    return user.is_authenticated and hasattr(user, 'lecturer_profile')
+
+@login_required
+@user_passes_test(is_lecturer)
+def view_module_ratings(request):
+    ratings = LearningModuleRating.objects.select_related('student').all().order_by('-submitted_at')
+    return render(request, 'view_module_ratings.html', {'ratings': ratings})
+
+
+
+#@login_required
+#def view_module_ratings(request):
+ #   ratings = LearningModuleRating.objects.all()
+  #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
+

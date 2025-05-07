@@ -1,7 +1,10 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
+
+
 from . import views
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -45,4 +48,7 @@ urlpatterns = [
     path('LecturerPages/LecturerTasksAndAssignments/GitSection2.html', views.GitSection2, name='GitSection2'),
     path('LecturerPages/LecturerTasksAndAssignments/GitSection3.html', views.GitSection3, name='GitSection3'),
     path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
+    path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
+    path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
+
 ]
