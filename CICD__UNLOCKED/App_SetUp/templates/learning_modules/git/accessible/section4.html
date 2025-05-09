@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>4. פקודות מתקדמות ב-Git</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #fff;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: #2c2c2c;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      padding: 30px;
+    }
+
+    .question {
+      display: none;
+      margin-top: 20px;
+      background-color: #3a3a3a;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: right;
+    }
+
+    .question p {
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+
+    input[type="radio"] {
+      margin-left: 10px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .resume-btn {
+      display: none;
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #00cc88;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-next {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007acc;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" role="main">
+  <h2 id="section4-title" tabindex="0">4. פקודות מתקדמות ב-Git</h2>
+  <p tabindex="0">כאן תלמד על פקודות מתקדמות כמו <code>git diff</code> ו־<code>.gitignore</code> – כלים חשובים להתנהלות חכמה מול קוד במאגרים.</p>
+
+  <div id="player4" aria-label="נגן וידאו של פקודות מתקדמות בגיט" role="region"></div>
+
+  <!-- שאלה ראשונה -->
+  <div id="question1" class="question" role="group" aria-labelledby="q1-label">
+    <p id="q1-label" tabindex="0">מה עושה הפקודה <code>git diff</code>?</p>
+    <label><input type="radio" name="q1" value="a"> מאחדת בין סניפים</label>
+    <label><input type="radio" name="q1" value="b"> מציגה הבדל בין שינויים שטרם נשמרו</label>
+    <label><input type="radio" name="q1" value="c"> שומרת שינויים עם תגית</label>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
+    <div id="feedback1" class="feedback" aria-live="polite"></div>
+    <button id="resume1" class="resume-btn" onclick="resumeVideo('question1', 'feedback1', 'resume1')">המשך צפייה</button>
+  </div>
+
+  <!-- שאלה שנייה -->
+  <div id="question2" class="question" role="group" aria-labelledby="q2-label">
+    <p id="q2-label" tabindex="0">מה המטרה של קובץ <code>.gitignore</code>?</p>
+    <label><input type="radio" name="q2" value="a"> למחוק את כל הקבצים</label>
+    <label><input type="radio" name="q2" value="b"> לשמור שינויים אוטומטית</label>
+    <label><input type="radio" name="q2" value="c"> להחריג קבצים מסוימים ממעקב Git</label>
+    <button onclick="checkAnswer('q2', 'c', 'feedback2')">בדוק תשובה</button>
+    <div id="feedback2" class="feedback" aria-live="polite"></div>
+    <button id="resume2" class="resume-btn" onclick="resumeVideo('question2', 'feedback2', 'resume2')">המשך צפייה</button>
+  </div>
+
+  <div style="text-align: center;">
+    <a href="?step=4q" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</div>
+
+<!-- YouTube API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player4;
+  let question1Shown = false;
+  let question2Shown = false;
+  let interval = null;
+
+  function onYouTubeIframeAPIReady() {
+    player4 = new YT.Player('player4', {
+      height: '360',
+      width: '640',
+      videoId: 'aiPAryg4nHA',
+      events: { 'onStateChange': onPlayerStateChange }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player4.getCurrentTime());
+
+        if (time >= 125 && !question1Shown) {
+          exitFullscreen();
+          player4.pauseVideo();
+          document.getElementById('question1').style.display = 'block';
+          question1Shown = true;
+        }
+
+        if (time >= 260 && !question2Shown) {
+          exitFullscreen();
+          player4.pauseVideo();
+          document.getElementById('question2').style.display = 'block';
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const selected = Array.from(document.getElementsByName(qName)).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:lightgreen'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:#ff5555'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player4.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "git diff מציג את ההבדלים בין גרסאות או שינויים שלא נשמרו.";
+      case 'q2': return ".gitignore מונע מעקב אחרי קבצים שלא נרצה לכלול ב־Git (למשל קבצי קונפיג או זמניים).";
+      default: return "";
+    }
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player4')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>
+
+</body>
+</html>
