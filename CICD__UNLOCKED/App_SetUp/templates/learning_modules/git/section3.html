@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>ענפים וקונפליקטים ב-Git</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    #player3 {
+      margin: auto;
+    }
+
+    .question-box {
+      display: none;
+      margin-top: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin-inline: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-next {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<h2>3. עבודה עם ענפים וטיפול בקונפליקטים</h2>
+<p>בסרטון הבא תלמד כיצד ליצור ולשלב ענפים (branches), ולפתור קונפליקטים בעת מיזוג.</p>
+
+<div id="player3"></div>
+
+<!-- שאלה 1 -->
+<div id="question1" class="question-box">
+  <p>מה עושה הפקודה <code>git branch</code>?</p>
+  <input type="radio" name="q1" value="a"> יוצרת עותק של מאגר<br>
+  <input type="radio" name="q1" value="b"> יוצרת או מציגה ענפים<br>
+  <input type="radio" name="q1" value="c"> משווה בין קבצים<br><br>
+  <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
+  <div id="feedback1"></div>
+  <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none">המשך צפייה</button>
+</div>
+
+<!-- שאלה 2 -->
+<div id="question2" class="question-box">
+  <p>מה קורה כשיש קונפליקט ב-merge?</p>
+  <input type="radio" name="q2" value="a"> המיזוג מתבצע אוטומטית<br>
+  <input type="radio" name="q2" value="b"> יש להחליט ידנית איזו גרסה תישמר<br>
+  <input type="radio" name="q2" value="c"> הענף נמחק<br><br>
+  <button onclick="checkAnswer('q2', 'b', 'feedback2')">בדוק תשובה</button>
+  <div id="feedback2"></div>
+  <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none">המשך צפייה</button>
+</div>
+
+<div style="margin-top: 30px; text-align: center;">
+  <a href="?step=3q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player3;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function onYouTubeIframeAPIReady() {
+    player3 = new YT.Player('player3', {
+      height: '360',
+      width: '640',
+      videoId: 'yOxNONblkb0',
+      events: { 'onStateChange': onPlayerStateChange }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING) {
+      const interval = setInterval(() => {
+        const time = Math.floor(player3.getCurrentTime());
+
+        if (time >= 120 && !question1Shown) {
+          exitFullscreen();
+          player3.pauseVideo();
+          document.getElementById('question1').style.display = 'block';
+          question1Shown = true;
+        }
+
+        if (time >= 540 && !question2Shown) {
+          exitFullscreen();
+          player3.pauseVideo();
+          document.getElementById('question2').style.display = 'block';
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+  }
+
+  function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const selected = Array.from(document.getElementsByName(qName)).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:green'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:red'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player3.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "הפקודה git branch משמשת ליצירת או הצגת ענפים.";
+      case 'q2': return "במקרה של קונפליקט, המפתח צריך להכריע ידנית איזו גרסה נשמרת.";
+      default: return "";
+    }
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player3')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>
+
+</body>
+</html>

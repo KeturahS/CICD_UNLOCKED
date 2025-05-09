@@ -75,11 +75,11 @@
 <div class="container">
   <div class="zone" id="warehouse" ondrop="drop(event)" ondragover="allowDrop(event)">
     <h3>🗃️ מחסן</h3>
-     {% for phrase in all_sentences %}
-    <div class="item" draggable="true" ondragstart="drag(event)" id="item-{{ phrase.type|lower }}-{{ forloop.counter }}">
-      {{ phrase.sentence}}
-    </div>
-  {% endfor %}
+    {% for phrase in all_sentences %}
+      <div class="item" draggable="true" ondragstart="drag(event)" id="item-{{ phrase.type|lower }}-{{ forloop.counter }}">
+        {{ phrase.sentence }}
+      </div>
+    {% endfor %}
   </div>
 
   <div class="zone" id="git" ondrop="drop(event)" ondragover="allowDrop(event)">
@@ -94,15 +94,12 @@
 <button onclick="checkAnswers()">בדוק תשובות</button>
 <div id="result"></div>
 
-
+<!-- כפתור מעבר לאחר תשובה נכונה -->
+<button id="next-section-btn" onclick="location.href='?step=2'" style="display: none;">⬅ עבור ללמידה הבאה</button>
 
 <script>
-  const correctAnswers = {
-    git: [],
-    github: []
-  };
+  const correctAnswers = { git: [], github: [] };
 
-  // Dynamically populate correctAnswers based on the items in all_sentences
   const allSentences = [
     {% for phrase in all_sentences %}
       { id: "item-{{ phrase.type|lower }}-{{ forloop.counter }}", type: "{{ phrase.type|lower }}" },
@@ -116,7 +113,6 @@
       correctAnswers.github.push(sentence.id);
     }
   });
-
 
   function allowDrop(ev) {
     ev.preventDefault();
@@ -147,12 +143,16 @@
     const githubCorrect = arraysEqual(githubItems.sort(), correctAnswers.github.sort());
 
     const result = document.getElementById("result");
+    const nextBtn = document.getElementById("next-section-btn");
+
     if (gitCorrect && githubCorrect) {
       result.textContent = "כל הכבוד! כל התשובות נכונות ✅";
       result.style.color = "green";
+      nextBtn.style.display = "inline-block";
     } else {
       result.textContent = "יש טעויות, נסה שוב ❌";
       result.style.color = "red";
+      nextBtn.style.display = "none";
     }
   }
 
