@@ -1,0 +1,153 @@
+<section id="section1" aria-labelledby="section1-title"
+         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+
+  <h2 id="section1-title" tabindex="0">1. מה זה Git ו-GitHub ולמה זה חשוב?</h2>
+  <p tabindex="0" style="font-size: 1.1em;">
+    Git היא מערכת לניהול גרסאות שמאפשרת למפתחים לעקוב אחרי שינויים בקוד, לעבוד בצורה שיתופית, ולחזור אחורה לגרסאות קודמות במקרה של טעות.
+    GitHub היא פלטפורמה מקוונת שמבוססת על Git ומאפשרת שיתוף פעולה בין מפתחים מכל העולם.
+  </p>
+
+  <div id="player" role="region" aria-label="נגן וידאו - הסבר על Git" tabindex="0"></div>
+
+  <!-- שאלה 1 -->
+  <div id="question1" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
+    <p id="q1-label" tabindex="0"><strong>מה Git שומר בפועל?</strong></p>
+    <div role="radiogroup" aria-labelledby="q1-label">
+      <label><input type="radio" name="q1" value="a"> רק את הקוד הנוכחי</label><br>
+      <label><input type="radio" name="q1" value="b"> היסטוריית שינויים וגרסאות</label><br>
+      <label><input type="radio" name="q1" value="c"> רק את הקוד של אחרים</label><br>
+    </div><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" aria-label="בדוק תשובה לשאלה הראשונה">בדוק תשובה</button>
+    <div id="feedback1" aria-live="assertive" class="feedback" style="display:none;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+  </div>
+
+  <!-- שאלה 2 -->
+  <div id="question2" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q2-label">
+    <p id="q2-label" tabindex="0"><strong>מה GitHub מוסיפה ל-Git?</strong></p>
+    <div role="radiogroup" aria-labelledby="q2-label">
+      <label><input type="radio" name="q2" value="a"> ממשק גרפי וניהול שיתופי</label><br>
+      <label><input type="radio" name="q2" value="b"> שפת תכנות</label><br>
+      <label><input type="radio" name="q2" value="c"> מערכת הפעלה</label><br>
+    </div><br>
+    <button onclick="checkAnswer('q2', 'a', 'feedback2')" aria-label="בדוק תשובה לשאלה השנייה">בדוק תשובה</button>
+    <div id="feedback2" aria-live="assertive" class="feedback" style="display:none;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+  </div>
+
+  <!-- כפתור מעבר -->
+  <div style="margin-top: 30px; text-align: left;">
+    <a href="?step=1q{% if request.GET.accessible %}&accessible=1{% endif %}"
+       class="btn-next"
+       style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;"
+       role="button"
+       aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</section>
+
+<!-- סקריפט YouTube -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player;
+  let interval = null;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: 'VtjoExU11d4',
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
+
+        if (time >= 90 && !question1Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          showQuestion('question1');
+          question1Shown = true;
+        }
+
+        if (time >= 240 && !question2Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          showQuestion('question2');
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function showQuestion(id) {
+    const q = document.getElementById(id);
+    q.style.display = 'block';
+    q.setAttribute('tabindex', '-1');
+    q.focus(); // נגישות: העברת פוקוס לשאלה באופן אוטומטי
+  }
+
+  function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const radios = document.getElementsByName(qName);
+    const selected = Array.from(radios).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:lightgreen'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:#ff5555'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "Git שומר את כל היסטוריית השינויים של קוד הפרויקט.";
+      case 'q2': return "GitHub מוסיפה ממשק גרפי, אפשרות לשיתוף ושיתוף פעולה בין מפתחים.";
+      default: return "";
+    }
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>

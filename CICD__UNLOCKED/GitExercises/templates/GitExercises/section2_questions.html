@@ -6,9 +6,10 @@
 </head>
 <body>
 
-    <button onclick="location.href='?step=3'" style="padding: 10px 20px; font-size: 16px;">
-        עבור ל-Section 3
-    </button>
+  <button onclick="location.href='?step=3{% if request.GET.accessible %}&accessible=1{% endif %}'">
+  ➡ המשך ל־Section 3
+</button>
+
 
 </body>
 </html>

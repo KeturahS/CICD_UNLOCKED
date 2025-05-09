@@ -1,7 +1,8 @@
 <body>
   <div style="text-align: center; margin-top: 50px;">
-    <a href="?step=4" class="btn-next" style="padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; border-radius: 8px; font-size: 16px;">
-      🎬 עבור ל־Section 4
-    </a>
+ <button onclick="location.href='?step=4{% if request.GET.accessible %}&accessible=1{% endif %}'">
+  ➡ המשך ל־Section 4
+</button>
+
   </div>
 </body>
