@@ -26,7 +26,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running pytest tests...'
-                sh 'pytest --ds=CICD__UNLOCKED.settings --junit-xml=test-reports/results.xml'
+                sh '~/.local/bin/pytest --ds=CICD__UNLOCKED.settings --junit-xml=test-reports/results.xml'
             }
             post {
                 always {
@@ -34,5 +34,6 @@ pipeline {
                 }
             }
         }
+
     }
 }
