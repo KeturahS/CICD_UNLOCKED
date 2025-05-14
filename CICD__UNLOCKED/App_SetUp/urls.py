@@ -1,5 +1,10 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.urls import path
+from .views import send_private_message
+from .views import view_my_messages
+
+
 
 
 
@@ -50,5 +55,8 @@ urlpatterns = [
     path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
     path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
     path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
+
+    path('lecturer/send-message/', send_private_message, name='send_private_message'),
+    path('student/my-messages/', view_my_messages, name='view_my_messages'),
 
 ]

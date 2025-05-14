@@ -29,6 +29,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import LearningModuleRating
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect
+from .forms import PrivateMessageForm
+
+from .models import PrivateMessage
+from django.contrib.auth.decorators import login_required
+
+
+
 
 
 
@@ -641,3 +650,27 @@ def view_module_ratings(request):
  #   ratings = LearningModuleRating.objects.all()
   #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
 
+
+def is_lecturer(user):
+    return user.is_authenticated and user.is_lecturer
+
+
+@login_required
+@user_passes_test(is_lecturer)
+def send_private_message(request):
+    if request.method == 'POST':
+        form = PrivateMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return render(request, 'messages/success.html', {'student_name': message.recipient.get_full_name()})
+    else:
+        form = PrivateMessageForm()
+
+    return render(request, 'messages/send_message.html', {'form': form})
+
+@login_required
+def view_my_messages(request):
+    messages = PrivateMessage.objects.filter(recipient=request.user).order_by('-created_at')
+    return render(request, 'messages/view_messages.html', {'messages': messages})

@@ -7,6 +7,15 @@ from .models import ContactMessage
 from django.core.exceptions import ValidationError
 from datetime import date
 from GitExercises.models import GitHubSentence, GitSentence
+from django import forms
+from .models import PrivateMessage
+from django.contrib.auth import get_user_model
+
+from django import forms
+from .models import PrivateMessage
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 
@@ -163,3 +172,31 @@ class GitHubSentenceForm(forms.ModelForm):
     class Meta:
         model = GitHubSentence
         fields = ['sentence']
+
+
+
+
+
+
+
+
+User = get_user_model()
+
+class PrivateMessageForm(forms.ModelForm):
+    class Meta:
+        model = PrivateMessage
+        fields = ['recipient', 'subject', 'message']
+        widgets = {
+            'recipient': forms.Select(attrs={'class': 'form-control'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'recipient': 'בחר סטודנט',
+            'subject': 'נושא ההודעה',
+            'message': 'תוכן ההודעה',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['recipient'].queryset = User.objects.filter(is_student=True)
