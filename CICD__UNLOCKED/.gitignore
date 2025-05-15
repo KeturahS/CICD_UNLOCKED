@@ -1,2 +1,3 @@
 __pycache__/
 *.pyc
+CICD__UNLOCKED/db.sqlite3
