@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.db import models
+from django.conf import settings
 
 # מודל משתמש מותאם אישית
 class User(AbstractUser):
@@ -66,3 +68,23 @@ class LearningModuleRating(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.module_name} ({self.rating}★)"
+
+
+
+class PrivateMessage(models.Model):
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='sent_messages'
+    )
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='received_messages'
+    )
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"מאת {self.sender.username} אל {self.recipient.username}: {self.subject}"

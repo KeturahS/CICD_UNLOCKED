@@ -4,6 +4,7 @@
 
 {% block content %}
 <div style="max-width: 900px; margin: auto; padding: 30px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+
   {% if not request.GET.step %}
     <h1 style="text-align: center;">🚀 לומדת Git אינטראקטיבית</h1>
     <p style="text-align: center; font-size: 1.1em;">
@@ -20,29 +21,53 @@
     </ol>
 
     <div style="text-align: center; margin-top: 40px;">
-      <a href="?step=1" class="btn-next">🎬 התחל את הלמידה</a>
+      <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}" class="btn-next">🎬 התחל את הלמידה</a>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      {% if not request.GET.accessible %}
+        <a href="?accessible=1" class="btn-next" style="background-color: #444;">🔓 הפעל מצב נגישות</a>
+      {% else %}
+        <a href="?" class="btn-next" style="background-color: #888;">🔒 מצב רגיל</a>
+      {% endif %}
     </div>
 
   {% elif request.GET.step == '1' %}
-    {% include 'learning_modules/git/section1.html' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/git/accessible/section1.html' %}
+    {% else %}
+      {% include 'learning_modules/git/section1.html' %}
+    {% endif %}
 
-{% elif request.GET.step == '1q' %}
-  {% include 'GitExercises/section1_questions.html' with all_sentences=all_sentences %}
+  {% elif request.GET.step == '1q' %}
+    {% include 'GitExercises/section1_questions.html' with all_sentences=all_sentences %}
 
   {% elif request.GET.step == '2' %}
-    {% include 'learning_modules/git/section2.html' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/git/accessible/section2.html' %}
+    {% else %}
+      {% include 'learning_modules/git/section2.html' %}
+    {% endif %}
 
   {% elif request.GET.step == '2q' %}
     {% include 'GitExercises/section2_questions.html' %}
 
   {% elif request.GET.step == '3' %}
-    {% include 'learning_modules/git/section3.html' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/git/accessible/section3.html' %}
+    {% else %}
+      {% include 'learning_modules/git/section3.html' %}
+    {% endif %}
 
   {% elif request.GET.step == '3q' %}
     {% include 'GitExercises/section3_questions.html' %}
 
   {% elif request.GET.step == '4' %}
-    {% include 'learning_modules/git/section4.html' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/git/accessible/section4.html' %}
+    {% else %}
+      {% include 'learning_modules/git/section4.html' %}
+    {% endif %}
 
   {% elif request.GET.step == '4q' %}
     {% include 'GitExercises/section4_questions.html' %}

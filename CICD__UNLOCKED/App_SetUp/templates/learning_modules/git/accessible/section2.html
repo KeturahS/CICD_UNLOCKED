@@ -1,0 +1,131 @@
+<section id="section2" aria-labelledby="section2-title" style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+  <h2 id="section2-title" tabindex="0">2. פקודות בסיסיות ב-Git</h2>
+  <p tabindex="0" style="font-size: 1.1em;">
+    כאן תכיר את הפקודות הבסיסיות ביותר בשימוש יומיומי ב-Git כמו <code>init</code>, <code>add</code>, <code>commit</code> ו-<code>status</code>.
+  </p>
+
+  <div id="player2" role="region" aria-label="נגן וידאו - פקודות בסיסיות ב-Git"></div>
+
+  <!-- שאלה 1 -->
+  <div id="question1" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
+    <p id="q1-label" tabindex="0">מה עושה הפקודה <code>git init</code>?</p>
+    <label><input type="radio" name="q1" value="a"> יוצרת עותק מרוחק של הפרויקט</label><br>
+    <label><input type="radio" name="q1" value="b"> יוצרת מאגר Git חדש בתיקייה</label><br>
+    <label><input type="radio" name="q1" value="c"> בודקת סטטוס הקבצים</label><br><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" aria-label="בדוק תשובה לשאלה על git init">בדוק תשובה</button>
+    <div id="feedback1" style="display:none;" aria-live="polite"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;">המשך צפייה</button>
+  </div>
+
+  <!-- שאלה 2 -->
+  <div id="question2" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q2-label">
+    <p id="q2-label" tabindex="0">מתי משתמשים בפקודה <code>git add</code>?</p>
+    <label><input type="radio" name="q2" value="a"> לאחר יצירת מאגר</label><br>
+    <label><input type="radio" name="q2" value="b"> כדי לשמור שינויים על הקוד</label><br>
+    <label><input type="radio" name="q2" value="c"> כדי להכין קבצים לקומיט</label><br><br>
+    <button onclick="checkAnswer('q2', 'c', 'feedback2')" aria-label="בדוק תשובה לשאלה על git add">בדוק תשובה</button>
+    <div id="feedback2" style="display:none;" aria-live="polite"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;">המשך צפייה</button>
+  </div>
+
+  <div style="margin-top: 30px; text-align: left;">
+    <a href="?step=2q" class="btn-next" style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;" role="button" aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</section>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+  let player2;
+  let interval = null;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function onYouTubeIframeAPIReady() {
+    player2 = new YT.Player('player2', {
+      height: '360',
+      width: '640',
+      videoId: 'ZXRtnwZ2RiQ',
+      events: { 'onStateChange': onPlayerStateChange }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player2.getCurrentTime());
+
+        if (time >= 255 && !question1Shown) {
+          exitFullscreenIfNeeded();
+          player2.pauseVideo();
+          document.getElementById('question1').style.display = 'block';
+          question1Shown = true;
+        }
+
+        if (time >= 780 && !question2Shown) {
+          exitFullscreenIfNeeded();
+          player2.pauseVideo();
+          document.getElementById('question2').style.display = 'block';
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function exitFullscreenIfNeeded() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const selected = Array.from(document.getElementsByName(qName)).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:lightgreen'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:#ff5555'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player2.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "הפקודה git init יוצרת מאגר גרסאות חדש בתיקייה המקומית.";
+      case 'q2': return "git add מוסיפה קבצים ל־staging area לפני שמבצעים commit.";
+      default: return "";
+    }
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player2')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>

@@ -94,8 +94,8 @@
 <button onclick="checkAnswers()">בדוק תשובות</button>
 <div id="result"></div>
 
-<!-- כפתור מעבר לאחר תשובה נכונה -->
-<button id="next-section-btn" onclick="location.href='?step=2'" style="display: none;">⬅ עבור ללמידה הבאה</button>
+<!-- כפתור מעבר דינמי -->
+<button id="next-section-btn" onclick="goToNext()" style="display: none;">⬅ עבור ללמידה הבאה</button>
 
 <script>
   const correctAnswers = { git: [], github: [] };
@@ -158,6 +158,12 @@
 
   function arraysEqual(a, b) {
     return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  function goToNext() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextStep = "?step=2" + (urlParams.has("accessible") ? "&accessible=1" : "");
+    location.href = nextStep;
   }
 </script>
 
