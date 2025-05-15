@@ -18,7 +18,7 @@ from django.shortcuts import render
 from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
-from .models import ContactMessage
+from .models import ContactMessage,Podcast
 from .models import LearningVideo
 from .models import LearningModuleRating
 from .models import LearningModuleRating
@@ -485,7 +485,7 @@ def learning_home(request):
 def git_module_view(request):
     git_sentences = list(GitSentence.objects.all())
     github_sentences = list(GitHubSentence.objects.all())
-
+    podcasts = []
     # שילוב לתרגול
     all_sentences = git_sentences + github_sentences
     random.shuffle(all_sentences)
@@ -495,10 +495,13 @@ def git_module_view(request):
     video = None
     if step in ['1', '2', '3', '4']:
         video = LearningVideo.objects.filter(module='Git', order=int(step)).first()
+        podcasts = Podcast.objects.filter(module='Git', order=int(step))  # 🟢
+
 
     context = {
         'all_sentences': all_sentences,
-        'video': video
+        'video': video,
+        'podcasts': podcasts
     }
 
     return render(request, 'learning_modules/git_module.html', context)

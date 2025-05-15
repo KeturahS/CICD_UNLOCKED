@@ -121,6 +121,7 @@ class Podcast(models.Model):
     audio_file = models.FileField(upload_to='podcasts/')  # נשמור את הקובץ בתיקיית media/podcasts/
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} ({self.module})"

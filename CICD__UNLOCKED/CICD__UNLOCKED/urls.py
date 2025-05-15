@@ -17,9 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('App_SetUp.urls')),        # ✅ כל הכתובות יתחילו מ־/
     path('exercises/', include('GitExercises.urls')),  # 🧩 שמור את זה כמו שהוא אם יש לך שאלות בגיט
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
