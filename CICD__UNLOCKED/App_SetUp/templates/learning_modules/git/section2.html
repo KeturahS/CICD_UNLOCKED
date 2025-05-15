@@ -1,10 +1,10 @@
 <section id="section2" style="padding: 30px; max-width: 900px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
-  <h2>2. פקודות בסיסיות ב-Git</h2>
+  <h2>{{ video.title }}</h2>
   <p style="font-size: 1.1em;">
-    כאן תכיר את הפקודות הבסיסיות ביותר בשימוש יומיומי ב-Git כמו <code>init</code>, <code>add</code>, <code>commit</code> ו-<code>status</code>.
+    {{ video.description }}
   </p>
 
-  <div id="player2"></div>
+  <div id="player"></div>
 
   <!-- שאלה ראשונה -->
   <div id="question1" style="display:none; margin-top: 20px;">
@@ -33,61 +33,62 @@
   </div>
 </section>
 
-<!-- יוטיוב API -->
+<!-- סקריפט YouTube -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-  let player2;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
+  let interval = null;
   let question1Shown = false;
   let question2Shown = false;
 
   function onYouTubeIframeAPIReady() {
-    player2 = new YT.Player('player2', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'ZXRtnwZ2RiQ',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
 
   function onPlayerStateChange(e) {
-    if (e.data === YT.PlayerState.PLAYING) {
-      const interval = setInterval(() => {
-        if (!player2 || player2.getPlayerState() !== YT.PlayerState.PLAYING) {
-          clearInterval(interval);
-          return;
-        }
-
-        const time = Math.floor(player2.getCurrentTime());
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 255 && !question1Shown) {
           exitFullscreenIfNeeded();
-          player2.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 780 && !question2Shown) {
           exitFullscreenIfNeeded();
-          player2.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
 
         if (question1Shown && question2Shown) {
           clearInterval(interval);
+          interval = null;
         }
       }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
     }
   }
 
   function exitFullscreenIfNeeded() {
     if (document.fullscreenElement || document.webkitFullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
   }
 
@@ -109,7 +110,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player2.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -121,7 +122,7 @@
   }
 
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player2')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });

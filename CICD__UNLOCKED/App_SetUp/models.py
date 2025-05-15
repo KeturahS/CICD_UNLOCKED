@@ -88,3 +88,20 @@ class PrivateMessage(models.Model):
 
     def __str__(self):
         return f"מאת {self.sender.username} אל {self.recipient.username}: {self.subject}"
+
+
+
+
+class LearningVideo(models.Model):
+    title = models.CharField(max_length=255)  # שם הסרטון
+    youtube_id = models.CharField(max_length=50)  # מזהה YouTube: לדוגמה 'VtjoExU11d4'
+    module = models.CharField(max_length=100, choices=[
+        ('Git', 'Git'),
+        ('Jenkins', 'Jenkins'),
+        ('Docker', 'Docker'),
+    ])
+    description = models.TextField(blank=True)  # תיאור הסרטון
+    order = models.PositiveIntegerField(default=0)  # סדר הצגה בתוך המודול
+
+    def __str__(self):
+        return f"{self.module} - {self.title}"

@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>4. פקודות מתקדמות ב-Git</title>
+  <title>{{ video.title }}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -77,10 +77,10 @@
 <body>
 
 <div class="container" role="main">
-  <h2 id="section4-title" tabindex="0">4. פקודות מתקדמות ב-Git</h2>
-  <p tabindex="0">כאן תלמד על פקודות מתקדמות כמו <code>git diff</code> ו־<code>.gitignore</code> – כלים חשובים להתנהלות חכמה מול קוד במאגרים.</p>
+  <h2 id="section4-title" tabindex="0">{{ video.title }}</h2>
+  <p tabindex="0">{{ video.description }}</p>
 
-  <div id="player4" aria-label="נגן וידאו של פקודות מתקדמות בגיט" role="region"></div>
+  <div id="player" aria-label="נגן וידאו של {{ video.title }}" role="region"></div>
 
   <!-- שאלה ראשונה -->
   <div id="question1" class="question" role="group" aria-labelledby="q1-label">
@@ -105,23 +105,25 @@
   </div>
 
   <div style="text-align: center;">
-    <a href="?step=4q" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">👉 עבור לשאלות נוספות בנושא</a>
+    <a href="?step=4q&accessible=1" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">👉 עבור לשאלות נוספות בנושא</a>
   </div>
 </div>
 
 <!-- YouTube API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-  let player4;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
   let question1Shown = false;
   let question2Shown = false;
   let interval = null;
 
   function onYouTubeIframeAPIReady() {
-    player4 = new YT.Player('player4', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'aiPAryg4nHA',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
@@ -129,18 +131,18 @@
   function onPlayerStateChange(e) {
     if (e.data === YT.PlayerState.PLAYING && !interval) {
       interval = setInterval(() => {
-        const time = Math.floor(player4.getCurrentTime());
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 125 && !question1Shown) {
           exitFullscreen();
-          player4.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 260 && !question2Shown) {
           exitFullscreen();
-          player4.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
@@ -187,7 +189,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player4.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -199,7 +201,7 @@
   }
 
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player4')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });
