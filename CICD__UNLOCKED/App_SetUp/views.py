@@ -19,6 +19,7 @@ from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
 from .models import ContactMessage
+from .models import LearningVideo
 from .models import LearningModuleRating
 from .models import LearningModuleRating
 from django.utils import timezone
@@ -466,18 +467,40 @@ def learning_home(request):
     return render(request, 'learning_modules/learning_modules_homePage.html')
 
 
+#@login_required
+#def git_module_view(request):
+ #   git_sentences = list(GitSentence.objects.all())
+  #  github_sentences = list(GitHubSentence.objects.all())
+
+    # Combine and shuffle the sentences
+   # all_sentences = git_sentences + github_sentences
+    #random.shuffle(all_sentences)
+
+    #context = {
+     #   'all_sentences': all_sentences,
+    #}
+    #return render(request, 'learning_modules/git_module.html', context)
+
 @login_required
 def git_module_view(request):
     git_sentences = list(GitSentence.objects.all())
     github_sentences = list(GitHubSentence.objects.all())
 
-    # Combine and shuffle the sentences
+    # שילוב לתרגול
     all_sentences = git_sentences + github_sentences
     random.shuffle(all_sentences)
 
+    # שליפת הסרטון לפי השלב, גם במצב נגיש
+    step = request.GET.get('step')
+    video = None
+    if step in ['1', '2', '3', '4']:
+        video = LearningVideo.objects.filter(module='Git', order=int(step)).first()
+
     context = {
         'all_sentences': all_sentences,
+        'video': video
     }
+
     return render(request, 'learning_modules/git_module.html', context)
 
 
@@ -560,6 +583,29 @@ def GitSection3(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection3.html')
 def GitSection4(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection4.html')
+
+
+
+@login_required
+def git_section1(request):
+    video = LearningVideo.objects.filter(module='Git', order=1).first()
+    return render(request, 'learning_modules/git/section1.html', {'video': video})
+
+@login_required
+def git_section2(request):
+    video = LearningVideo.objects.filter(module='Git', order=2).first()
+    return render(request, 'learning_modules/git/section2.html', {'video': video})
+
+@login_required
+def git_section3(request):
+    video = LearningVideo.objects.filter(module='Git', order=3).first()
+    return render(request, 'learning_modules/git/section3.html', {'video': video})
+
+@login_required
+def git_section4(request):
+    video = LearningVideo.objects.filter(module='Git', order=4).first()
+    return render(request, 'learning_modules/git/section4.html', {'video': video})
+
 
 #
 # @login_required

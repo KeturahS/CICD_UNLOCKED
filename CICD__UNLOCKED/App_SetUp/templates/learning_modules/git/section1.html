@@ -1,7 +1,7 @@
 <section id="section1" style="padding: 30px; max-width: 900px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
-  <h2>1. מה זה Git ו-GitHub ולמה זה חשוב?</h2>
+  <h2>{{ video.title }}</h2>
   <p style="font-size: 1.1em;">
-    Git היא מערכת לניהול גרסאות שמאפשרת למפתחים לעקוב אחרי שינויים בקוד, לעבוד בצורה שיתופית, ולחזור אחורה לגרסאות קודמות במקרה של טעות. GitHub היא פלטפורמה מקוונת שמבוססת על Git ומאפשרת שיתוף פעולה בין מפתחים מכל העולם.
+    {{ video.description }}
   </p>
 
   <!-- נגן YouTube -->
@@ -31,14 +31,15 @@
 
   <!-- כפתור מעבר -->
   <div style="margin-top: 30px; text-align: left;">
-    <a href="?step=1q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
+    <a href="?step=1q" class="btn-next">👉 עבור לשלב הבא</a>
   </div>
 </section>
 
 <!-- סקריפט YouTube API -->
 <script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
+  const videoIdFromDB = "{{ video.youtube_id }}";  // ← מושך מה־DB
+
   let player;
   let interval = null;
   let question1Shown = false;
@@ -48,7 +49,7 @@
     player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'VtjoExU11d4',
+      videoId: videoIdFromDB,
       events: {
         'onStateChange': onPlayerStateChange
       }
@@ -130,7 +131,6 @@
     }
   }
 
-  // אם חזרת מהיסטוריית דפדפן – טען שוב את הנגן
   window.addEventListener('pageshow', function () {
     if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();

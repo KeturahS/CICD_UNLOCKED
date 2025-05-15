@@ -55,6 +55,11 @@ urlpatterns = [
     path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
     path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
     path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
+    path('learning/git/section1/', views.git_section1, name='git_section1'),
+    path('learning/git/section2/', views.git_section2, name='git_section2'),
+    path('learning/git/section3/', views.git_section3, name='git_section3'),
+    path('learning/git/section4/', views.git_section4, name='git_section4'),
+
 
     path('lecturer/send-message/', send_private_message, name='send_private_message'),
     path('student/my-messages/', view_my_messages, name='view_my_messages'),

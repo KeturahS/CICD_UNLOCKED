@@ -34,9 +34,9 @@
 
   {% elif request.GET.step == '1' %}
     {% if request.GET.accessible %}
-      {% include 'learning_modules/git/accessible/section1.html' %}
+      {% include 'learning_modules/git/accessible/section1.html' with video=video  %}
     {% else %}
-      {% include 'learning_modules/git/section1.html' %}
+      {% include 'learning_modules/git/section1.html' with video=video %}
     {% endif %}
 
   {% elif request.GET.step == '1q' %}
@@ -44,9 +44,9 @@
 
   {% elif request.GET.step == '2' %}
     {% if request.GET.accessible %}
-      {% include 'learning_modules/git/accessible/section2.html' %}
+      {% include 'learning_modules/git/accessible/section2.html' with video=video  %}
     {% else %}
-      {% include 'learning_modules/git/section2.html' %}
+      {% include 'learning_modules/git/section2.html' with video=video %}
     {% endif %}
 
   {% elif request.GET.step == '2q' %}
@@ -54,9 +54,9 @@
 
   {% elif request.GET.step == '3' %}
     {% if request.GET.accessible %}
-      {% include 'learning_modules/git/accessible/section3.html' %}
+      {% include 'learning_modules/git/accessible/section3.html' with video=video  %}
     {% else %}
-      {% include 'learning_modules/git/section3.html' %}
+      {% include 'learning_modules/git/section3.html' with video=video %}
     {% endif %}
 
   {% elif request.GET.step == '3q' %}
@@ -64,9 +64,9 @@
 
   {% elif request.GET.step == '4' %}
     {% if request.GET.accessible %}
-      {% include 'learning_modules/git/accessible/section4.html' %}
+      {% include 'learning_modules/git/accessible/section4.html' with video=video  %}
     {% else %}
-      {% include 'learning_modules/git/section4.html' %}
+      {% include 'learning_modules/git/section4.html' with video=video %}
     {% endif %}
 
   {% elif request.GET.step == '4q' %}

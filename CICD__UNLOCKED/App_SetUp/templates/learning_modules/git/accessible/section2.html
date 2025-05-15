@@ -1,10 +1,8 @@
 <section id="section2" aria-labelledby="section2-title" style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
-  <h2 id="section2-title" tabindex="0">2. פקודות בסיסיות ב-Git</h2>
-  <p tabindex="0" style="font-size: 1.1em;">
-    כאן תכיר את הפקודות הבסיסיות ביותר בשימוש יומיומי ב-Git כמו <code>init</code>, <code>add</code>, <code>commit</code> ו-<code>status</code>.
-  </p>
+  <h2 id="section2-title" tabindex="0">{{ video.title }}</h2>
+  <p tabindex="0" style="font-size: 1.1em;">{{ video.description }}</p>
 
-  <div id="player2" role="region" aria-label="נגן וידאו - פקודות בסיסיות ב-Git"></div>
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0"></div>
 
   <!-- שאלה 1 -->
   <div id="question1" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
@@ -29,23 +27,25 @@
   </div>
 
   <div style="margin-top: 30px; text-align: left;">
-    <a href="?step=2q" class="btn-next" style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;" role="button" aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+    <a href="?step=2q&accessible=1" class="btn-next" style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;" role="button" aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
   </div>
 </section>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-  let player2;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
   let interval = null;
   let question1Shown = false;
   let question2Shown = false;
 
   function onYouTubeIframeAPIReady() {
-    player2 = new YT.Player('player2', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'ZXRtnwZ2RiQ',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
@@ -53,18 +53,18 @@
   function onPlayerStateChange(e) {
     if (e.data === YT.PlayerState.PLAYING && !interval) {
       interval = setInterval(() => {
-        const time = Math.floor(player2.getCurrentTime());
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 255 && !question1Shown) {
           exitFullscreenIfNeeded();
-          player2.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 780 && !question2Shown) {
           exitFullscreenIfNeeded();
-          player2.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
@@ -112,7 +112,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player2.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -124,7 +124,7 @@
   }
 
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player2')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });

@@ -1,13 +1,10 @@
 <section id="section1" aria-labelledby="section1-title"
          style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
 
-  <h2 id="section1-title" tabindex="0">1. מה זה Git ו-GitHub ולמה זה חשוב?</h2>
-  <p tabindex="0" style="font-size: 1.1em;">
-    Git היא מערכת לניהול גרסאות שמאפשרת למפתחים לעקוב אחרי שינויים בקוד, לעבוד בצורה שיתופית, ולחזור אחורה לגרסאות קודמות במקרה של טעות.
-    GitHub היא פלטפורמה מקוונת שמבוססת על Git ומאפשרת שיתוף פעולה בין מפתחים מכל העולם.
-  </p>
+  <h2 id="section1-title" tabindex="0">{{ video.title }}</h2>
+  <p tabindex="0" style="font-size: 1.1em;">{{ video.description }}</p>
 
-  <div id="player" role="region" aria-label="נגן וידאו - הסבר על Git" tabindex="0"></div>
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0"></div>
 
   <!-- שאלה 1 -->
   <div id="question1" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
@@ -47,7 +44,10 @@
 
 <!-- סקריפט YouTube -->
 <script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
+  const videoIdFromDB = "{{ video.youtube_id }}";  // משיכה מה-DB
+
   let player;
   let interval = null;
   let question1Shown = false;
@@ -57,7 +57,7 @@
     player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'VtjoExU11d4',
+      videoId: videoIdFromDB,
       events: {
         'onStateChange': onPlayerStateChange
       }

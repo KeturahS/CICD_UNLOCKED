@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>3. ענפים וקונפליקטים ב-Git</title>
+  <title>{{ video.title }}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
       margin-bottom: 20px;
     }
 
-    #player3 {
+    #player {
       margin: auto;
     }
 
@@ -61,10 +61,10 @@
 </head>
 <body>
 
-<h2 id="section3-title" tabindex="0">3. עבודה עם ענפים וטיפול בקונפליקטים</h2>
-<p tabindex="0">בסרטון הבא תלמד כיצד ליצור ולשלב ענפים (branches), ולפתור קונפליקטים בעת מיזוג.</p>
+<h2 id="section3-title" tabindex="0">{{ video.title }}</h2>
+<p tabindex="0">{{ video.description }}</p>
 
-<div id="player3" role="region" aria-label="נגן וידאו - ענפים וקונפליקטים ב-Git"></div>
+<div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}"></div>
 
 <!-- שאלה 1 -->
 <div id="question1" class="question-box" role="group" aria-labelledby="q1-label">
@@ -89,21 +89,23 @@
 </div>
 
 <div style="margin-top: 30px; text-align: center;">
-  <a href="?step=3q" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">👉 עבור לשאלות נוספות בנושא</a>
+  <a href="?step=3q&accessible=1" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">👉 עבור לשאלות נוספות בנושא</a>
 </div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-  let player3;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
   let interval = null;
   let question1Shown = false;
   let question2Shown = false;
 
   function onYouTubeIframeAPIReady() {
-    player3 = new YT.Player('player3', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'yOxNONblkb0',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
@@ -111,18 +113,18 @@
   function onPlayerStateChange(e) {
     if (e.data === YT.PlayerState.PLAYING && !interval) {
       interval = setInterval(() => {
-        const time = Math.floor(player3.getCurrentTime());
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 120 && !question1Shown) {
           exitFullscreen();
-          player3.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 540 && !question2Shown) {
           exitFullscreen();
-          player3.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
@@ -166,7 +168,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player3.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -178,7 +180,7 @@
   }
 
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player3')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });

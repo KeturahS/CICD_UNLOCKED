@@ -1,143 +1,92 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>Git - פקודות מתקדמות</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 40px;
-      text-align: center;
-    }
+<section id="section4" style="padding: 30px; max-width: 900px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+  <h2>{{ video.title }}</h2>
+  <p style="font-size: 1.1em;">{{ video.description }}</p>
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      padding: 30px;
-    }
+  <div id="player"></div>
 
-    .question {
-      display: none;
-      margin-top: 20px;
-      text-align: right;
-    }
-
-    .question p {
-      font-weight: bold;
-    }
-
-    .question input {
-      margin: 5px 0;
-    }
-
-    .feedback {
-      display: none;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .resume-btn {
-      display: none;
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 14px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <h2>4. פקודות מתקדמות ב-Git</h2>
-  <p style="font-size: 1.1em;">
-    כאן תלמד על פקודות מתקדמות כמו <code>git diff</code> ו־<code>.gitignore</code> – כלים חשובים להתנהלות חכמה מול קוד במאגרים.
-  </p>
-
-  <div id="player4"></div>
-
-  <!-- שאלה ראשונה -->
-  <div id="question1" class="question">
+  <!-- שאלה 1 -->
+  <div id="question1" style="display:none; margin-top: 20px;">
     <p>מה עושה הפקודה <code>git diff</code>?</p>
     <input type="radio" name="q1" value="a"> מאחדת בין סניפים<br>
     <input type="radio" name="q1" value="b"> מציגה הבדל בין שינויים שטרם נשמרו<br>
     <input type="radio" name="q1" value="c"> שומרת שינויים עם תגית<br><br>
     <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
-    <div id="feedback1" class="feedback"></div>
-    <button id="resume1" class="resume-btn" onclick="resumeVideo('question1', 'feedback1', 'resume1')">המשך צפייה</button>
+    <div id="feedback1" style="display:none;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;">המשך צפייה</button>
   </div>
 
-  <!-- שאלה שנייה -->
-  <div id="question2" class="question">
+  <!-- שאלה 2 -->
+  <div id="question2" style="display:none; margin-top: 20px;">
     <p>מה המטרה של קובץ <code>.gitignore</code>?</p>
     <input type="radio" name="q2" value="a"> למחוק את כל הקבצים<br>
     <input type="radio" name="q2" value="b"> לשמור שינויים אוטומטית<br>
     <input type="radio" name="q2" value="c"> להחריג קבצים מסוימים ממעקב Git<br><br>
     <button onclick="checkAnswer('q2', 'c', 'feedback2')">בדוק תשובה</button>
-    <div id="feedback2" class="feedback"></div>
-    <button id="resume2" class="resume-btn" onclick="resumeVideo('question2', 'feedback2', 'resume2')">המשך צפייה</button>
+    <div id="feedback2" style="display:none;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;">המשך צפייה</button>
   </div>
 
   <div style="margin-top: 30px; text-align: left;">
     <a href="?step=4q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
   </div>
-</div>
+</section>
 
+<!-- YouTube API -->
 <script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
-  let player4;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
+  let interval = null;
   let question1Shown = false;
   let question2Shown = false;
 
   function onYouTubeIframeAPIReady() {
-    player4 = new YT.Player('player4', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'aiPAryg4nHA',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
 
   function onPlayerStateChange(e) {
-    if (e.data === YT.PlayerState.PLAYING) {
-      const interval = setInterval(() => {
-        const time = Math.floor(player4.getCurrentTime());
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 125 && !question1Shown) {
           exitFullscreen();
-          player4.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 260 && !question2Shown) {
           exitFullscreen();
-          player4.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
 
         if (question1Shown && question2Shown) {
           clearInterval(interval);
+          interval = null;
         }
       }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
     }
   }
 
   function exitFullscreen() {
     if (document.fullscreenElement || document.webkitFullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
   }
 
@@ -159,7 +108,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player4.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -171,11 +120,8 @@
   }
 
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player4')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });
 </script>
-
-</body>
-</html>
