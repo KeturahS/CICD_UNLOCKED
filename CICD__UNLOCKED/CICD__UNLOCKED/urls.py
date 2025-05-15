@@ -20,8 +20,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('App_SetUp.urls')),
-    path('exercises/', include('GitExercises.urls')),
-    path('', include('App_SetUp.urls')),
-    path('lecturer/', include('App_SetUp.urls')),
+    path('', include('App_SetUp.urls')),        # ✅ כל הכתובות יתחילו מ־/
+    path('exercises/', include('GitExercises.urls')),  # 🧩 שמור את זה כמו שהוא אם יש לך שאלות בגיט
 ]
