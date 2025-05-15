@@ -4,6 +4,27 @@
     {{ video.description }}
   </p>
 
+
+  {% if podcasts %}
+  <div id="podcast-block" style="margin: 30px 0;">
+    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+      🎧 לחץ להשמעת פודקאסט בנושא זה
+    </button>
+
+    <div id="podcast-player" style="display:none; margin-top: 20px;">
+      <audio controls style="width: 100%;">
+        <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
+        הדפדפן שלך לא תומך בניגון אודיו.
+      </audio>
+      <div style="margin-top: 10px;">
+        <a href="{{ podcasts.0.audio_file.url }}" download style="text-decoration: none; background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 5px;">
+          ⬇️ הורד פודקאסט למחשב
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <!-- נגן YouTube -->
   <div id="player"></div>
 
@@ -130,6 +151,17 @@
       default: return "";
     }
   }
+
+
+  function togglePodcast() {
+    const playerDiv = document.getElementById('podcast-player');
+    if (playerDiv.style.display === 'none') {
+      playerDiv.style.display = 'block';
+    } else {
+      playerDiv.style.display = 'none';
+    }
+  }
+
 
   window.addEventListener('pageshow', function () {
     if (!document.getElementById('player')?.hasChildNodes()) {
