@@ -1,0 +1,152 @@
+<section id="section1" style="padding: 30px; max-width: 900px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
+  <h2>{{ video.title }}</h2>
+  <p style="font-size: 1.1em;">
+    {{ video.description }}
+  </p>
+
+  {% if podcasts %}
+  <div id="podcast-block" style="margin: 30px 0;">
+    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+      🎧 לחץ להשמעת פודקאסט בנושא זה
+    </button>
+    <div id="podcast-player" style="display:none; margin-top: 20px;">
+      <audio controls style="width: 100%;">
+        <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
+        הדפדפן שלך לא תומך בניגון אודיו.
+      </audio>
+      <div style="margin-top: 10px;">
+        <a href="{{ podcasts.0.audio_file.url }}" download style="text-decoration: none; background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 5px;">
+          ⬇️ הורד פודקאסט למחשב
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- נגן YouTube -->
+  <div id="player"></div>
+
+  <!-- שאלה 1 -->
+  <div id="question1" style="display:none; margin-top: 20px;">
+    <p>מה זה Jenkins?</p>
+    <input type="radio" name="q1" value="a"> כלי לניהול קוד מקור כמו Git<br>
+    <input type="radio" name="q1" value="b"> מערכת לאוטומציה של תהליכי פיתוח ותצורה (CI/CD)<br>
+    <input type="radio" name="q1" value="c"> מערכת ענן לאחסון פרויקטים<br><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
+    <div id="feedback1" style="display:none;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;">המשך צפייה</button>
+  </div>
+
+  <!-- שאלה 2 -->
+  <div id="question2" style="display:none; margin-top: 20px;">
+    <p>למה חשוב להשתמש ב-Jenkins בפרויקט תוכנה?</p>
+    <input type="radio" name="q2" value="a"> כדי לאחסן את הקוד בגיבוי<br>
+    <input type="radio" name="q2" value="b"> כדי להריץ בדיקות, לבנות קוד ולבצע דיפלוי בצורה אוטומטית<br>
+    <input type="radio" name="q2" value="c"> כדי לעקוב אחרי באגים<br><br>
+    <button onclick="checkAnswer('q2', 'b', 'feedback2')">בדוק תשובה</button>
+    <div id="feedback2" style="display:none;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;">המשך צפייה</button>
+  </div>
+
+  <!-- כפתור מעבר -->
+  <div style="margin-top: 30px; text-align: left;">
+    <a href="?step=1q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</section>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  const videoIdFromDB = "{{ video.youtube_id }}";
+  let player;
+  let interval = null;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: videoIdFromDB,
+      events: { 'onStateChange': onPlayerStateChange }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
+        if (time >= 120 && !question1Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          document.getElementById('question1').style.display = 'block';
+          question1Shown = true;
+        }
+        if (time >= 240 && !question2Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          document.getElementById('question2').style.display = 'block';
+          question2Shown = true;
+        }
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 1000);
+    }
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const selected = Array.from(document.getElementsByName(qName)).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:green'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:red'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "Jenkins הוא כלי לאוטומציה של תהליכי פיתוח כמו בנייה, בדיקות ודיפלוי.";
+      case 'q2': return "שימוש ב־Jenkins מאפשר חיסכון בזמן ודיוק בתהליך ה־CI/CD.";
+      default: return "";
+    }
+  }
+
+  function togglePodcast() {
+    const playerDiv = document.getElementById('podcast-player');
+    if (playerDiv.style.display === 'none') {
+      playerDiv.style.display = 'block';
+    } else {
+      playerDiv.style.display = 'none';
+    }
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>

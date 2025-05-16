@@ -62,12 +62,19 @@
   {% elif request.GET.step == '3q' %}
     {% include 'GitExercises/section3_questions.html' %}
 
-  {% elif request.GET.step == '4' %}
-    {% if request.GET.accessible %}
-      {% include 'learning_modules/git/accessible/section4.html' with video=video podcasts=podcasts  %}
-    {% else %}
-      {% include 'learning_modules/git/section4.html' with video=video podcasts=podcasts %}
+{% elif request.GET.step == '4' %}
+  {% if request.GET.accessible %}
+    {% include 'learning_modules/git/accessible/section4.html' with video=video podcasts=podcasts %}
+    {% if presentations %}
+      {% include 'learning_modules/git/accessible/section4_presentation.html' with presentation=presentations.0 %}
     {% endif %}
+  {% else %}
+    {% include 'learning_modules/git/section4.html' with video=video podcasts=podcasts %}
+    {% if presentations %}
+      {% include 'learning_modules/git/section4_presentation.html' with presentation=presentations.0 %}
+    {% endif %}
+  {% endif %}
+
 
   {% elif request.GET.step == '4q' %}
     {% include 'GitExercises/section4_questions.html' %}

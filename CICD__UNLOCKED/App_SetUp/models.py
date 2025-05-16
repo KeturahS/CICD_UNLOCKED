@@ -125,3 +125,20 @@ class Podcast(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.module})"
+
+
+
+
+class Presentation(models.Model):
+    MODULE_CHOICES = [
+        ('Git', 'Git'),
+        ('Jenkins', 'Jenkins'),
+        ('Docker', 'Docker'),
+    ]
+    module = models.CharField(max_length=20, choices=MODULE_CHOICES)
+    title = models.CharField(max_length=200)
+    embed_url = models.URLField(help_text="קישור Google Slides עם embed")
+    order = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.module} - {self.title}"
