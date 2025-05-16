@@ -60,6 +60,14 @@ urlpatterns = [
     path('learning/git/section3/', views.git_section3, name='git_section3'),
     path('learning/git/section4/', views.git_section4, name='git_section4'),
 
+    path('learning/jenkins/section1/', views.jenkins_section1, name='jenkins_section1'),
+    path('learning/jenkins/section2/', views.jenkins_section2, name='jenkins_section2'),
+    path('learning/jenkins/section3/', views.jenkins_section3, name='jenkins_section3'),
+    path('learning/jenkins/section4/', views.jenkins_section4, name='jenkins_section4'),
+
+    path('learning/docker/section1/', views.docker_section1, name='docker_section1'),
+    path('learning/docker/section2/', views.docker_section2, name='docker_section2'),
+
 
     path('lecturer/send-message/', send_private_message, name='send_private_message'),
     path('student/my-messages/', view_my_messages, name='view_my_messages'),

@@ -1,0 +1,167 @@
+<section id="section2" aria-labelledby="section2-title"
+         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+
+  <h2 id="section2-title" tabindex="0">{{ video.title }}</h2>
+  <p tabindex="0" style="font-size: 1.1em;">{{ video.description }}</p>
+
+  {% if podcasts %}
+  <div id="podcast-block" style="margin: 30px 0;" role="region" aria-label="נגן פודקאסט בנושא זה">
+    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+      🎧 לחץ להשמעת פודקאסט בנושא זה
+    </button>
+    <div id="podcast-player" style="display:none; margin-top: 20px;">
+      <audio controls style="width: 100%;">
+        <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
+        הדפדפן שלך לא תומך בניגון אודיו.
+      </audio>
+      <div style="margin-top: 10px;">
+        <a href="{{ podcasts.0.audio_file.url }}" download
+           style="text-decoration: none; background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 5px;">
+          ⬇️ הורד פודקאסט למחשב
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0"></div>
+
+  <!-- שאלה 1 -->
+  <div id="question1" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
+    <p id="q1-label" tabindex="0"><strong>מהו קונטיינר (Container) ב־Docker?</strong></p>
+    <div role="radiogroup" aria-labelledby="q1-label">
+      <label><input type="radio" name="q1" value="a"> מערכת הפעלה חדשה</label><br>
+      <label><input type="radio" name="q1" value="b"> סביבת הרצה מבודדת הכוללת את הקוד, התלויות וההגדרות</label><br>
+      <label><input type="radio" name="q1" value="c"> סקריפט להרצת בדיקות אוטומטיות</label><br>
+    </div><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" aria-label="בדוק תשובה לשאלה הראשונה">בדוק תשובה</button>
+    <div id="feedback1" aria-live="assertive" style="display:none;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+  </div>
+
+  <!-- שאלה 2 -->
+  <div id="question2" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q2-label">
+    <p id="q2-label" tabindex="0"><strong>כיצד יוצרים קונטיינר ב־Docker?</strong></p>
+    <div role="radiogroup" aria-labelledby="q2-label">
+      <label><input type="radio" name="q2" value="a"> באמצעות פקודת docker push</label><br>
+      <label><input type="radio" name="q2" value="b"> באמצעות פקודת docker run על בסיס image קיים</label><br>
+      <label><input type="radio" name="q2" value="c"> על ידי שימוש ב־GitHub Actions בלבד</label><br>
+    </div><br>
+    <button onclick="checkAnswer('q2', 'b', 'feedback2')" aria-label="בדוק תשובה לשאלה השנייה">בדוק תשובה</button>
+    <div id="feedback2" aria-live="assertive" style="display:none;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+  </div>
+
+  <div style="margin-top: 30px; text-align: left;">
+    <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
+       class="btn-next"
+       style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;"
+       role="button"
+       aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</section>
+
+<!-- YouTube Script -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  const videoIdFromDB = "{{ video.youtube_id }}";
+  let player;
+  let interval = null;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: videoIdFromDB,
+      events: { 'onStateChange': onPlayerStateChange }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
+
+        if (time >= 150 && !question1Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          showQuestion('question1');
+          question1Shown = true;
+        }
+
+        if (time >= 900 && !question2Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          showQuestion('question2');
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function showQuestion(id) {
+    const q = document.getElementById(id);
+    q.style.display = 'block';
+    q.setAttribute('tabindex', '-1');
+    q.focus();
+  }
+
+  function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const selected = Array.from(document.getElementsByName(qName)).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:lightgreen'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:#ff5555'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "קונטיינר כולל קוד, תלויות וסביבת ריצה – כיחידה עצמאית מבודדת.";
+      case 'q2': return "פקודת docker run יוצרת קונטיינר מתוך image – זו הדרך הנפוצה ביותר להתחיל.";
+      default: return "";
+    }
+  }
+
+  function togglePodcast() {
+    const playerDiv = document.getElementById('podcast-player');
+    playerDiv.style.display = (playerDiv.style.display === 'none') ? 'block' : 'none';
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>

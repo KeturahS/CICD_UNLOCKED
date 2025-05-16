@@ -13,7 +13,7 @@ from .models import User
 from .forms import SignUpForm, LoginForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import LecturerProfile, StudentProfile, AdminProfile
+from .models import LecturerProfile, StudentProfile, AdminProfile,Presentation
 from django.shortcuts import render
 from .forms import StudentProfileUpdateForm
 
@@ -486,6 +486,7 @@ def git_module_view(request):
     git_sentences = list(GitSentence.objects.all())
     github_sentences = list(GitHubSentence.objects.all())
     podcasts = []
+    presentations =[]
     # שילוב לתרגול
     all_sentences = git_sentences + github_sentences
     random.shuffle(all_sentences)
@@ -496,12 +497,14 @@ def git_module_view(request):
     if step in ['1', '2', '3', '4']:
         video = LearningVideo.objects.filter(module='Git', order=int(step)).first()
         podcasts = Podcast.objects.filter(module='Git', order=int(step))  # 🟢
+        presentations = Presentation.objects.filter(module='Git', order=int(step))
 
 
     context = {
         'all_sentences': all_sentences,
         'video': video,
-        'podcasts': podcasts
+        'podcasts': podcasts,
+        'presentations': presentations
     }
 
     return render(request, 'learning_modules/git_module.html', context)
@@ -509,12 +512,45 @@ def git_module_view(request):
 
 @login_required
 def jenkins_module_view(request):
-    return render(request, 'learning_modules/jenkins_module.html')
+    podcasts = []
+    presentations = []
+    # שליפת סרטון ופודקאסט לפי שלב (step)
+    step = request.GET.get('step')
+    video = None
+    if step in ['1', '2', '3', '4']:
+        video = LearningVideo.objects.filter(module='Jenkins', order=int(step)).first()
+        podcasts = Podcast.objects.filter(module='Jenkins', order=int(step))
+        presentations = Presentation.objects.filter(module='Jenkins', order=int(step))
+
+    context = {
+        'video': video,
+        'podcasts': podcasts,
+        'presentations': presentations
+    }
+
+    return render(request, 'learning_modules/jenkins_module.html', context)
 
 
 @login_required
 def docker_module_view(request):
-    return render(request, 'learning_modules/docker_module.html')
+    podcasts = []
+    presentations = []
+
+    # שליפת סרטון ופודקאסט לפי שלב (step)
+    step = request.GET.get('step')
+    video = None
+    if step in ['1', '2','3']:
+        video = LearningVideo.objects.filter(module='Docker', order=int(step)).first()
+        podcasts = Podcast.objects.filter(module='Docker', order=int(step))
+        presentations = Presentation.objects.filter(module='Docker', order=int(step))
+
+    context = {
+        'video': video,
+        'podcasts': podcasts,
+        'presentations': presentations
+    }
+
+    return render(request, 'learning_modules/docker_module.html', context)
 
 
 
@@ -610,6 +646,39 @@ def git_section4(request):
     return render(request, 'learning_modules/git/section4.html', {'video': video})
 
 
+
+
+@login_required
+def jenkins_section1(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=1).first()
+    return render(request, 'learning_modules/jenkins/section1.html', {'video': video})
+
+@login_required
+def jenkins_section2(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=2).first()
+    return render(request, 'learning_modules/jenkins/section2.html', {'video': video})
+
+@login_required
+def jenkins_section3(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=3).first()
+    return render(request, 'learning_modules/jenkins/section3.html', {'video': video})
+
+@login_required
+def jenkins_section4(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=4).first()
+    return render(request, 'learning_modules/jenkins/section4.html', {'video': video})
+
+
+
+@login_required
+def docker_section1(request):
+    video = LearningVideo.objects.filter(module='Docker', order=1).first()
+    return render(request, 'learning_modules/docker/section1.html', {'video': video})
+
+@login_required
+def docker_section2(request):
+    video = LearningVideo.objects.filter(module='Docker', order=2).first()
+    return render(request, 'learning_modules/docker/section2.html', {'video': video})
 #
 # @login_required
 # def rate_learning_modules(request):
