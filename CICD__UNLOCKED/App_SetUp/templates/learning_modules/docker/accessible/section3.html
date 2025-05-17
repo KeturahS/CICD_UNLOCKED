@@ -1,9 +1,12 @@
 <section id="presentation-wrapper" aria-labelledby="docker-presentation-title"
-         style="text-align: center; padding: 30px; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.3); max-width: 1000px; margin: auto;">
-  <h2 id="docker-presentation-title" tabindex="0" style="margin-bottom: 20px;">📑 מצגת: Docker - מבוא וכלים בסיסיים</h2>
+         style="text-align: center; padding: 40px 25px; background-color: #1e1e1e; color: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); max-width: 1000px; margin: auto; font-family: 'Segoe UI', sans-serif;">
+
+  <h2 id="docker-presentation-title" tabindex="0" style="margin-bottom: 20px; font-size: 2em; color: #ffffff;">
+    📑 מצגת: Docker - מבוא וכלים בסיסיים
+  </h2>
 
   <!-- מצגת מוטמעת -->
-  <div role="region" aria-label="מצגת מוטמעת בנושא Docker" style="position: relative;">
+  <div role="region" aria-label="מצגת מוטמעת בנושא Docker" style="position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
     <iframe
       id="slideFrame"
       src="{{ presentation.embed_url }}&rm=minimal"
@@ -13,10 +16,11 @@
       allowfullscreen
       title="מצגת אינטראקטיבית על Docker"
       aria-label="שקופיות בנושא Docker"
+      style="border: none;"
     ></iframe>
 
     <!-- כפתורי ניווט -->
-    <div style="margin-top: 20px;" role="group" aria-label="שליטה במצגת">
+    <div style="margin-top: 25px;" role="group" aria-label="שליטה במצגת">
       <button onclick="prevSlide()" class="btn-nav" aria-label="שקופית קודמת">◀️ קודם</button>
       <button onclick="nextSlide()" class="btn-nav" aria-label="שקופית הבאה">▶️ הבא</button>
       <button onclick="toggleFullscreen()" class="btn-nav" aria-label="מסך מלא למצגת">⛶ מסך מלא</button>
@@ -24,7 +28,7 @@
   </div>
 
   <!-- כפתור מעבר לשאלות -->
-  <div id="questions-btn" style="margin-top: 30px; display: none;" role="region" aria-label="מעבר לשאלות">
+  <div id="questions-btn" style="margin-top: 40px; display: none;" role="region" aria-label="מעבר לשאלות בנושא">
     <a href="?step=3q{% if request.GET.accessible %}&accessible=1{% endif %}"
        class="btn-next"
        role="button"
@@ -34,18 +38,19 @@
   </div>
 </section>
 
-<!-- עיצוב נגיש -->
+<!-- עיצוב מודרני עם נגישות -->
 <style>
   .btn-nav {
     background-color: #007acc;
     color: #ffffff;
-    padding: 12px 20px;
-    margin: 0 10px;
+    padding: 12px 24px;
+    margin: 0 8px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease, transform 0.1s ease;
   }
 
   .btn-nav:hover,
@@ -53,17 +58,19 @@
     background-color: #005fa3;
     outline: 2px solid #ffffff;
     outline-offset: 2px;
+    transform: scale(1.03);
   }
 
   .btn-next {
     background-color: #00cc88;
     color: #ffffff;
-    padding: 14px 26px;
+    padding: 14px 28px;
     font-size: 18px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     text-decoration: none;
-    display: inline-block;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease;
   }
 
   .btn-next:hover,
@@ -71,18 +78,32 @@
     background-color: #009e6e;
     outline: 2px solid #ffffff;
     outline-offset: 2px;
+    transform: scale(1.03);
+  }
+
+  @media (max-width: 600px) {
+    .btn-nav {
+      display: block;
+      width: 90%;
+      margin: 10px auto;
+    }
+
+    .btn-next {
+      width: 90%;
+      font-size: 16px;
+    }
   }
 </style>
 
 <!-- לוגיקת ניווט -->
 <script>
   let currentSlide = 0;
-  const totalSlides = 7; // ⚠️ שנה בהתאם למספר השקופיות
+  const totalSlides = 7; // ← שנה לפי מספר השקופיות שלך בפועל
 
   function updateIframe() {
     const iframe = document.getElementById('slideFrame');
     const baseUrl = "{{ presentation.embed_url|cut:'?start=false&loop=false&delayms=3000' }}";
-    iframe.src = baseUrl + `?start=false&loop=false&delayms=3000&slide=${currentSlide}`;
+    iframe.src = `${baseUrl}?start=false&loop=false&delayms=3000&slide=${currentSlide}`;
   }
 
   function nextSlide() {
@@ -111,7 +132,7 @@
     else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
   }
 
-  // תמיכה בנגישות דרך מקלדת (לדפדפנים ישנים)
+  // תמיכה במקשי חצים ← / →
   document.addEventListener('keydown', function (e) {
     if (e.key === "ArrowRight") nextSlide();
     if (e.key === "ArrowLeft") prevSlide();

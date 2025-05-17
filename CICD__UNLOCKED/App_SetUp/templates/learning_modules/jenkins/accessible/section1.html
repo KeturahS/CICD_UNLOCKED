@@ -1,12 +1,12 @@
 <section id="section1" aria-labelledby="section1-title"
-         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); font-family: Arial, sans-serif;">
 
   <h2 id="section1-title" tabindex="0">{{ video.title }}</h2>
   <p tabindex="0" style="font-size: 1.1em;">{{ video.description }}</p>
 
   {% if podcasts %}
   <div id="podcast-block" style="margin: 30px 0;" role="region" aria-label="נגן פודקאסט בנושא זה">
-    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+    <button onclick="togglePodcast()" style="background-color: #00cc88; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
       🎧 לחץ להשמעת פודקאסט בנושא זה
     </button>
     <div id="podcast-player" style="display:none; margin-top: 20px;">
@@ -23,44 +23,70 @@
   </div>
   {% endif %}
 
-  <!-- נגן יוטיוב -->
-  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0"></div>
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0" style="margin-bottom: 20px;"></div>
 
-  <!-- שאלה 1 -->
-  <div id="question1" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
+  <!-- שאלות -->
+  <div id="question1" class="question" style="display:none; margin-top: 20px; background-color: #2c2c2c; border-radius: 10px; padding: 20px;" role="group" aria-labelledby="q1-label">
     <p id="q1-label" tabindex="0"><strong>מה זה Jenkins?</strong></p>
     <div role="radiogroup" aria-labelledby="q1-label">
       <label><input type="radio" name="q1" value="a"> כלי לניהול קוד מקור כמו Git</label><br>
       <label><input type="radio" name="q1" value="b"> מערכת לאוטומציה של תהליכי פיתוח ותצורה (CI/CD)</label><br>
       <label><input type="radio" name="q1" value="c"> מערכת ענן לאחסון פרויקטים</label><br>
     </div><br>
-    <button onclick="checkAnswer('q1', 'b', 'feedback1')" aria-label="בדוק תשובה לשאלה הראשונה">בדוק תשובה</button>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" aria-label="בדוק תשובה לשאלה הראשונה" class="btn-answer">בדוק תשובה</button>
     <div id="feedback1" class="feedback" style="display:none;" aria-live="assertive"></div>
-    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;" class="btn-resume">המשך צפייה</button>
   </div>
 
-  <!-- שאלה 2 -->
-  <div id="question2" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q2-label">
+  <div id="question2" class="question" style="display:none; margin-top: 20px; background-color: #2c2c2c; border-radius: 10px; padding: 20px;" role="group" aria-labelledby="q2-label">
     <p id="q2-label" tabindex="0"><strong>למה חשוב להשתמש ב-Jenkins בפרויקט תוכנה?</strong></p>
     <div role="radiogroup" aria-labelledby="q2-label">
       <label><input type="radio" name="q2" value="a"> כדי לאחסן את הקוד בגיבוי</label><br>
       <label><input type="radio" name="q2" value="b"> כדי להריץ בדיקות, לבנות קוד ולבצע דיפלוי בצורה אוטומטית</label><br>
       <label><input type="radio" name="q2" value="c"> כדי לעקוב אחרי באגים</label><br>
     </div><br>
-    <button onclick="checkAnswer('q2', 'b', 'feedback2')" aria-label="בדוק תשובה לשאלה השנייה">בדוק תשובה</button>
+    <button onclick="checkAnswer('q2', 'b', 'feedback2')" aria-label="בדוק תשובה לשאלה השנייה" class="btn-answer">בדוק תשובה</button>
     <div id="feedback2" class="feedback" style="display:none;" aria-live="assertive"></div>
-    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;" class="btn-resume">המשך צפייה</button>
   </div>
 
   <div style="margin-top: 30px; text-align: left;">
     <a href="?step=1q{% if request.GET.accessible %}&accessible=1{% endif %}"
        class="btn-next"
-       style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;"
        role="button"
-       aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+       aria-label="עבור לשאלות נוספות בנושא זה">
+      👉 עבור לשאלות נוספות בנושא
+    </a>
   </div>
 </section>
 
+<style>
+  .btn-answer, .btn-resume, .btn-next {
+    background-color: #00cc88;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-next {
+    background-color: #007acc;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-answer:hover, .btn-resume:hover, .btn-next:hover {
+    background-color: #009e6e;
+  }
+
+  .feedback {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+</style>
 <!-- YouTube Script -->
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>

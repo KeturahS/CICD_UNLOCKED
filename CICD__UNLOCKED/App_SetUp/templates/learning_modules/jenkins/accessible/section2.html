@@ -1,5 +1,6 @@
+
 <section id="section2" aria-labelledby="section2-title"
-         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); font-family: Arial, sans-serif;">
 
   <h2 id="section2-title" tabindex="0">{{ video.title }}</h2>
   <p tabindex="0" style="font-size: 1.1em;">{{ video.description }}</p>
@@ -7,7 +8,7 @@
   {% if podcasts %}
   <div id="podcast-block" style="margin: 30px 0;" role="region" aria-label="נגן פודקאסט - {{ video.title }}">
     <button onclick="togglePodcast()" aria-expanded="false" aria-controls="podcast-player"
-            style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+            style="background-color: #00cc88; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
       🎧 לחץ להשמעת פודקאסט בנושא זה
     </button>
     <div id="podcast-player" style="display:none; margin-top: 20px;">
@@ -26,18 +27,44 @@
   </div>
   {% endif %}
 
-  <!-- נגן יוטיוב -->
-  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0"></div>
+  <!-- נגן YouTube -->
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0" style="margin-bottom: 20px;"></div>
 
   <!-- כפתור מעבר -->
   <div style="margin-top: 30px; text-align: left;">
     <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
        class="btn-next"
-       style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;"
        role="button"
-       aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+       aria-label="עבור לשאלות נוספות בנושא זה">
+      👉 עבור לשאלות נוספות בנושא
+    </a>
   </div>
 </section>
+
+<!-- עיצוב כפתור -->
+<style>
+  .btn-next {
+    background-color: #007acc;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+  }
+
+  .btn-next:hover {
+    background-color: #005fa3;
+  }
+
+  button:hover,
+  button:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+  }
+</style>
 
 <!-- סקריפט YouTube -->
 <script src="https://www.youtube.com/iframe_api"></script>

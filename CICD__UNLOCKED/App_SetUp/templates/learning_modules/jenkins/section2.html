@@ -1,13 +1,11 @@
-<section id="section2" style="padding: 30px; max-width: 900px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1);">
-  <h2>{{ video.title }}</h2>
-  <p style="font-size: 1.1em;">
-    {{ video.description }}
-  </p>
+<section id="section2" style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); font-family: Arial, sans-serif;">
+  <h2 style="margin-bottom: 10px;">{{ video.title }}</h2>
+  <p style="font-size: 1.1em;">{{ video.description }}</p>
 
   {% if podcasts %}
   <div id="podcast-block" style="margin: 30px 0;">
-    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
-      🎧 לחץ להשמעת פודקאסט בנושא זה
+    <button onclick="togglePodcast()" style="background-color: #00cc88; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+      🎧 פתח פודקאסט בנושא זה
     </button>
     <div id="podcast-player" style="display:none; margin-top: 20px;">
       <audio controls style="width: 100%;">
@@ -15,19 +13,20 @@
         הדפדפן שלך לא תומך בניגון אודיו.
       </audio>
       <div style="margin-top: 10px;">
-        <a href="{{ podcasts.0.audio_file.url }}" download style="text-decoration: none; background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 5px;">
-          ⬇️ הורד פודקאסט למחשב
+        <a href="{{ podcasts.0.audio_file.url }}" download
+           style="text-decoration: none; background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 5px;">
+          ⬇️ הורד את הפודקאסט למחשב
         </a>
       </div>
     </div>
   </div>
   {% endif %}
 
-  <!-- נגן YouTube -->
-  <div id="player"></div>
+  <!-- YouTube Player -->
+  <div id="player" style="margin-bottom: 20px;"></div>
 
   <div style="margin-top: 30px; text-align: left;">
-    <a href="?step=2q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
+    <a href="?step=2q" class="btn-next" style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none;">👉 עבור לשאלות נוספות בנושא</a>
   </div>
 </section>
 

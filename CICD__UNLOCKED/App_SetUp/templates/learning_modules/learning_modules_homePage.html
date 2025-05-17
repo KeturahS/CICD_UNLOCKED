@@ -3,29 +3,89 @@
 {% block title %}ברוך הבא ללומדת ה־CI/CD{% endblock %}
 
 {% block content %}
-  <div style="max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); text-align: center;">
-    <h1>🎓 ברוך הבא ללומדת ה־CI/CD</h1>
-    <p>
-      בלומדה זו תלמד בצורה אינטראקטיבית על הכלים הנפוצים בעולם הפיתוח המודרני:
-      <strong>Git</strong>, <strong>Jenkins</strong> ו־<strong>Docker</strong>.
-    </p>
-    <p>
-      כל מודול כולל סרטונים קצרים, שאלות לתרגול והסברים שיעזרו לך להבין את התהליך מאחורי Continuous Integration ו־Continuous Deployment.
-    </p>
-    <p>
-      כדי להתחיל, בחר את המודול שמעניין אותך מהתפריט בצד או מהקישורים שלמטה:
-    </p>
+<style>
+  .intro-box {
+    max-width: 900px;
+    margin: auto;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+  }
 
-    <div style="margin-top: 30px;">
+  .intro-title {
+    font-size: 2em;
+    background: linear-gradient(90deg, #007acc, #00cc88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .intro-text {
+    font-size: 1.15em;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .module-links {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .btn-module {
+    background-color: #007acc;
+    color: white;
+    padding: 14px 26px;
+    font-size: 1em;
+    border: none;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    min-width: 220px;
+  }
+
+  .btn-module:hover {
+    background-color: #005fa3;
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="intro-box">
+  <h1 class="intro-title">🎓 ברוך הבא ללומדת ה־CI/CD</h1>
+
+  <p class="intro-text">
+    בלומדה זו תלמד בצורה אינטראקטיבית על הכלים הנפוצים בעולם הפיתוח המודרני:<br>
+    <strong>Git</strong>, <strong>Jenkins</strong> ו־<strong>Docker</strong>.
+  </p>
+  <p class="intro-text">
+    כל מודול כולל סרטונים קצרים, שאלות לתרגול והסברים שיעזרו לך להבין את התהליך מאחורי Continuous Integration ו־Continuous Deployment.
+  </p>
+  <p class="intro-text">
+    בחר את המודול שתרצה ללמוד ממנו:
+  </p>
+
+  <div class="module-links">
     {% if 'git' in visible_modules %}
-        <a href="{% url 'git_module' %}" class="btn-next" style="margin: 10px;">🚀 התחל את מודול Git</a>
+      <a href="{% url 'git_module' %}" class="btn-module" aria-label="מודול Git">🚀 התחל את מודול Git</a>
     {% endif %}
     {% if 'jenkins' in visible_modules %}
-        <a href="{% url 'jenkins_module' %}" class="btn-next" style="margin: 10px;">🛠️ עבור למודול Jenkins</a>
+      <a href="{% url 'jenkins_module' %}" class="btn-module" aria-label="מודול Jenkins">🛠️ עבור למודול Jenkins</a>
     {% endif %}
     {% if 'docker' in visible_modules %}
-        <a href="{% url 'docker_module' %}" class="btn-next" style="margin: 10px;">📦 עבור למודול Docker</a>
+      <a href="{% url 'docker_module' %}" class="btn-module" aria-label="מודול Docker">📦 עבור למודול Docker</a>
     {% endif %}
-    </div>
   </div>
+</div>
 {% endblock %}

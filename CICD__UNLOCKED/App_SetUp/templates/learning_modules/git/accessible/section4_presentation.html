@@ -1,9 +1,10 @@
 <section id="presentation-wrapper" aria-labelledby="presentation-title"
-         style="text-align: center; padding: 30px; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); max-width: 1000px; margin: auto;">
+         style="text-align: center; padding: 40px 30px; background-color: #1e1e1e; color: #ffffff; border-radius: 16px; box-shadow: 0 0 30px rgba(0,0,0,0.4); max-width: 1000px; margin: auto; font-family: 'Segoe UI', sans-serif;">
 
-  <h2 id="presentation-title" tabindex="0">📑 מצגת: פקודות מתקדמות ב־Git</h2>
+  <h2 id="presentation-title" tabindex="0" style="font-size: 2em; margin-bottom: 20px;">
+    📑 מצגת: פקודות מתקדמות ב־Git
+  </h2>
 
-  <!-- מצגת -->
   <div style="position: relative;" role="region" aria-label="מצגת מוטמעת של Google Slides">
     <iframe
       id="slideFrame"
@@ -12,19 +13,20 @@
       frameborder="0"
       allowfullscreen
       title="מצגת פקודות מתקדמות"
-      aria-label="תצוגת שקופיות"
+      aria-label="שקופיות מצגת"
+      style="border-radius: 8px;"
     ></iframe>
 
     <!-- כפתורי שליטה -->
-    <div style="margin-top: 20px;">
+    <div style="margin-top: 24px;" role="group" aria-label="שליטה במצגת">
       <button onclick="prevSlide()" class="btn-nav" aria-label="שקופית קודמת">◀️ קודם</button>
       <button onclick="nextSlide()" class="btn-nav" aria-label="שקופית הבאה">▶️ הבא</button>
-      <button onclick="toggleFullscreen()" class="btn-nav" aria-label="הצג מסך מלא">⛶ מסך מלא</button>
+      <button onclick="toggleFullscreen()" class="btn-nav" aria-label="מצב מסך מלא">⛶ מסך מלא</button>
     </div>
   </div>
 
-  <!-- מעבר לשאלות -->
-  <div id="questions-btn" style="margin-top: 30px; display: none;">
+  <!-- כפתור מעבר לשאלות -->
+  <div id="questions-btn" style="margin-top: 35px; display: none;" role="region" aria-label="מעבר לשאלות">
     <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}"
        class="btn-next"
        role="button"
@@ -38,41 +40,49 @@
   .btn-nav {
     background-color: #007acc;
     color: white;
-    padding: 10px 18px;
+    padding: 12px 20px;
+    margin: 0 8px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
   }
 
-  .btn-nav:hover {
+  .btn-nav:hover,
+  .btn-nav:focus {
     background-color: #005fa3;
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
   }
 
   .btn-next {
     background-color: #00cc88;
     color: white;
-    padding: 12px 24px;
-    font-size: 16px;
+    padding: 14px 26px;
+    font-size: 18px;
     border: none;
     border-radius: 8px;
     text-decoration: none;
+    display: inline-block;
   }
 
-  .btn-next:hover {
+  .btn-next:hover,
+  .btn-next:focus {
     background-color: #009e6e;
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
   }
 </style>
 
 <script>
   let currentSlide = 0;
-  const totalSlides = 9;
+  const totalSlides = 9; // 🔢 שנה אם יש פחות/יותר שקופיות
 
   function updateIframe() {
     const iframe = document.getElementById('slideFrame');
     const baseUrl = "{{ presentation.embed_url|cut:'?start=false&loop=false&delayms=3000' }}";
-    iframe.src = baseUrl + `?start=false&loop=false&delayms=3000&slide=${currentSlide}`;
+    iframe.src = `${baseUrl}?start=false&loop=false&delayms=3000&slide=${currentSlide}`;
   }
 
   function nextSlide() {
@@ -95,17 +105,13 @@
 
   function toggleFullscreen() {
     const iframe = document.getElementById('slideFrame');
-    if (iframe.requestFullscreen) {
-      iframe.requestFullscreen();
-    } else if (iframe.webkitRequestFullscreen) {
-      iframe.webkitRequestFullscreen();
-    } else if (iframe.mozRequestFullScreen) {
-      iframe.mozRequestFullScreen();
-    } else if (iframe.msRequestFullscreen) {
-      iframe.msRequestFullscreen();
-    }
+    if (iframe.requestFullscreen) iframe.requestFullscreen();
+    else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+    else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
+    else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
   }
 
+  // תמיכה במקלדת ⌨️
   window.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight') nextSlide();
     if (e.key === 'ArrowLeft') prevSlide();

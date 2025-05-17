@@ -1,4 +1,6 @@
-<section id="presentation-wrapper" style="text-align: center; padding: 30px; background-color: #f9f9f9; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.1); max-width: 1000px; margin: auto;">
+<section id="presentation-wrapper"
+         style="text-align: center; padding: 30px; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
+
   <h2 style="margin-bottom: 20px;">📑 מצגת: Jenkins - היכרות כללית</h2>
 
   <!-- מצגת מוטמעת -->
@@ -11,10 +13,9 @@
       frameborder="0"
       allowfullscreen
       title="מצגת ג'נקינס"
-      aria-label="מצגת מוטמעת על Jenkins"
     ></iframe>
 
-    <!-- כפתורי ניווט -->
+    <!-- כפתורי שליטה -->
     <div style="margin-top: 20px;">
       <button onclick="prevSlide()" class="btn-nav">◀️ קודם</button>
       <button onclick="nextSlide()" class="btn-nav">▶️ הבא</button>
@@ -22,11 +23,9 @@
     </div>
   </div>
 
-  <!-- כפתור מעבר לשאלות -->
+  <!-- מעבר לשאלות -->
   <div id="questions-btn" style="margin-top: 30px; display: none;">
-    <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}" class="btn-next">
-      ✅ עבור לשאלות על Jenkins
-    </a>
+    <a href="?step=4q" class="btn-next">✅ עבור לשאלות על Jenkins</a>
   </div>
 </section>
 
@@ -35,11 +34,11 @@
   .btn-nav {
     background-color: #007acc;
     color: white;
-    padding: 10px 18px;
+    padding: 10px 20px;
+    margin: 0 8px;
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    margin: 0 10px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
@@ -63,10 +62,10 @@
   }
 </style>
 
-<!-- לוגיקת שליטה בשקופיות -->
+<!-- שליטה על שקופיות -->
 <script>
   let currentSlide = 0;
-  const totalSlides = 8;
+  const totalSlides = 8; // שנה לפי מספר השקופיות שלך
 
   function updateIframe() {
     const iframe = document.getElementById('slideFrame');
@@ -99,4 +98,10 @@
     else if (iframe.mozRequestFullScreen) iframe.mozRequestFullScreen();
     else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
   }
+
+  // תמיכה דרך מקשי חיצים
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
 </script>
