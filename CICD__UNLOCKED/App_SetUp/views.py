@@ -14,27 +14,27 @@ from .forms import SignUpForm, LoginForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile,Presentation
-from django.shortcuts import render
 from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
-from .models import ContactMessage,Podcast
+from .models import ContactMessage, Podcast
 from .models import LearningVideo
 from .models import LearningModuleRating
 from .models import LearningModuleRating
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
 from .models import LearningModuleRating
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from .models import LearningModuleRating
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect
 from .forms import PrivateMessageForm
 
-from .models import PrivateMessage
+from .models import PrivateMessage, CourseContent
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 
 
@@ -464,7 +464,11 @@ def student_messages_view(request):
 def learning_home(request):
     if not request.user.is_student:
         return redirect('login_view')
-    return render(request, 'learning_modules/learning_modules_homePage.html')
+    visible_modules = []
+    for content in CourseContent.objects.all():
+        if content.visibility_mode == 'immediate':
+            visible_modules.append(content.module)
+    return render(request, 'learning_modules/learning_modules_homePage.html', {'visible_modules': visible_modules})
 
 
 #@login_required
@@ -792,3 +796,30 @@ def send_private_message(request):
 def view_my_messages(request):
     messages = PrivateMessage.objects.filter(recipient=request.user).order_by('-created_at')
     return render(request, 'messages/view_messages.html', {'messages': messages})
+
+
+
+
+def student_modules_view(request):
+    visible_modules = []
+    for content in CourseContent.objects.all():
+        if content.visibility_mode == 'immediate':
+            visible_modules.append(content.module)
+    return render(request, 'learning_modules/learning_modules_homePage.html', {'visible_modules': visible_modules})
+
+@login_required
+def lecturer_manage_content(request):
+    contents = CourseContent.objects.all()
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/lecturer_content_manage.html', {'contents': contents})
+
+@login_required
+def update_module_visibility(request, content_id):
+    if request.method == 'POST':
+        content = get_object_or_404(CourseContent, id=content_id)
+        visibility_mode = request.POST.get('visibility_mode')
+        if visibility_mode in ['immediate', 'hidden']:
+            content.visibility_mode = visibility_mode
+            content.save()
+    return redirect('lecturer_manage_content')
+
+

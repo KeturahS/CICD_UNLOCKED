@@ -3,11 +3,6 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from .views import send_private_message
 from .views import view_my_messages
-
-
-
-
-
 from . import views
 
 
@@ -45,6 +40,8 @@ urlpatterns = [
     path('modules/git/', views.git_module_view, name='git_module'),
     path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),
     path('modules/docker/', views.docker_module_view, name='docker_module'),
+    path('lecturer/manage-content/', views.lecturer_manage_content, name='lecturer_manage_content'),
+    path('lecturer/update-content/<int:content_id>/', views.update_module_visibility, name='update_module_visibility'),
     path('LecturerPages/LecturerTasksAndAssignments/manage_tasks_and_check_assignments.html', views.manage_tasks_and_check_assignments, name='manage_tasks_and_check_assignments'),
     path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_git.html', views.Lecturer_manage_git, name='Lecturer_manage_git'),
     path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_docker.html', views.Lecturer_manage_docker, name='Lecturer_manage_docker'),

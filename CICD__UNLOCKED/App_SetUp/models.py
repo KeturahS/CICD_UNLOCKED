@@ -1,8 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
+
 
 # מודל משתמש מותאם אישית
 class User(AbstractUser):
@@ -142,3 +143,33 @@ class Presentation(models.Model):
 
     def __str__(self):
         return f"{self.module} - {self.title}"
+
+
+
+
+
+class CourseContent(models.Model):
+    MODULE_CHOICES = [
+        ('git', 'Git'),
+        ('jenkins', 'Jenkins'),
+        ('docker', 'Docker'),
+    ]
+
+    module = models.CharField(max_length=20, choices=MODULE_CHOICES, unique=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+
+    visibility_mode = models.CharField(
+        max_length=10,
+        choices=[('immediate', 'מיידי'), ('hidden', 'מוסתר')],
+        default='hidden'
+    )
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def is_visible_to_students(self):
+        return self.visibility_mode == 'immediate'
+
+    def __str__(self):
+        return f"{self.module} - {self.title}"
+

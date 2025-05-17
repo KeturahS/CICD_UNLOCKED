@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ניהול זמינות מודולים</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap RTL -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">ניהול זמינות מודולים</h2>
+
+    <table class="table table-bordered text-end">
+        <thead class="table-light">
+            <tr>
+                <th>מודול</th>
+                <th>כותרת</th>
+                <th>מצב נוכחי</th>
+                <th>שינוי זמינות</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for content in contents %}
+            <tr>
+                <td>{{ content.get_module_display }}</td>
+                <td>{{ content.title }}</td>
+                <td>
+                    {% if content.visibility_mode == "immediate" %}
+                        <span class="text-success">גלוי</span>
+                    {% else %}
+                        <span class="text-muted">מוסתר</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'update_module_visibility' content.id %}">
+                        {% csrf_token %}
+                        <select name="visibility_mode" class="form-select mb-2" onchange="toggleDateTime(this, '{{ content.id }}')">
+                            <option value="immediate">הפעלה מיידית</option>
+                            <option value="hidden">הסתרה</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">עדכן</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">לא קיימים תכנים</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'lecturer' %}" class="btn btn-secondary mt-4">חזרה לדף הבית</a>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

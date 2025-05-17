@@ -49,7 +49,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">הקורסים שלי</h5>
                                         <p class="card-text">ניהול וצפייה בקורסים שלך</p>
-                                        <a href="#" class="btn btn-outline-primary">כניסה</a>
+                                        <a href="{% url 'lecturer_manage_content' %}" class="btn btn-outline-primary">כניסה</a>
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">מטלות ומבחנים</h5>
                                         <p class="card-text">ניהול מטלות ובדיקת עבודות</p>
-                                        <a href="#" class="btn btn-outline-primary">כניסה</a>
+                                        <a href="{% url 'manage_tasks_and_check_assignments' %}" class="btn btn-outline-primary">כניסה</a>
                                     </div>
                                 </div>
                             </div>
@@ -103,9 +103,10 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'index' %}" class="btn btn-secondary">חזרה לדף הראשי</a>
-                        </div>
+                        <form method="post" action="{% url 'index' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-secondary">התנתקות</button>
+                        </form>
                     </div>
                 </div>
             </div>
