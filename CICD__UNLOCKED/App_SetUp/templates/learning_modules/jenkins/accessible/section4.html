@@ -1,7 +1,7 @@
 <section id="presentation-wrapper" aria-labelledby="presentation-title"
-         style="text-align: center; padding: 30px; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); max-width: 1000px; margin: auto;">
+         style="text-align: center; padding: 30px; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4); max-width: 1000px; margin: auto; font-family: Arial, sans-serif;">
 
-  <h2 id="presentation-title" tabindex="0">📑 מצגת: Jenkins - היכרות כללית</h2>
+  <h2 id="presentation-title" tabindex="0" style="margin-bottom: 20px;">📑 מצגת: Jenkins - היכרות כללית</h2>
 
   <!-- מצגת מוטמעת -->
   <div role="region" aria-label="מצגת מוטמעת על Jenkins" style="position: relative;">
@@ -15,19 +15,23 @@
       aria-label="תוכן המצגת בנושא Jenkins"
       title="מצגת ג'נקינס"
       tabindex="0"
+      style="border-radius: 8px;"
     ></iframe>
 
     <!-- כפתורי ניווט -->
-    <div style="margin-top: 20px;" role="group" aria-label="ניווט בין שקופיות">
+    <div style="margin-top: 20px;" role="group" aria-label="כפתורי שליטה בשקופיות">
       <button onclick="prevSlide()" class="btn-nav" aria-label="שקופית קודמת">◀️ קודם</button>
       <button onclick="nextSlide()" class="btn-nav" aria-label="שקופית הבאה">▶️ הבא</button>
       <button onclick="toggleFullscreen()" class="btn-nav" aria-label="הצג במסך מלא">⛶ מסך מלא</button>
     </div>
   </div>
 
-  <!-- כפתור מעבר לשאלות -->
+  <!-- מעבר לשאלות -->
   <div id="questions-btn" style="margin-top: 30px; display: none;">
-    <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}" class="btn-next" role="button" aria-label="עבור לשאלות על Jenkins">
+    <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}"
+       class="btn-next"
+       role="button"
+       aria-label="עבור לשאלות על Jenkins">
       ✅ עבור לשאלות על Jenkins
     </a>
   </div>
@@ -46,8 +50,11 @@
     transition: background-color 0.3s;
   }
 
-  .btn-nav:hover {
+  .btn-nav:hover,
+  .btn-nav:focus {
     background-color: #005fa3;
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
   }
 
   .btn-next {
@@ -58,10 +65,14 @@
     border: none;
     border-radius: 8px;
     text-decoration: none;
+    transition: background-color 0.3s;
   }
 
-  .btn-next:hover {
+  .btn-next:hover,
+  .btn-next:focus {
     background-color: #009e6e;
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
   }
 </style>
 
@@ -104,5 +115,10 @@
     if (!document.getElementById('slideFrame')?.hasChildNodes()) {
       updateIframe();
     }
+  });
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
   });
 </script>

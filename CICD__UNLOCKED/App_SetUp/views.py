@@ -508,7 +508,8 @@ def git_module_view(request):
         'all_sentences': all_sentences,
         'video': video,
         'podcasts': podcasts,
-        'presentations': presentations
+        'presentations': presentations,
+        'visible_modules': ['git', 'jenkins', 'docker'],
     }
 
     return render(request, 'learning_modules/git_module.html', context)
@@ -529,7 +530,8 @@ def jenkins_module_view(request):
     context = {
         'video': video,
         'podcasts': podcasts,
-        'presentations': presentations
+        'presentations': presentations,
+        'visible_modules': ['git', 'jenkins', 'docker'],
     }
 
     return render(request, 'learning_modules/jenkins_module.html', context)
@@ -551,7 +553,8 @@ def docker_module_view(request):
     context = {
         'video': video,
         'podcasts': podcasts,
-        'presentations': presentations
+        'presentations': presentations,
+        'visible_modules': ['git', 'jenkins', 'docker'],
     }
 
     return render(request, 'learning_modules/docker_module.html', context)

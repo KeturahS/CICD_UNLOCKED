@@ -1,65 +1,115 @@
 <section id="section2" aria-labelledby="section2-title"
-         style="padding: 30px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+         style="padding: 40px 25px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); font-family: 'Segoe UI', sans-serif;">
 
-  <h2 id="section2-title" tabindex="0">{{ video.title }}</h2>
-  <p tabindex="0" style="font-size: 1.1em;">{{ video.description }}</p>
+  <h2 id="section2-title" tabindex="0" style="font-size: 2em; margin-bottom: 10px;">{{ video.title }}</h2>
+  <p tabindex="0" style="font-size: 1.1em; color: #ccc;">{{ video.description }}</p>
 
   {% if podcasts %}
   <div id="podcast-block" style="margin: 30px 0;" role="region" aria-label="נגן פודקאסט בנושא זה">
-    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">
+    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em;">
       🎧 לחץ להשמעת פודקאסט בנושא זה
     </button>
     <div id="podcast-player" style="display:none; margin-top: 20px;">
-      <audio controls style="width: 100%;">
+      <audio controls style="width: 100%; margin-bottom: 10px;">
         <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
         הדפדפן שלך לא תומך בניגון אודיו.
       </audio>
-      <div style="margin-top: 10px;">
-        <a href="{{ podcasts.0.audio_file.url }}" download
-           style="text-decoration: none; background-color: #4CAF50; color: white; padding: 8px 16px; border-radius: 5px;">
-          ⬇️ הורד פודקאסט למחשב
-        </a>
-      </div>
+      <a href="{{ podcasts.0.audio_file.url }}" download
+         style="text-decoration: none; background-color: #4CAF50; color: white; padding: 10px 18px; border-radius: 6px; display: inline-block;">
+        ⬇️ הורד פודקאסט למחשב
+      </a>
     </div>
   </div>
   {% endif %}
 
-  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0"></div>
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0" style="margin-top: 20px;"></div>
 
   <!-- שאלה 1 -->
-  <div id="question1" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q1-label">
-    <p id="q1-label" tabindex="0"><strong>מהו קונטיינר (Container) ב־Docker?</strong></p>
+  <div id="question1" class="question" style="display:none; margin-top: 30px; background-color: #2e2e2e; padding: 20px; border-radius: 12px;" role="group" aria-labelledby="q1-label">
+    <p id="q1-label" tabindex="0" style="font-weight: bold; font-size: 1.1em;">מהו קונטיינר (Container) ב־Docker?</p>
     <div role="radiogroup" aria-labelledby="q1-label">
       <label><input type="radio" name="q1" value="a"> מערכת הפעלה חדשה</label><br>
       <label><input type="radio" name="q1" value="b"> סביבת הרצה מבודדת הכוללת את הקוד, התלויות וההגדרות</label><br>
       <label><input type="radio" name="q1" value="c"> סקריפט להרצת בדיקות אוטומטיות</label><br>
     </div><br>
-    <button onclick="checkAnswer('q1', 'b', 'feedback1')" aria-label="בדוק תשובה לשאלה הראשונה">בדוק תשובה</button>
-    <div id="feedback1" aria-live="assertive" style="display:none;"></div>
-    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" class="btn-check" aria-label="בדוק תשובה לשאלה הראשונה">בדוק תשובה</button>
+    <div id="feedback1" aria-live="assertive" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" class="btn-resume" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
   </div>
 
   <!-- שאלה 2 -->
-  <div id="question2" class="question" style="display:none; margin-top: 20px;" role="group" aria-labelledby="q2-label">
-    <p id="q2-label" tabindex="0"><strong>כיצד יוצרים קונטיינר ב־Docker?</strong></p>
+  <div id="question2" class="question" style="display:none; margin-top: 30px; background-color: #2e2e2e; padding: 20px; border-radius: 12px;" role="group" aria-labelledby="q2-label">
+    <p id="q2-label" tabindex="0" style="font-weight: bold; font-size: 1.1em;">כיצד יוצרים קונטיינר ב־Docker?</p>
     <div role="radiogroup" aria-labelledby="q2-label">
       <label><input type="radio" name="q2" value="a"> באמצעות פקודת docker push</label><br>
       <label><input type="radio" name="q2" value="b"> באמצעות פקודת docker run על בסיס image קיים</label><br>
       <label><input type="radio" name="q2" value="c"> על ידי שימוש ב־GitHub Actions בלבד</label><br>
     </div><br>
-    <button onclick="checkAnswer('q2', 'b', 'feedback2')" aria-label="בדוק תשובה לשאלה השנייה">בדוק תשובה</button>
-    <div id="feedback2" aria-live="assertive" style="display:none;"></div>
-    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+    <button onclick="checkAnswer('q2', 'b', 'feedback2')" class="btn-check" aria-label="בדוק תשובה לשאלה השנייה">בדוק תשובה</button>
+    <div id="feedback2" aria-live="assertive" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" class="btn-resume" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
   </div>
 
-  <div style="margin-top: 30px; text-align: left;">
+  <div style="margin-top: 40px; text-align: left;">
     <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
        class="btn-next"
-       style="background-color:#00cc88; color:#fff; padding:10px 20px; border-radius:6px; display:inline-block;"
        role="button"
        aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
   </div>
 </section>
+
+<style>
+  .btn-check {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+  }
+
+  .btn-check:hover {
+    background-color: #1c7ed6;
+  }
+
+  .btn-resume {
+    margin-top: 10px;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-next {
+    background-color: #00cc88;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .btn-next:hover {
+    background-color: #009e6e;
+  }
+
+  label {
+    display: block;
+    margin: 6px 0;
+    cursor: pointer;
+  }
+
+  input[type="radio"] {
+    margin-left: 6px;
+  }
+</style>
+
 
 <!-- YouTube Script -->
 <script src="https://www.youtube.com/iframe_api"></script>
