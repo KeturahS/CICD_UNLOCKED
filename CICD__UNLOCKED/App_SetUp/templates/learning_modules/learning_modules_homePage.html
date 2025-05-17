@@ -17,9 +17,15 @@
     </p>
 
     <div style="margin-top: 30px;">
-      <a href="{% url 'git_module' %}" class="btn-next" style="margin: 10px;">🚀 התחל את מודול Git</a>
-      <a href="{% url 'jenkins_module' %}" class="btn-next" style="margin: 10px;">🛠️ עבור למודול Jenkins</a>
-      <a href="{% url 'docker_module' %}" class="btn-next" style="margin: 10px;">📦 עבור למודול Docker</a>
+    {% if 'git' in visible_modules %}
+        <a href="{% url 'git_module' %}" class="btn-next" style="margin: 10px;">🚀 התחל את מודול Git</a>
+    {% endif %}
+    {% if 'jenkins' in visible_modules %}
+        <a href="{% url 'jenkins_module' %}" class="btn-next" style="margin: 10px;">🛠️ עבור למודול Jenkins</a>
+    {% endif %}
+    {% if 'docker' in visible_modules %}
+        <a href="{% url 'docker_module' %}" class="btn-next" style="margin: 10px;">📦 עבור למודול Docker</a>
+    {% endif %}
     </div>
   </div>
 {% endblock %}

@@ -53,9 +53,16 @@
 <button class="openbtn" onclick="toggleSidebar()">☰</button>
 
 <div id="sidebar" class="sidebar">
+  {% if 'git' in visible_modules %}
   <a href="{% url 'git_module' %}">Git</a>
+  {% endif %}
+  {% if 'jenkins' in visible_modules %}
   <a href="{% url 'jenkins_module' %}">Jenkins</a>
+  {% endif %}
+  {% if 'docker' in visible_modules %}
   <a href="{% url 'docker_module' %}">Docker</a>
+  {% endif %}
+
 </div>
 
 <div class="content">
