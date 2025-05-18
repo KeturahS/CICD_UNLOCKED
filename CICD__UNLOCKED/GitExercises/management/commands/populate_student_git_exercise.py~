@@ -1,0 +1,25 @@
+from django.core.management.base import BaseCommand
+from App_SetUp.models import StudentProfile
+from GitExercises.models import Terminal_Exercises_Git_Commands, StudentTerminalGitCommandExercise
+
+class Command(BaseCommand):
+    help = 'Populate StudentTerminalGitCommandExercise for all students and commands'
+
+    def handle(self, *args, **kwargs):
+        students = StudentProfile.objects.all()
+        commands = Terminal_Exercises_Git_Commands.objects.all()
+
+        # Convert all commands to a list of dictionaries
+        commands_list = list(commands.values(
+            'id', 'command', 'Hebrew_Command', 'English_Description',
+            'Hebrew_Description', 'git_feedback', 'completed', 'level'
+        ))
+
+        for student in students:
+            # Create or update the StudentTerminalGitCommandExercise object
+            StudentTerminalGitCommandExercise.objects.update_or_create(
+                student=student,
+                defaults={'commands_data': commands_list}
+            )
+
+        self.stdout.write(self.style.SUCCESS("Successfully populated StudentTerminalGitCommandExercise for all students."))

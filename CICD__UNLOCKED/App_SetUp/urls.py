@@ -1,7 +1,10 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-
+from django.urls import path
+from .views import send_private_message
+from .views import view_my_messages
 from . import views
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -38,9 +41,36 @@ urlpatterns = [
     path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),
     path('modules/docker/', views.docker_module_view, name='docker_module'),
 
+    path('lecturer/manage-content/', views.lecturer_manage_content, name='lecturer_manage_content'),
+    path('lecturer/update-content/<int:content_id>/', views.update_module_visibility, name='update_module_visibility'),
+
+    path('LecturerPages/LecturerTasksAndAssignments/manage_tasks_and_check_assignments.html', views.manage_tasks_and_check_assignments, name='manage_tasks_and_check_assignments'),
+    path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_git.html', views.Lecturer_manage_git, name='Lecturer_manage_git'),
+    path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_docker.html', views.Lecturer_manage_docker, name='Lecturer_manage_docker'),
+    path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_jenkins.html', views.Lecturer_manage_jenkins, name='Lecturer_manage_jenkins'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection1.html', views.GitSection1, name='GitSection1'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection2.html', views.GitSection2, name='GitSection2'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection3.html', views.GitSection3, name='GitSection3'),
+    path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
+
+    path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
+    path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
+    path('learning/git/section1/', views.git_section1, name='git_section1'),
+    path('learning/git/section2/', views.git_section2, name='git_section2'),
+    path('learning/git/section3/', views.git_section3, name='git_section3'),
+    path('learning/git/section4/', views.git_section4, name='git_section4'),
+
+    path('learning/jenkins/section1/', views.jenkins_section1, name='jenkins_section1'),
+    path('learning/jenkins/section2/', views.jenkins_section2, name='jenkins_section2'),
+    path('learning/jenkins/section3/', views.jenkins_section3, name='jenkins_section3'),
+    path('learning/jenkins/section4/', views.jenkins_section4, name='jenkins_section4'),
+
+    path('learning/docker/section1/', views.docker_section1, name='docker_section1'),
+    path('learning/docker/section2/', views.docker_section2, name='docker_section2'),
 
 
+    path('lecturer/send-message/', send_private_message, name='send_private_message'),
+    path('student/my-messages/', view_my_messages, name='view_my_messages'),
 
-    path('placeholder/', views.placeholder_view, name='git_quiz_1'),
 
 ]

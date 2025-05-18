@@ -24,7 +24,8 @@ SECRET_KEY = 'django-insecure-664_mh1i2l)-jkn*bh&4$0l*eegryv++)7ce8&v@q11vfzq0o3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server
@@ -44,8 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'App_SetUp.apps.AppSetupConfig',
-    'GitExercises',
+    'GitExercises.apps.GitExercisesConfig',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

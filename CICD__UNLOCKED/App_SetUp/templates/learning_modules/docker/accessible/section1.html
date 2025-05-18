@@ -1,0 +1,217 @@
+<section id="section1" aria-labelledby="section1-title"
+         style="padding: 40px 25px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); font-family: 'Segoe UI', sans-serif;">
+
+  <h2 id="section1-title" tabindex="0" style="font-size: 2em; margin-bottom: 10px;">{{ video.title }}</h2>
+  <p tabindex="0" style="font-size: 1.1em; color: #ccc;">{{ video.description }}</p>
+
+  {% if podcasts %}
+  <div id="podcast-block" style="margin: 30px 0;" role="region" aria-label="נגן פודקאסט בנושא זה">
+    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em;">
+      🎧 לחץ להשמעת פודקאסט בנושא זה
+    </button>
+    <div id="podcast-player" style="display:none; margin-top: 20px;">
+      <audio controls style="width: 100%; margin-bottom: 10px;">
+        <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
+        הדפדפן שלך לא תומך בניגון אודיו.
+      </audio>
+      <a href="{{ podcasts.0.audio_file.url }}" download
+         style="text-decoration: none; background-color: #4CAF50; color: white; padding: 10px 18px; border-radius: 6px; display: inline-block;">
+        ⬇️ הורד פודקאסט למחשב
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- נגן YouTube -->
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0" style="margin-top: 20px;"></div>
+
+  <!-- שאלה 1 -->
+  <div id="question1" class="question" style="display:none; margin-top: 30px; background-color: #2e2e2e; padding: 20px; border-radius: 12px;" role="group" aria-labelledby="q1-label">
+    <p id="q1-label" tabindex="0" style="font-weight: bold; font-size: 1.1em;">מהו Docker?</p>
+    <div role="radiogroup" aria-labelledby="q1-label">
+      <label><input type="radio" name="q1" value="a"> מערכת הפעלה חדשה למפתחים</label><br>
+      <label><input type="radio" name="q1" value="b"> פלטפורמה להרצת אפליקציות בתוך קונטיינרים מבודדים</label><br>
+      <label><input type="radio" name="q1" value="c"> תוסף ל־GitHub שמנהל משתמשים</label><br>
+    </div><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" class="btn-check" aria-label="בדוק תשובה לשאלה הראשונה">בדוק תשובה</button>
+    <div id="feedback1" aria-live="assertive" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" class="btn-resume" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+  </div>
+
+  <!-- שאלה 2 -->
+  <div id="question2" class="question" style="display:none; margin-top: 30px; background-color: #2e2e2e; padding: 20px; border-radius: 12px;" role="group" aria-labelledby="q2-label">
+    <p id="q2-label" tabindex="0" style="font-weight: bold; font-size: 1.1em;">למה Docker כל כך נפוץ כיום?</p>
+    <div role="radiogroup" aria-labelledby="q2-label">
+      <label><input type="radio" name="q2" value="a"> בגלל שהוא כלי עיצוב גרפי</label><br>
+      <label><input type="radio" name="q2" value="b"> בגלל שהוא מאפשר הפצה והרצה עקבית של אפליקציות בסביבות שונות</label><br>
+      <label><input type="radio" name="q2" value="c"> בגלל שהוא משפר מהירות אינטרנט</label><br>
+    </div><br>
+    <button onclick="checkAnswer('q2', 'b', 'feedback2')" class="btn-check" aria-label="בדוק תשובה לשאלה השנייה">בדוק תשובה</button>
+    <div id="feedback2" aria-live="assertive" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" class="btn-resume" style="display:none;" aria-label="המשך צפייה">המשך צפייה</button>
+  </div>
+
+  <!-- מעבר לשאלות נוספות -->
+  <div style="margin-top: 40px; text-align: left;">
+    <a href="?step=1q{% if request.GET.accessible %}&accessible=1{% endif %}"
+       class="btn-next"
+       role="button"
+       aria-label="עבור לשאלות נוספות בנושא זה">👉 עבור לשאלות נוספות בנושא</a>
+  </div>
+</section>
+
+<style>
+  .btn-check {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+  }
+
+  .btn-check:hover {
+    background-color: #1c7ed6;
+  }
+
+  .btn-resume {
+    margin-top: 10px;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-next {
+    background-color: #00cc88;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .btn-next:hover {
+    background-color: #009e6e;
+  }
+
+  label {
+    display: block;
+    margin: 6px 0;
+    cursor: pointer;
+  }
+
+  input[type="radio"] {
+    margin-left: 6px;
+  }
+</style>
+
+
+<!-- סקריפט YouTube -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  const videoIdFromDB = "{{ video.youtube_id }}";
+  let player;
+  let interval = null;
+  let question1Shown = false;
+  let question2Shown = false;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: videoIdFromDB,
+      events: { 'onStateChange': onPlayerStateChange }
+    });
+  }
+
+  function onPlayerStateChange(e) {
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
+        if (time >= 180 && !question1Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          showQuestion('question1');
+          question1Shown = true;
+        }
+
+        if (time >= 300 && !question2Shown) {
+          exitFullscreen();
+          player.pauseVideo();
+          showQuestion('question2');
+          question2Shown = true;
+        }
+
+        if (question1Shown && question2Shown) {
+          clearInterval(interval);
+          interval = null;
+        }
+      }, 1000);
+    }
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function showQuestion(id) {
+    const q = document.getElementById(id);
+    q.style.display = 'block';
+    q.setAttribute('tabindex', '-1');
+    q.focus();
+  }
+
+  function exitFullscreen() {
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  }
+
+  function checkAnswer(qName, correctVal, feedbackId) {
+    const selected = Array.from(document.getElementsByName(qName)).find(r => r.checked);
+    const feedback = document.getElementById(feedbackId);
+    if (!selected) {
+      feedback.innerText = "אנא בחר תשובה";
+    } else if (selected.value === correctVal) {
+      feedback.innerHTML = "<span style='color:lightgreen'>✅ תשובה נכונה!</span>";
+    } else {
+      feedback.innerHTML = "<span style='color:#ff5555'>❌ תשובה שגויה.</span> " + getExplanation(qName);
+    }
+    feedback.style.display = 'block';
+    document.getElementById('resume' + qName[qName.length - 1]).style.display = 'inline-block';
+  }
+
+  function resumeVideo(qDivId, fbId, btnId) {
+    document.getElementById(qDivId).style.display = 'none';
+    document.getElementById(fbId).style.display = 'none';
+    document.getElementById(btnId).style.display = 'none';
+    player.playVideo();
+  }
+
+  function getExplanation(qName) {
+    switch (qName) {
+      case 'q1': return "Docker הוא כלי להרצת אפליקציות מבודדות בקונטיינרים – על גבי כל סביבה.";
+      case 'q2': return "Docker מאפשר יציבות בין סביבות (פיתוח, בדיקות, production) וזה מה שהופך אותו לנפוץ.";
+      default: return "";
+    }
+  }
+
+  function togglePodcast() {
+    const playerDiv = document.getElementById('podcast-player');
+    playerDiv.style.display = (playerDiv.style.display === 'none') ? 'block' : 'none';
+  }
+
+  window.addEventListener('pageshow', function () {
+    if (!document.getElementById('player')?.hasChildNodes()) {
+      onYouTubeIframeAPIReady();
+    }
+  });
+</script>

@@ -1,7 +1,0 @@
-# GitExercises/urls.py
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('GitExercise1/', views.placeholder_view, name='git_quiz_1'),
-]

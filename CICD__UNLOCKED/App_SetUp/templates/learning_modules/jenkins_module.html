@@ -1,10 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'learning_modules/base_learning_module.html' %}
 
-</body>
-</html>
+{% block title %}🛠️ לומדת Jenkins - אינטראקטיבית ודיגיטלית{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: auto; padding: 40px; background: linear-gradient(135deg, #f3f9ff, #ffffff); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+
+  {% if not request.GET.step %}
+    <!-- כותרת ראשית -->
+    <h1 style="text-align: center; font-size: 2.5em; color: #d32f2f; margin-bottom: 20px;">
+      🛠️ לומדת Jenkins אינטראקטיבית
+    </h1>
+
+    <!-- תיאור כללי -->
+    <p style="text-align: center; font-size: 1.2em; color: #333;">
+      לומדה זו תכיר לך את Jenkins – הכלי המוביל לאוטומציה של תהליכי פיתוח (CI/CD). תלמד כיצד הוא עובד, כיצד מתקינים אותו ואיך יוצרים משימות ראשונות בצורה פשוטה ואינטראקטיבית.
+    </p>
+
+    <hr style="margin: 40px auto; width: 60%; border: 1px solid #ef5350;">
+
+    <!-- תוכן עניינים -->
+    <div style="background-color: #ffebee; padding: 30px; border-radius: 12px;">
+      <h2 style="text-align: center; color: #c62828;">📚 תוכן עניינים</h2>
+      <ol style="font-size: 1.1em; line-height: 2; color: #444; text-align: right; direction: rtl; padding-right: 20px;">
+        <li>היכרות עם Jenkins</li>
+        <li>התקנת Jenkins</li>
+        <li>בניית Job ראשון ב־Jenkins</li>
+        <li>מצגת על Jenkins</li>
+      </ol>
+    </div>
+
+    <!-- כפתור התחלה -->
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
+         class="btn-next"
+         style="background-color: #c62828; padding: 14px 28px; font-size: 18px; border-radius: 10px;">
+        🎬 התחל את הלמידה
+      </a>
+    </div>
+
+    <!-- מצב נגישות -->
+    <div style="text-align: center; margin-top: 25px;">
+      {% if not request.GET.accessible %}
+        <a href="?accessible=1" class="btn-next" style="background-color: #444;">🔓 הפעל מצב נגישות</a>
+      {% else %}
+        <a href="?" class="btn-next" style="background-color: #888;">🔒 חזרה למצב רגיל</a>
+      {% endif %}
+    </div>
+
+  {% elif request.GET.step == '1' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/jenkins/accessible/section1.html' with video=video podcasts=podcasts %}
+    {% else %}
+      {% include 'learning_modules/jenkins/section1.html' with video=video podcasts=podcasts %}
+    {% endif %}
+
+  {% elif request.GET.step == '1q' %}
+    {% include 'JenkinsExercises/section1_questions.html' %}
+
+  {% elif request.GET.step == '2' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/jenkins/accessible/section2.html' with video=video podcasts=podcasts %}
+    {% else %}
+      {% include 'learning_modules/jenkins/section2.html' with video=video podcasts=podcasts %}
+    {% endif %}
+
+  {% elif request.GET.step == '2q' %}
+    {% include 'JenkinsExercises/section2_questions.html' %}
+
+  {% elif request.GET.step == '3' %}
+    {% if request.GET.accessible %}
+      {% include 'learning_modules/jenkins/accessible/section3.html' with video=video podcasts=podcasts %}
+    {% else %}
+      {% include 'learning_modules/jenkins/section3.html' with video=video podcasts=podcasts %}
+    {% endif %}
+
+  {% elif request.GET.step == '3q' %}
+    {% include 'JenkinsExercises/section3_questions.html' %}
+
+  {% elif request.GET.step == '4' %}
+    {% if request.GET.accessible %}
+      {% if presentations %}
+        {% include 'learning_modules/jenkins/accessible/section4.html' with presentation=presentations.0 %}
+      {% endif %}
+    {% else %}
+      {% if presentations %}
+        {% include 'learning_modules/jenkins/section4.html' with presentation=presentations.0 %}
+      {% endif %}
+    {% endif %}
+
+  {% elif request.GET.step == '4q' %}
+    {% include 'JenkinsExercises/section4_questions.html' %}
+
+  {% endif %}
+</div>
+{% endblock %}
