@@ -34,6 +34,8 @@ urlpatterns = [
 
     path('contact/', views.contact_us, name='contact_us'),
     path('my-messages/', views.student_messages_view, name='student_messages'),
+    path('admin_page/resolve_request/<int:message_id>/', views.resolve_request, name='resolve_request'),
+    path('lecturer/resolve_request/<int:message_id>/', views.resolve_lecturer_request, name='resolve_lecturer_request'),
 
 
     path('learning/', views.learning_home, name='learning_home'),
@@ -67,6 +69,7 @@ urlpatterns = [
 
     path('learning/docker/section1/', views.docker_section1, name='docker_section1'),
     path('learning/docker/section2/', views.docker_section2, name='docker_section2'),
+    path('learning/docker/section3/', views.docker_section3, name='docker_section3'),
 
 
     path('lecturer/send-message/', send_private_message, name='send_private_message'),

@@ -182,7 +182,13 @@ def login_view(request):
 
 
 def lecturer(request):
-    return render(request, 'LecturerPages/lecturer.html')
+    show_filter = request.GET.get('show')
+    if show_filter == 'open':
+        contact_messages = ContactMessage.objects.filter(is_resolved=False, category='lecturer').order_by('-created_at')
+    else:
+        contact_messages = ContactMessage.objects.filter(category='lecturer').order_by('-created_at')
+
+    return render(request, 'LecturerPages/lecturer.html', {'contact_messages': contact_messages, })
 
 
 def student(request):
@@ -192,12 +198,18 @@ def student(request):
 @login_required
 @csrf_protect
 def admin(request):
+    show_filter = request.GET.get('show')
+    if show_filter == 'open':
+        contact_messages = ContactMessage.objects.filter(is_resolved=False, category__in=['support', 'admin']).order_by('-created_at')
+    else:
+        contact_messages = ContactMessage.objects.filter(category__in=['support', 'admin']).order_by('-created_at')
     lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
     admins_requests = User.objects.filter(is_admin=True, is_active=False) if request.user.is_superuser else None
 
     context = {
         "lecturers_requests": lecturers_requests,
         "admins_requests": admins_requests,
+        'contact_messages': contact_messages,
 
     }
     return render(request, "AdminPages/admin_page.html", context)
@@ -303,7 +315,41 @@ def manage_students(request):
     }
     return render(request, "AdminPages/admin_page_students_section.html", context)
 
+@login_required
+def resolve_request(request, message_id):
+    if not request.user.is_admin:
+        return redirect('login_view')
 
+    message = get_object_or_404(ContactMessage, id=message_id)
+    message.is_resolved = True
+    message.save()
+    send_mail(
+        subject='הפנייה שלך טופלה',
+        message=f'שלום {message.student.username}, הפנייה שלך בנושא "{message.subject}" טופלה בהצלחה. תוכל לצפות בעדכון באזור הפניות שלך באתר.',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[message.student.email],
+        fail_silently=False,
+    )
+    return redirect('admin')
+
+
+@login_required
+def resolve_lecturer_request(request, message_id):
+    if not request.user.is_lecturer:
+        return redirect('login_view')
+
+    message = get_object_or_404(ContactMessage, id=message_id)
+    if message.category == 'lecturer':  # רק אם הפנייה נשלחה למרצה
+        message.is_resolved = True
+        message.save()
+        send_mail(
+            subject='הפנייה שלך טופלה',
+            message=f'שלום {message.student.username}, הפנייה שלך בנושא "{message.subject}" טופלה בהצלחה. תוכל לצפות בעדכון באזור הפניות שלך באתר.',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[message.student.email],
+            fail_silently=False,
+        )
+    return redirect('lecturer')  # תחזיר את המרצה לעמוד שלו אחרי הטיפול
 def get_superuser_email():
     # Retrieve the first superuser
     superuser = User.objects.filter(is_superuser=True).first()
@@ -774,6 +820,11 @@ def docker_section1(request):
 def docker_section2(request):
     video = LearningVideo.objects.filter(module='Docker', order=2).first()
     return render(request, 'learning_modules/docker/section2.html', {'video': video})
+
+@login_required
+def docker_section3(request):
+    video = LearningVideo.objects.filter(module='Docker', order=3).first()
+    return render(request, 'learning_modules/docker/section3.html', {'video': video})
 
 #
 # @login_required
