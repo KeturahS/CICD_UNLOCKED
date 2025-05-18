@@ -67,6 +67,7 @@ urlpatterns = [
 
     path('learning/docker/section1/', views.docker_section1, name='docker_section1'),
     path('learning/docker/section2/', views.docker_section2, name='docker_section2'),
+    path('learning/docker/section3/', views.docker_section3, name='docker_section3'),
 
 
     path('lecturer/send-message/', send_private_message, name='send_private_message'),

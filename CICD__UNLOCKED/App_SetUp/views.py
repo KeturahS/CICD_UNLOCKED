@@ -775,6 +775,11 @@ def docker_section2(request):
     video = LearningVideo.objects.filter(module='Docker', order=2).first()
     return render(request, 'learning_modules/docker/section2.html', {'video': video})
 
+@login_required
+def docker_section3(request):
+    video = LearningVideo.objects.filter(module='Docker', order=3).first()
+    return render(request, 'learning_modules/docker/section3.html', {'video': video})
+
 #
 # @login_required
 # def rate_learning_modules(request):
