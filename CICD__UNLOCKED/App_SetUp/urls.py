@@ -75,5 +75,9 @@ urlpatterns = [
     path('lecturer/send-message/', send_private_message, name='send_private_message'),
     path('student/my-messages/', view_my_messages, name='view_my_messages'),
 
+    path('lecturer/monitor-progress/', views.monitor_student_git_progress, name='monitor_student_git_progress'),
+    path('lecturer/monitor-progress/download/', views.download_student_report, name='download_student_report'),
+
+
 
 ]

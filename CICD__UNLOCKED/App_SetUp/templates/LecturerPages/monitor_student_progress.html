@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ניטור התקדמות סטודנטים</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f8ff;
+            padding: 30px;
+            margin: 0;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #0d3b66;
+        }
+        form, .graphs, .summary-table {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        select, button {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #d4e3ff;
+        }
+        .send-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        .send-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>ניטור התקדמות סטודנטים</h1>
+
+<!-- טופס בחירת סטודנט לגרפים -->
+<form method="get">
+    <label for="student">בחר סטודנט לגרפים:</label>
+    <select name="student" id="student">
+        {% for student in student_list %}
+            <option value="{{ student }}" {% if selected_student == student %}selected{% endif %}>
+                {{ student }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">הצג גרפים</button>
+</form>
+
+<!-- גרפים -->
+<div class="graphs">
+    <h2>📊 גרף עמודות - סטודנט נבחר</h2>
+    {% if bar_graph %}
+        <img src="data:image/png;base64,{{ bar_graph }}" alt="Bar Graph">
+    {% else %}
+        <p>לא נמצאו נתונים להצגה.</p>
+    {% endif %}
+
+    <h2>🥧 גרף עוגה - סטודנט נבחר</h2>
+    {% if pie_chart %}
+        <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
+    {% else %}
+        <p>לא נמצאו נתונים להצגה.</p>
+    {% endif %}
+</div>
+
+<!-- טופס סינון סטודנטים לטבלה -->
+<form method="get">
+    <label for="table_filter">סנן טבלה לפי:</label>
+    <select name="table_filter" id="table_filter">
+        <option value="">-- ללא --</option>
+        <option value="best" {% if table_filter == "best" %}selected{% endif %}>המצטיינים</option>
+        <option value="struggle" {% if table_filter == "struggle" %}selected{% endif %}>המתקשים</option>
+    </select>
+    <button type="submit">סנן טבלה</button>
+</form>
+
+<!-- טבלת סיכום -->
+<div class="summary-table">
+    <h2>🔍 טבלת ממוצע ניסיונות לפי סטודנט</h2>
+    {% if summary %}
+        <table>
+            <thead>
+                <tr>
+                    <th>שם סטודנט</th>
+                    <th>סה"כ ניסיונות</th>
+                    <th>סה"כ פקודות שהושלמו</th>
+                    <th>ממוצע ניסיונות</th>
+                    <th>סטטוס</th>
+                    <th>שלח הודעה</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for student in summary %}
+                <tr>
+                    <td>{{ student.student__user__username }}</td>
+                    <td>{{ student.total_attempts }}</td>
+                    <td>{{ student.total_completed }}</td>
+                    <td>{{ student.avg_attempts|floatformat:2 }}</td>
+                    <td>
+                        {% if student.avg_attempts > 2.5 or student.avg_attempts == 0 %}
+                            🚨 מתקשה
+                        {% else %}
+                            ✅ מצליח
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'send_private_message' %}?recipient={{ student.student__user__username }}" class="send-btn">✉️ שלח הודעה</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <form method="post" action="{% url 'download_student_report' %}">
+            {% csrf_token %}
+            <input type="hidden" name="table_filter" value="{{ table_filter }}">
+            <button type="submit">📥 הורד דו"ח כקובץ CSV</button>
+        </form>
+    {% else %}
+        <p>אין מידע להצגה.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
