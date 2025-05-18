@@ -40,8 +40,10 @@ urlpatterns = [
     path('modules/git/', views.git_module_view, name='git_module'),
     path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),
     path('modules/docker/', views.docker_module_view, name='docker_module'),
+
     path('lecturer/manage-content/', views.lecturer_manage_content, name='lecturer_manage_content'),
     path('lecturer/update-content/<int:content_id>/', views.update_module_visibility, name='update_module_visibility'),
+
     path('LecturerPages/LecturerTasksAndAssignments/manage_tasks_and_check_assignments.html', views.manage_tasks_and_check_assignments, name='manage_tasks_and_check_assignments'),
     path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_git.html', views.Lecturer_manage_git, name='Lecturer_manage_git'),
     path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_docker.html', views.Lecturer_manage_docker, name='Lecturer_manage_docker'),
@@ -50,6 +52,7 @@ urlpatterns = [
     path('LecturerPages/LecturerTasksAndAssignments/GitSection2.html', views.GitSection2, name='GitSection2'),
     path('LecturerPages/LecturerTasksAndAssignments/GitSection3.html', views.GitSection3, name='GitSection3'),
     path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
+
     path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
     path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
     path('learning/git/section1/', views.git_section1, name='git_section1'),
@@ -68,5 +71,6 @@ urlpatterns = [
 
     path('lecturer/send-message/', send_private_message, name='send_private_message'),
     path('student/my-messages/', view_my_messages, name='view_my_messages'),
+
 
 ]

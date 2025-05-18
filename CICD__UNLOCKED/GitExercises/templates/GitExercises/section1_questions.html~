@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Git vs GitHub - פעילות אינטראקטיבית</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .zone {
+      border: 2px dashed #aaa;
+      border-radius: 10px;
+      background-color: #fff;
+      width: 250px;
+      min-height: 300px;
+      padding: 15px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    .zone h3 {
+      margin-top: 0;
+    }
+
+    .item {
+      background-color: #e0f0ff;
+      border: 1px solid #2196F3;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      cursor: grab;
+    }
+
+    .item.dragging {
+      opacity: 0.5;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>גרור כל מושג למקום הנכון: Git או GitHub</h2>
+
+<div class="container">
+  <div class="zone" id="warehouse" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <h3>🗃️ מחסן</h3>
+    {% for phrase in all_sentences %}
+      <div class="item" draggable="true" ondragstart="drag(event)" id="item-{{ phrase.type|lower }}-{{ forloop.counter }}">
+        {{ phrase.sentence }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="zone" id="git" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <h3>🌀 Git</h3>
+  </div>
+
+  <div class="zone" id="github" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <h3>🌐 GitHub</h3>
+  </div>
+</div>
+
+<button onclick="checkAnswers()">בדוק תשובות</button>
+<div id="result"></div>
+
+<!-- כפתור מעבר דינמי -->
+<button id="next-section-btn" onclick="goToNext()" style="display: none;">⬅ עבור ללמידה הבאה</button>
+
+<script>
+  const correctAnswers = { git: [], github: [] };
+
+  const allSentences = [
+    {% for phrase in all_sentences %}
+      { id: "item-{{ phrase.type|lower }}-{{ forloop.counter }}", type: "{{ phrase.type|lower }}" },
+    {% endfor %}
+  ];
+
+  allSentences.forEach(sentence => {
+    if (sentence.type === "git") {
+      correctAnswers.git.push(sentence.id);
+    } else if (sentence.type === "github") {
+      correctAnswers.github.push(sentence.id);
+    }
+  });
+
+  function allowDrop(ev) {
+    ev.preventDefault();
+  }
+
+  function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    ev.target.classList.add("dragging");
+  }
+
+  function drop(ev) {
+    ev.preventDefault();
+    const id = ev.dataTransfer.getData("text");
+    const el = document.getElementById(id);
+    if (!ev.target.classList.contains("item")) {
+      ev.target.appendChild(el);
+    }
+    el.classList.remove("dragging");
+  }
+
+  function checkAnswers() {
+    const gitBox = document.getElementById("git");
+    const githubBox = document.getElementById("github");
+    const gitItems = Array.from(gitBox.querySelectorAll(".item")).map(i => i.id);
+    const githubItems = Array.from(githubBox.querySelectorAll(".item")).map(i => i.id);
+
+    const gitCorrect = arraysEqual(gitItems.sort(), correctAnswers.git.sort());
+    const githubCorrect = arraysEqual(githubItems.sort(), correctAnswers.github.sort());
+
+    const result = document.getElementById("result");
+    const nextBtn = document.getElementById("next-section-btn");
+
+    if (gitCorrect && githubCorrect) {
+      result.textContent = "כל הכבוד! כל התשובות נכונות ✅";
+      result.style.color = "green";
+      nextBtn.style.display = "inline-block";
+    } else {
+      result.textContent = "יש טעויות, נסה שוב ❌";
+      result.style.color = "red";
+      nextBtn.style.display = "none";
+    }
+  }
+
+  function arraysEqual(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  function goToNext() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const nextStep = "?step=2" + (urlParams.has("accessible") ? "&accessible=1" : "");
+    location.href = nextStep;
+  }
+</script>
+
+</body>
+</html>

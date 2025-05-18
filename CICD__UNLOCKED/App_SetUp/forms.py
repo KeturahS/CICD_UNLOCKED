@@ -6,7 +6,9 @@ from .models import StudentProfile
 from .models import ContactMessage
 from django.core.exceptions import ValidationError
 from datetime import date
-from GitExercises.models import GitHubSentence, GitSentence
+
+from GitExercises.models import GitHubSentence, GitSentence, Terminal_Exercises_Git_Commands
+
 from django import forms
 from .models import PrivateMessage
 from django.contrib.auth import get_user_model
@@ -16,6 +18,7 @@ from .models import PrivateMessage
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
 
 
 
@@ -174,6 +177,12 @@ class GitHubSentenceForm(forms.ModelForm):
         fields = ['sentence']
 
 
+class TerminalExercisesGitCommandsForm(forms.ModelForm):
+    class Meta:
+        model = Terminal_Exercises_Git_Commands
+        fields = ['command', 'English_Description','Hebrew_Description', 'git_feedback', 'git_command_scenario', 'level']
+
+
 
 
 
@@ -200,3 +209,4 @@ class PrivateMessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['recipient'].queryset = User.objects.filter(is_student=True)
+

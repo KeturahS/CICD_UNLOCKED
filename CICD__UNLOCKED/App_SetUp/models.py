@@ -5,6 +5,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 
+
+
+
+
 # מודל משתמש מותאם אישית
 class User(AbstractUser):
     is_admin = models.BooleanField('Is admin', default=False)
@@ -24,9 +28,9 @@ class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="student_profile")
     institution = models.CharField('Institution', max_length=255, choices=INSTITUTION_CHOICES)
     target_completion_date = models.DateField('Target completion date', blank=True, null=True)
-
     def __str__(self):
         return f"Student Profile of {self.user.username}"
+
 
 # פרופיל מרצה
 class LecturerProfile(models.Model):

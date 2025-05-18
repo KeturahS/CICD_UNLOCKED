@@ -1,15 +1,1039 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>מעבר ל-Section 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תרגול פקודות Git</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --bg-darker: #0f0f0f;
+            --bg-medium: #2a2a2a;
+            --bg-light: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-success: #4ade80;
+            --text-error: #f87171;
+            --text-warning: #facc15;
+            --text-info: #60a5fa;
+            --border-color: #4a4a4a;
+            --accent-color: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tutorial-section, .terminal-section {
+            background-color: var(--bg-medium);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            background-color: var(--bg-light);
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-path {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .terminal-badges {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            background-color: var(--bg-dark);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .terminal-body {
+            background-color: var(--bg-darker);
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            min-height: 400px;
+            max-height: 60vh;
+            overflow-y: auto;
+            font-size: 14px;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-input-line {
+            display: flex;
+            margin-top: 10px;
+            direction: ltr;
+        }
+
+        .prompt {
+            color: var(--text-success);
+            margin-right: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        #terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .command-output {
+            white-space: pre-wrap;
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .hebrew-translation {
+            color: var(--text-info);
+            border-top: 1px dashed var(--border-color);
+            margin-top: 5px;
+            padding-top: 5px;
+            direction: rtl;
+            text-align: right;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .success {
+            color: var(--text-primary);
+        }
+
+        .error {
+            color: var(--text-error);
+        }
+
+        .command-line {
+            display: flex;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .terminal-footer {
+            background-color: var(--bg-light);
+            padding: 10px 15px;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .execute-btn {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .execute-btn:hover {
+            background-color: var(--bg-dark);
+            color: var(--text-success);
+        }
+
+        .execute-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tab-container {
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .tab.active {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Add custom scrollbar styling */
+        .tab-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .tab-content::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb {
+            background: var(--bg-medium);
+            border-radius: 4px;
+        }
+
+        .tab-content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        .lesson-card {
+            background-color: var(--bg-dark);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .lesson-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .check-icon {
+            color: var(--text-success);
+            font-size: 18px;
+        }
+
+        .lesson-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .code-example {
+            background-color: var(--bg-medium);
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+        }
+
+        .complete-btn {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .complete-btn:hover {
+            background-color: var(--bg-medium);
+            color: var(--text-success);
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .workflow-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            width: 100%;
+        }
+
+        .workflow-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        .workflow-icon.commit {
+            background-color: rgba(74, 222, 128, 0.2);
+            color: var(--text-success);
+        }
+
+        .workflow-icon.branch {
+            background-color: rgba(250, 204, 21, 0.2);
+            color: var(--text-warning);
+        }
+
+        .workflow-icon.merge {
+            background-color: rgba(192, 132, 252, 0.2);
+            color: #c084fc;
+        }
+
+        .workflow-text {
+            flex: 1;
+        }
+
+        .workflow-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .workflow-description {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .workflow-line {
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            width: 2px;
+            height: 30px;
+            background-color: var(--border-color);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--bg-medium);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .mode-switch {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-dark);
+        }
+
+        .test-scenario {
+            background-color: var(--bg-medium);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .scenario-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .scenario-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+     .btn-custom {
+    display: inline-block;
+    padding: 15px 30px; /* Increase padding for a bigger button */
+    font-size: 18px; /* Larger font size */
+    font-weight: bold;
+    color: #fff; /* White text */
+    background-color: #000; /* Black background */
+    border: none;
+    border-radius: 8px; /* Slightly rounded corners */
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-custom:hover {
+    background-color: #333; /* Darker gray on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-custom:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+        .button-container {
+    text-align: <l></l>eft; /* Align the button to the left */
+    margin-bottom: 20px;
+}
+
+    </style>
 </head>
 <body>
 
-  <button onclick="location.href='?step=3{% if request.GET.accessible %}&accessible=1{% endif %}'">
-  ➡ המשך ל־Section 3
-</button>
 
 
+    <header>
+        <h1>תרגול פקודות Git</h1>
+        <p class="subtitle">למד פקודות Git באמצעות תרגול אינטראקטיבי</p>
+
+
+
+    </header>
+
+
+
+        <div class="button-container">
+            <a href="{% url 'GitScenarioExercise' %}" class="btn btn-secondary btn-custom">מעבר למבדקים</a>
+        </div>
+
+
+
+    <div class="container">
+        <div class="tutorial-section">
+
+
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="basics">בסיסי</div>
+                    <div class="tab" data-tab="branching">ענפים</div>
+                    <div class="tab" data-tab="advanced">מתקדם</div>
+                </div>
+
+                <div class="tab-content active" id="basics">
+
+                        {%for basic_command in basic_git_terminal_commands %}
+                            <div class="lesson-card" data-lesson="{{basic_command.command.command}}">
+                                <div class="lesson-header">
+                                    <div class="lesson-title">{{basic_command.command.Hebrew_Command}}</div>
+                                    <div class="check-icon" style="display: none;">✓</div>
+                                </div>
+                                <div class="lesson-description">{{basic_command.command.Hebrew_Description}}</div>
+                                <div class="code-example">{{basic_command.command.command}}</div>
+                                  </div>
+                        {%endfor%}
+
+
+                </div>
+
+                <div class="tab-content" id="branching">
+
+                      {%for branching_command in branches_git_terminal_commands %}
+                            <div class="lesson-card" data-lesson="{{branching_command.command.command}}">
+                                <div class="lesson-header">
+                                    <div class="lesson-title">{{branching_command.command.Hebrew_Command}}</div>
+                                    <div class="check-icon" style="display: none;">✓</div>
+                                </div>
+                                <div class="lesson-description">{{branching_command.command.Hebrew_Description}}</div>
+                                <div class="code-example">{{branching_command.command.command}}</div>
+                                    </div>
+                        {%endfor%}
+
+                </div>
+
+                <div class="tab-content" id="advanced">
+
+                        {%for Advanced_Command in advanced_git_terminal_commands %}
+                            <div class="lesson-card" data-lesson="{{Advanced_Command.command.command}}">
+                                <div class="lesson-header">
+                                    <div class="lesson-title">{{Advanced_Command.command.Hebrew_Command}}</div>
+                                    <div class="check-icon" style="display: none;">✓</div>
+                                </div>
+                                <div class="lesson-description">{{Advanced_Command.command.Hebrew_Description}}</div>
+                                <div class="code-example">{{Advanced_Command.command.command}}</div>
+
+                            </div>
+                        {%endfor%}
+
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" id="prev-btn" disabled>הקודם</button>
+                <button class="nav-btn" id="next-btn">הבא</button>
+            </div>
+        </div>
+
+
+
+        <div class="terminal-section">
+            <div class="terminal-header">
+                <div class="terminal-path" id="terminal-path">git@practice:~/project</div>
+                <div class="terminal-badges">
+                    <div class="badge" id="branch-badge">ענף: main</div>
+                    <button class="execute-btn" onclick="resetTerminal()">איפוס</button>
+                </div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div class="command-output success">
+                    Welcome to Git Practice Terminal! Type 'help' to see available commands.
+                    <div class="hebrew-translation">ברוכים הבאים לטרמינל תרגול Git! הקלד 'help' כדי לראות פקודות זמינות.</div>
+                </div>
+            </div>
+            <div class="terminal-footer">
+                <div>הקלד פקודת Git או 'help' כדי לראות פקודות זמינות</div>
+                <button class="execute-btn" id="execute-btn" disabled>הרץ</button>
+            </div>
+            <form id="terminal-form" onsubmit="handleCommand(event)">
+                <div class="terminal-input-line">
+                    <span class="prompt">$</span>
+                    <input type="text" id="terminal-input" autocomplete="off" autofocus>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>תרגול אינטראקטיבי של פקודות Git © 2025</p>
+    </footer>
+
+
+
+
+    <script>
+        // Terminal state
+        const state = {
+            repositoryInitialized: false,
+            currentDirectory: '/project',
+            filesStaged: [],
+            filesCommitted: [],
+            branches: ['main'],
+            currentBranch: 'main',
+            mockFiles: ['index.html', 'style.css', 'app.js', 'README.md'],
+            completedLessons: []
+        };
+
+        // Command feedback translations
+        const translations = {
+            'welcome': 'ברוכים הבאים לטרמינל תרגול Git! הקלד \'help\' כדי לראות פקודות זמינות.',
+            'help': 'פקודות Git זמינות:\n\nהקלד help כדי לראות את הרשימה המלאה\nclear - נקה את הטרמינל\nls - הצג קבצים בתיקייה הנוכחית',
+            'repo_initialized': 'מאגר Git כבר מאותחל',
+            'init_success': 'אותחל מאגר Git ריק ב',
+            'not_git_repo': 'לא מאגר git. הרץ \'git init\' קודם.',
+            'nothing_commit': 'אין מה לקומיט, עץ העבודה נקי',
+            'changes_commit': 'שינויים להקמיט:',
+            'untracked_files': 'קבצים לא מעוקבים:',
+            'nothing_specified': 'לא צוין כלום, לא נוסף כלום.',
+            'added_files': 'נוספו קבצים לאזור ההכנה',
+            'file_already': 'קובץ כבר באזור ההכנה או בקומיט',
+            'file_added': 'נוסף לאזור ההכנה',
+            'file_not_found': 'קובץ לא נמצא',
+            'nothing_to_commit': 'אין מה לקומיט. הוסף קבצים קודם עם \'git add\'',
+            'files_changed': 'קבצים שונו',
+            'provide_message': 'אנא ספק הודעת קומיט עם -m \'ההודעה שלך\'',
+            'branch_exists': 'ענף כבר קיים',
+            'branch_created': 'נוצר ענף',
+            'specify_branch': 'אנא ציין שם ענף',
+            'branch_not_exist': 'ענף לא קיים. השתמש ב-b- כדי ליצור אותו.',
+            'created_switched': 'נוצר והוחלף לענף',
+            'switched_branch': 'הוחלף לענף',
+            'specify_merge': 'אנא ציין ענף למיזוג',
+            'branch_not_exist_merge': 'ענף לא קיים',
+            'merge_self': 'לא ניתן למזג ענף לתוך עצמו',
+            'merged_branch': 'מוזג ענף',
+            'into': 'לתוך',
+            'no_commits': 'אין קומיטים עדיין',
+            'command_not_implemented': 'פקודת Git לא מיושמת:',
+            'terminal_reset': 'טרמינל אופס. הקלד \'help\' כדי לראות פקודות זמינות.',
+            'command_not_found': 'פקודה לא נמצאה. הקלד \'help\' כדי לראות פקודות זמינות.'
+        };
+
+        // DOM elements
+        const terminalBody = document.getElementById('terminal-body');
+        const terminalInput = document.getElementById('terminal-input');
+        const terminalPath = document.getElementById('terminal-path');
+
+        const branchBadge = document.getElementById('branch-badge');
+        const executeBtn = document.getElementById('execute-btn');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPercentage = document.getElementById('progress-percentage');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Tab navigation
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        let activeTabIndex = 0;
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                tabContents[index].classList.add('active');
+
+                activeTabIndex = index;
+                updateNavButtons();
+            });
+        });
+
+        function updateNavButtons() {
+            prevBtn.disabled = activeTabIndex === 0;
+            nextBtn.disabled = activeTabIndex === tabs.length - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (activeTabIndex > 0) {
+                tabs[activeTabIndex].classList.remove('active');
+                tabContents[activeTabIndex].classList.remove('active');
+                activeTabIndex--;
+                tabs[activeTabIndex].classList.add('active');
+                tabContents[activeTabIndex].classList.add('active');
+                updateNavButtons();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (activeTabIndex < tabs.length - 1) {
+                tabs[activeTabIndex].classList.remove('active');
+                tabContents[activeTabIndex].classList.remove('active');
+                activeTabIndex++;
+                tabs[activeTabIndex].classList.add('active');
+                tabContents[activeTabIndex].classList.add('active');
+                updateNavButtons();
+            }
+        });
+
+        // Focus input when terminal body is clicked
+        terminalBody.addEventListener('click', () => {
+            terminalInput.focus();
+        });
+
+        // Enable/disable execute button based on input
+        terminalInput.addEventListener('input', () => {
+            executeBtn.disabled = !terminalInput.value.trim();
+        });
+
+        // Execute button click handler
+        executeBtn.addEventListener('click', () => {
+            if (terminalInput.value.trim()) {
+                handleCommand(new Event('submit'));
+            }
+        });
+
+        // Handle command submission
+        function handleCommand(event) {
+            event.preventDefault();
+
+            const input = terminalInput.value.trim();
+            if (!input) return;
+
+            // Add command to terminal
+            const commandLine = document.createElement('div');
+            commandLine.className = 'command-line';
+            commandLine.innerHTML = `<span class="prompt">$</span> <span>${input}</span>`;
+            terminalBody.appendChild(commandLine);
+
+            // Process command
+            const commandParts = input.split(' ');
+            const commandName = commandParts[0];
+            const args = commandParts.slice(1);
+
+            let output = '';
+            let hebrewOutput = '';
+            let success = false;
+
+            // Process the command
+            if (commandName === 'help') {
+                output = 'Available Git commands:\n\n' +
+                    '\n\nOther commands:\n' +
+                    'clear - Clear the terminal\n' +
+                    'ls - List files in current directory';
+                hebrewOutput = translations.help;
+                success = true;
+            }
+            else if (commandName === 'clear') {
+                terminalBody.innerHTML = '';
+                terminalInput.value = '';
+                return;
+            }
+             else if (commandName === 'ls') {
+                output = state.mockFiles.join('\n');
+                hebrewOutput = 'קבצים בתיקייה הנוכחית:';
+                success = true;
+            }
+
+
+            else if (commandName === 'git') {
+                     {% for cmd in git_terminal_commands %}
+                            if ('{{cmd.command.command}}' === input) {
+                                output = '{{cmd.command.git_feedback|escapejs}}';
+                                hebrewOutput = '{{cmd.command.Hebrew_Description|escapejs}}';
+                            }
+                     {% endfor %}
+
+
+            } else {
+                output = `Command not found: ${commandName}. Type 'help' to see available commands.`;
+                hebrewOutput = translations.command_not_found;
+            }
+
+            // Add output to terminal
+            const outputElement = document.createElement('div');
+            outputElement.className = `command-output ${success ? 'success' : 'error'}`;
+            outputElement.innerHTML = output;
+
+
+
+            terminalBody.appendChild(outputElement);
+
+            // Clear input and scroll to bottom
+            terminalInput.value = '';
+            executeBtn.disabled = true;
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+
+            // Focus back on input
+            terminalInput.focus();
+        }
+
+       // Reset terminal
+        function resetTerminal() {
+            terminalBody.innerHTML = '';
+            const welcomeElement = document.createElement('div');
+            welcomeElement.className = 'command-output success';
+            welcomeElement.innerHTML = 'Terminal reset. Type \'help\' to see available commands.';
+
+            const translationElement = document.createElement('div');
+            translationElement.className = 'hebrew-translation';
+            translationElement.textContent = translations.terminal_reset;
+            welcomeElement.appendChild(translationElement);
+
+            terminalBody.appendChild(welcomeElement);
+
+            state.repositoryInitialized = false;
+            state.filesStaged = [];
+            state.filesCommitted = [];
+            state.branches = ['main'];
+            state.currentBranch = 'main';
+            branchBadge.textContent = 'ענף: main';
+        }
+
+
+
+        // Initialize
+        updateNavButtons();
+
+        // Focus input on page load
+        window.addEventListener('load', () => {
+            terminalInput.focus();
+        });
+
+        // מצב האפליקציה
+        const appState = {
+            mode: 'practice',
+            currentScenario: null,
+            scenarios: [],
+            completedScenarios: new Set()
+        };
+
+        // פונקציה ליצירת תרחישים מהפקודות הקיימות
+        async function generateScenarios() {
+            const scenarios = [];
+
+            // הוספת תרחישים מפקודות בסיסיות
+            {% for cmd in basic_git_terminal_commands %}
+                scenarios.push({
+                    id: 'basic_{{forloop.counter}}',
+                    text: `אתה עובד על פרויקט Git. ${cmd.command.command.Hebrew_Description}`,
+                    command: '{{cmd.command.command}}',
+                    category: 'basic'
+                });
+            {% endfor %}
+
+            // הוספת תרחישים מפקודות ענפים
+            {% for cmd in branches_git_terminal_commands %}
+                scenarios.push({
+                    id: 'branch_{{forloop.counter}}',
+                    text: `אתה עובד עם ענפים ב-Git. ${cmd.command.command.Hebrew_Description}`,
+                    command: '{{cmd.command.command}}',
+                    category: 'branch'
+                });
+            {% endfor %}
+
+            // הוספת תרחישים מפקודות מתקדמות
+            {% for cmd in advanced_git_terminal_commands %}
+                scenarios.push({
+                    id: 'advanced_{{forloop.counter}}',
+                    text: `אתה מבצע פעולה מתקדמת ב-Git. ${cmd.command.command.Hebrew_Description}`,
+                    command: '{{cmd.command.command}}',
+                    category: 'advanced'
+                });
+            {% endfor %}
+
+            // ערבוב התרחישים
+            return scenarios.sort(() => Math.random() - 0.5);
+        }
+
+        // פונקציה להצגת תרחיש אקראי
+        function showRandomScenario() {
+            const availableScenarios = appState.scenarios.filter(s => !appState.completedScenarios.has(s.id));
+            if (availableScenarios.length === 0) {
+                showCompletionMessage();
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableScenarios.length);
+            appState.currentScenario = availableScenarios[randomIndex];
+
+            document.getElementById('scenario-text').textContent = appState.currentScenario.text;
+
+        }
+
+
+
+        // פונקציה לבדיקת תשובה
+        function checkAnswer(input) {
+            if (!appState.currentScenario) return false;
+
+            const isCorrect = input.trim().toLowerCase() === appState.currentScenario.command.toLowerCase();
+            if (isCorrect) {
+                appState.completedScenarios.add(appState.currentScenario.id);
+                showSuccessMessage();
+
+                // עדכון סטטוס הפקודה בבסיס הנתונים
+                fetch('/update_command_status/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        command: appState.currentScenario.command,
+                        category: appState.currentScenario.category
+                    })
+                });
+
+                setTimeout(showRandomScenario, 2000);
+            }
+            return isCorrect;
+        }
+
+        // פונקציה להצגת הודעת הצלחה
+        function showSuccessMessage() {
+            const successElement = document.createElement('div');
+            successElement.className = 'command-output success';
+            successElement.textContent = 'כל הכבוד! הפקודה נכונה.';
+            terminalBody.appendChild(successElement);
+        }
+
+        // פונקציה להצגת הודעת השלמה
+        function showCompletionMessage() {
+            const completionElement = document.createElement('div');
+            completionElement.className = 'command-output success';
+            completionElement.textContent = 'כל הכבוד! השלמת את כל התרחישים.';
+            terminalBody.appendChild(completionElement);
+        }
+
+        // פונקציה לקבלת CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // אתחול התרחישים
+        async function initializeScenarios() {
+            appState.scenarios = await generateScenarios();
+            showRandomScenario();
+        }
+
+        // מעבר בין מצבים
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                appState.mode = mode;
+
+                // עדכון UI
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                document.querySelector('.test-scenario').style.display = mode === 'test' ? 'block' : 'none';
+                document.querySelector('.tutorial-section').style.display = mode === 'practice' ? 'block' : 'none';
+
+                if (mode === 'test') {
+                    initializeScenarios();
+                }
+            });
+        });
+
+        // עדכון פונקציית handleCommand
+        const originalHandleCommand = handleCommand;
+        handleCommand = function(event) {
+            if (appState.mode === 'test') {
+                event.preventDefault();
+                const input = terminalInput.value.trim();
+                if (!input) return;
+
+                const isCorrect = checkAnswer(input);
+                if (!isCorrect) {
+                    const errorElement = document.createElement('div');
+                    errorElement.className = 'command-output error';
+                    errorElement.textContent = 'נסה שוב. הפקודה לא נכונה.';
+                    terminalBody.appendChild(errorElement);
+                }
+
+                terminalInput.value = '';
+                return;
+            }
+
+            originalHandleCommand(event);
+        };
+    </script>
 </body>
 </html>

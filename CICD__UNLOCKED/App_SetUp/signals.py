@@ -1,6 +1,12 @@
 from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
+
 from .models import User, LecturerProfile, StudentProfile, AdminProfile
+
+# File: App_SetUp/signals.py
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from App_SetUp.models import StudentProfile
+from GitExercises.models import Terminal_Exercises_Git_Commands, StudentTerminalGitCommandExercise
 
 
 @receiver(pre_save, sender=User)
@@ -38,3 +44,4 @@ def create_admin_profile(sender, instance, created, **kwargs):
     if hasattr(instance,
                '_previous_is_active') and not instance._previous_is_active and instance.is_active and instance.is_admin:
         AdminProfile.objects.get_or_create(user=instance)
+

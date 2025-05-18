@@ -11,6 +11,7 @@ admin.site.register(StudentProfile)
 admin.site.register(LecturerProfile)
 admin.site.register(AdminProfile)
 admin.site.register(ContactMessage)
+
 admin.site.register(LearningVideo)
 admin.site.register(Podcast)
 admin.site.register(Presentation)
@@ -23,3 +24,4 @@ admin.site.register(CourseContent)
 #    list_filter = ('visibility_mode', 'module')
 #    search_fields = ('title', 'description')
 #    ordering = ('module_name',)
+
