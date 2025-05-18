@@ -1,6 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import User
+
 
 
 
@@ -70,3 +73,107 @@ class LearningModuleRating(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.module_name} ({self.rating}★)"
+
+
+
+class PrivateMessage(models.Model):
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='sent_messages'
+    )
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='received_messages'
+    )
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"מאת {self.sender.username} אל {self.recipient.username}: {self.subject}"
+
+
+
+
+class LearningVideo(models.Model):
+    title = models.CharField(max_length=255)  # שם הסרטון
+    youtube_id = models.CharField(max_length=50)  # מזהה YouTube: לדוגמה 'VtjoExU11d4'
+    module = models.CharField(max_length=100, choices=[
+        ('Git', 'Git'),
+        ('Jenkins', 'Jenkins'),
+        ('Docker', 'Docker'),
+    ])
+    description = models.TextField(blank=True)  # תיאור הסרטון
+    order = models.PositiveIntegerField(default=0)  # סדר הצגה בתוך המודול
+
+    def __str__(self):
+        return f"{self.module} - {self.title}"
+
+
+
+
+class Podcast(models.Model):
+    MODULE_CHOICES = [
+        ('Git', 'Git'),
+        ('Jenkins', 'Jenkins'),
+        ('Docker', 'Docker'),
+    ]
+
+    title = models.CharField(max_length=255)
+    module = models.CharField(max_length=20, choices=MODULE_CHOICES)
+    audio_file = models.FileField(upload_to='podcasts/')  # נשמור את הקובץ בתיקיית media/podcasts/
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    order = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.title} ({self.module})"
+
+
+
+
+class Presentation(models.Model):
+    MODULE_CHOICES = [
+        ('Git', 'Git'),
+        ('Jenkins', 'Jenkins'),
+        ('Docker', 'Docker'),
+    ]
+    module = models.CharField(max_length=20, choices=MODULE_CHOICES)
+    title = models.CharField(max_length=200)
+    embed_url = models.URLField(help_text="קישור Google Slides עם embed")
+    order = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.module} - {self.title}"
+
+
+
+
+
+class CourseContent(models.Model):
+    MODULE_CHOICES = [
+        ('git', 'Git'),
+        ('jenkins', 'Jenkins'),
+        ('docker', 'Docker'),
+    ]
+
+    module = models.CharField(max_length=20, choices=MODULE_CHOICES, unique=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+
+    visibility_mode = models.CharField(
+        max_length=10,
+        choices=[('immediate', 'מיידי'), ('hidden', 'מוסתר')],
+        default='hidden'
+    )
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def is_visible_to_students(self):
+        return self.visibility_mode == 'immediate'
+
+    def __str__(self):
+        return f"{self.module} - {self.title}"
+

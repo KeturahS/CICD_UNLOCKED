@@ -1,6 +1,5 @@
 __pycache__/
 *.pyc
 
-# Ignore SQLite database file
+CICD__UNLOCKED/db.sqlite3
 
-db.sqlite3

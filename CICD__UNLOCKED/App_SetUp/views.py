@@ -13,21 +13,33 @@ from .models import User
 from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import LecturerProfile, StudentProfile, AdminProfile
-from django.shortcuts import render
+from .models import LecturerProfile, StudentProfile, AdminProfile,Presentation
 from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
-from .models import ContactMessage
+from .models import ContactMessage, Podcast
+from .models import LearningVideo
 from .models import LearningModuleRating
 from .models import LearningModuleRating
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
 from .models import LearningModuleRating
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from .models import LearningModuleRating
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .forms import PrivateMessageForm
+
+from .models import PrivateMessage, CourseContent
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from datetime import datetime
+
+from django.contrib.auth.decorators import login_required
+
+
+
+
 
 from django.shortcuts import render, redirect
 from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress
@@ -451,13 +463,32 @@ def student_messages_view(request):
 def learning_home(request):
     if not request.user.is_student:
         return redirect('login_view')
-    return render(request, 'learning_modules/learning_modules_homePage.html')
+    visible_modules = []
+    for content in CourseContent.objects.all():
+        if content.visibility_mode == 'immediate':
+            visible_modules.append(content.module)
+    return render(request, 'learning_modules/learning_modules_homePage.html', {'visible_modules': visible_modules})
 
+
+#@login_required
+#def git_module_view(request):
+ #   git_sentences = list(GitSentence.objects.all())
+  #  github_sentences = list(GitHubSentence.objects.all())
+
+    # Combine and shuffle the sentences
+   # all_sentences = git_sentences + github_sentences
+    #random.shuffle(all_sentences)
+
+    #context = {
+     #   'all_sentences': all_sentences,
+    #}
+    #return render(request, 'learning_modules/git_module.html', context)
 
 @login_required
 def git_module_view(request):
     git_sentences = list(GitSentence.objects.all())
     github_sentences = list(GitHubSentence.objects.all())
+
     from django.db.models import Q
     try:
         CurrentStudentGitCommandProgress = StudentGitCommandProgress.objects.filter(
@@ -481,12 +512,35 @@ def git_module_view(request):
     CurrentStudentGitCommandProgress = StudentGitCommandProgress.objects.filter(
         student=request.user.student_profile)
 
+
+    podcasts = []
+    presentations =[]
+    # שילוב לתרגול
+    all_sentences = git_sentences + github_sentences
+    random.shuffle(all_sentences)
+
+    # שליפת הסרטון לפי השלב, גם במצב נגיש
+    step = request.GET.get('step')
+    video = None
+    if step in ['1', '2', '3', '4']:
+        video = LearningVideo.objects.filter(module='Git', order=int(step)).first()
+        podcasts = Podcast.objects.filter(module='Git', order=int(step))  # 🟢
+        presentations = Presentation.objects.filter(module='Git', order=int(step))
+
+
     context = {
         'all_sentences': all_sentences,
         'basic_git_terminal_commands': categorized_commands['basic'],
         'branches_git_terminal_commands': categorized_commands['branches'],
         'advanced_git_terminal_commands': categorized_commands['advanced'],
-        'git_terminal_commands': CurrentStudentGitCommandProgress,}
+        'git_terminal_commands': CurrentStudentGitCommandProgress,
+        'video': video,
+        'podcasts': podcasts,
+        'presentations': presentations,
+        'visible_modules': ['git', 'jenkins', 'docker'],
+    }
+
+
     return render(request, 'learning_modules/git_module.html', context)
 
 
@@ -496,12 +550,47 @@ def git_module_view(request):
 
 @login_required
 def jenkins_module_view(request):
-    return render(request, 'learning_modules/jenkins_module.html')
+    podcasts = []
+    presentations = []
+    # שליפת סרטון ופודקאסט לפי שלב (step)
+    step = request.GET.get('step')
+    video = None
+    if step in ['1', '2', '3', '4']:
+        video = LearningVideo.objects.filter(module='Jenkins', order=int(step)).first()
+        podcasts = Podcast.objects.filter(module='Jenkins', order=int(step))
+        presentations = Presentation.objects.filter(module='Jenkins', order=int(step))
+
+    context = {
+        'video': video,
+        'podcasts': podcasts,
+        'presentations': presentations,
+        'visible_modules': ['git', 'jenkins', 'docker'],
+    }
+
+    return render(request, 'learning_modules/jenkins_module.html', context)
 
 
 @login_required
 def docker_module_view(request):
-    return render(request, 'learning_modules/docker_module.html')
+    podcasts = []
+    presentations = []
+
+    # שליפת סרטון ופודקאסט לפי שלב (step)
+    step = request.GET.get('step')
+    video = None
+    if step in ['1', '2','3']:
+        video = LearningVideo.objects.filter(module='Docker', order=int(step)).first()
+        podcasts = Podcast.objects.filter(module='Docker', order=int(step))
+        presentations = Presentation.objects.filter(module='Docker', order=int(step))
+
+    context = {
+        'video': video,
+        'podcasts': podcasts,
+        'presentations': presentations,
+        'visible_modules': ['git', 'jenkins', 'docker'],
+    }
+
+    return render(request, 'learning_modules/docker_module.html', context)
 
 
 def manage_tasks_and_check_assignments(request):
@@ -630,6 +719,62 @@ def GitSection4(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection4.html')
 
 
+
+@login_required
+def git_section1(request):
+    video = LearningVideo.objects.filter(module='Git', order=1).first()
+    return render(request, 'learning_modules/git/section1.html', {'video': video})
+
+@login_required
+def git_section2(request):
+    video = LearningVideo.objects.filter(module='Git', order=2).first()
+    return render(request, 'learning_modules/git/section2.html', {'video': video})
+
+@login_required
+def git_section3(request):
+    video = LearningVideo.objects.filter(module='Git', order=3).first()
+    return render(request, 'learning_modules/git/section3.html', {'video': video})
+
+@login_required
+def git_section4(request):
+    video = LearningVideo.objects.filter(module='Git', order=4).first()
+    return render(request, 'learning_modules/git/section4.html', {'video': video})
+
+
+
+
+@login_required
+def jenkins_section1(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=1).first()
+    return render(request, 'learning_modules/jenkins/section1.html', {'video': video})
+
+@login_required
+def jenkins_section2(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=2).first()
+    return render(request, 'learning_modules/jenkins/section2.html', {'video': video})
+
+@login_required
+def jenkins_section3(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=3).first()
+    return render(request, 'learning_modules/jenkins/section3.html', {'video': video})
+
+@login_required
+def jenkins_section4(request):
+    video = LearningVideo.objects.filter(module='Jenkins', order=4).first()
+    return render(request, 'learning_modules/jenkins/section4.html', {'video': video})
+
+
+
+@login_required
+def docker_section1(request):
+    video = LearningVideo.objects.filter(module='Docker', order=1).first()
+    return render(request, 'learning_modules/docker/section1.html', {'video': video})
+
+@login_required
+def docker_section2(request):
+    video = LearningVideo.objects.filter(module='Docker', order=2).first()
+    return render(request, 'learning_modules/docker/section2.html', {'video': video})
+
 #
 # @login_required
 # def rate_learning_modules(request):
@@ -714,7 +859,68 @@ def view_module_ratings(request):
     ratings = LearningModuleRating.objects.select_related('student').all().order_by('-submitted_at')
     return render(request, 'view_module_ratings.html', {'ratings': ratings})
 
+
 # @login_required
 # def view_module_ratings(request):
 #   ratings = LearningModuleRating.objects.all()
 #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
+
+
+
+#@login_required
+#def view_module_ratings(request):
+ #   ratings = LearningModuleRating.objects.all()
+  #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
+
+
+def is_lecturer(user):
+    return user.is_authenticated and user.is_lecturer
+
+
+@login_required
+@user_passes_test(is_lecturer)
+def send_private_message(request):
+    if request.method == 'POST':
+        form = PrivateMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return render(request, 'messages/success.html', {'student_name': message.recipient.get_full_name()})
+    else:
+        form = PrivateMessageForm()
+
+    return render(request, 'messages/send_message.html', {'form': form})
+
+@login_required
+def view_my_messages(request):
+    messages = PrivateMessage.objects.filter(recipient=request.user).order_by('-created_at')
+    return render(request, 'messages/view_messages.html', {'messages': messages})
+
+
+
+
+def student_modules_view(request):
+    visible_modules = []
+    for content in CourseContent.objects.all():
+        if content.visibility_mode == 'immediate':
+            visible_modules.append(content.module)
+    return render(request, 'learning_modules/learning_modules_homePage.html', {'visible_modules': visible_modules})
+
+@login_required
+def lecturer_manage_content(request):
+    contents = CourseContent.objects.all()
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/lecturer_content_manage.html', {'contents': contents})
+
+@login_required
+def update_module_visibility(request, content_id):
+    if request.method == 'POST':
+        content = get_object_or_404(CourseContent, id=content_id)
+        visibility_mode = request.POST.get('visibility_mode')
+        if visibility_mode in ['immediate', 'hidden']:
+            content.visibility_mode = visibility_mode
+            content.save()
+    return redirect('lecturer_manage_content')
+
+
+

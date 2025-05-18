@@ -1,109 +1,138 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>3. ענפים וקונפליקטים ב-Git</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #1e1e1e;
-      color: #ffffff;
-      padding: 40px;
-      text-align: center;
-    }
+<section id="section3" aria-labelledby="section3-title"
+         style="padding: 40px 25px; max-width: 900px; margin: auto; background-color: #1e1e1e; color: #ffffff; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); font-family: 'Segoe UI', sans-serif;">
 
-    h2 {
-      margin-bottom: 20px;
-    }
+  <h2 id="section3-title" tabindex="0" style="font-size: 2em; margin-bottom: 10px;">{{ video.title }}</h2>
+  <p tabindex="0" style="font-size: 1.1em; color: #cccccc;">{{ video.description }}</p>
 
-    #player3 {
-      margin: auto;
-    }
+  {% if podcasts %}
+  <div id="podcast-block" style="margin: 30px 0;" role="region" aria-label="נגן פודקאסט">
+    <button onclick="togglePodcast()" aria-label="השמע פודקאסט על הנושא הנוכחי"
+            style="background-color: #00cc88; color: white; padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em;">
+      🎧 לחץ להשמעת פודקאסט בנושא זה
+    </button>
+    <div id="podcast-player" style="display:none; margin-top: 20px;">
+      <audio controls style="width: 100%;">
+        <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
+        הדפדפן שלך לא תומך בניגון אודיו.
+      </audio>
+      <div style="margin-top: 10px;">
+        <a href="{{ podcasts.0.audio_file.url }}" download
+           style="text-decoration: none; background-color: #4CAF50; color: white; padding: 10px 18px; border-radius: 6px; display: inline-block;">
+          ⬇️ הורד את הפודקאסט למחשב
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
-    .question-box {
-      display: none;
-      margin-top: 20px;
-      background-color: #2c2c2c;
-      border: 1px solid #888;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      margin-inline: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    }
+  <div id="player" role="region" aria-label="נגן וידאו - {{ video.title }}" tabindex="0" style="margin-top: 20px;"></div>
 
-    label {
-      display: block;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
+  <!-- שאלה 1 -->
+  <div id="question1" class="question-box" role="group" aria-labelledby="q1-label" style="display:none;">
+    <p id="q1-label" tabindex="0" style="font-weight: bold;">מה עושה הפקודה <code>git branch</code>?</p>
+    <label><input type="radio" name="q1" value="a"> יוצרת עותק של מאגר</label><br>
+    <label><input type="radio" name="q1" value="b"> יוצרת או מציגה ענפים</label><br>
+    <label><input type="radio" name="q1" value="c"> משווה בין קבצים</label><br><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" class="btn-check" aria-label="בדוק תשובה לשאלה על git branch">בדוק תשובה</button>
+    <div id="feedback1" aria-live="polite" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" class="btn-resume" style="display:none;">המשך צפייה</button>
+  </div>
 
-    input[type="radio"] {
-      margin-left: 10px;
-    }
+  <!-- שאלה 2 -->
+  <div id="question2" class="question-box" role="group" aria-labelledby="q2-label" style="display:none;">
+    <p id="q2-label" tabindex="0" style="font-weight: bold;">מה קורה כשיש קונפליקט ב-merge?</p>
+    <label><input type="radio" name="q2" value="a"> המיזוג מתבצע אוטומטית</label><br>
+    <label><input type="radio" name="q2" value="b"> יש להחליט ידנית איזו גרסה תישמר</label><br>
+    <label><input type="radio" name="q2" value="c"> הענף נמחק</label><br><br>
+    <button onclick="checkAnswer('q2', 'b', 'feedback2')" class="btn-check" aria-label="בדוק תשובה לשאלה על קונפליקט">בדוק תשובה</button>
+    <div id="feedback2" aria-live="polite" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" class="btn-resume" style="display:none;">המשך צפייה</button>
+  </div>
 
-    button, .btn-next {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #00cc88;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+  <div style="margin-top: 40px; text-align: center;">
+    <a href="?step=3q&accessible=1" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">
+      👉 עבור לשאלות נוספות בנושא
+    </a>
+  </div>
+</section>
 
-    .btn-next {
-      display: inline-block;
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
+<style>
+  .question-box {
+    background-color: #2c2c2c;
+    border: 1px solid #888;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 30px auto 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
 
-<h2 id="section3-title" tabindex="0">3. עבודה עם ענפים וטיפול בקונפליקטים</h2>
-<p tabindex="0">בסרטון הבא תלמד כיצד ליצור ולשלב ענפים (branches), ולפתור קונפליקטים בעת מיזוג.</p>
+  label {
+    display: block;
+    margin: 8px 0;
+    cursor: pointer;
+  }
 
-<div id="player3" role="region" aria-label="נגן וידאו - ענפים וקונפליקטים ב-Git"></div>
+  input[type="radio"] {
+    margin-left: 10px;
+  }
 
-<!-- שאלה 1 -->
-<div id="question1" class="question-box" role="group" aria-labelledby="q1-label">
-  <p id="q1-label" tabindex="0">מה עושה הפקודה <code>git branch</code>?</p>
-  <label><input type="radio" name="q1" value="a"> יוצרת עותק של מאגר</label>
-  <label><input type="radio" name="q1" value="b"> יוצרת או מציגה ענפים</label>
-  <label><input type="radio" name="q1" value="c"> משווה בין קבצים</label>
-  <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
-  <div id="feedback1" style="margin-top:10px;" aria-live="polite"></div>
-  <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" style="display:none;">המשך צפייה</button>
-</div>
+  .btn-check {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+  }
 
-<!-- שאלה 2 -->
-<div id="question2" class="question-box" role="group" aria-labelledby="q2-label">
-  <p id="q2-label" tabindex="0">מה קורה כשיש קונפליקט ב-merge?</p>
-  <label><input type="radio" name="q2" value="a"> המיזוג מתבצע אוטומטית</label>
-  <label><input type="radio" name="q2" value="b"> יש להחליט ידנית איזו גרסה תישמר</label>
-  <label><input type="radio" name="q2" value="c"> הענף נמחק</label>
-  <button onclick="checkAnswer('q2', 'b', 'feedback2')">בדוק תשובה</button>
-  <div id="feedback2" style="margin-top:10px;" aria-live="polite"></div>
-  <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" style="display:none;">המשך צפייה</button>
-</div>
+  .btn-check:hover {
+    background-color: #1976d2;
+  }
 
-<div style="margin-top: 30px; text-align: center;">
-  <a href="?step=3q" class="btn-next" role="button" aria-label="מעבר לשאלות נוספות בנושא">👉 עבור לשאלות נוספות בנושא</a>
-</div>
+  .btn-resume {
+    margin-top: 10px;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-next {
+    background-color: #00cc88;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-next:hover {
+    background-color: #009e6e;
+  }
+</style>
+
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-  let player3;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
   let interval = null;
   let question1Shown = false;
   let question2Shown = false;
 
   function onYouTubeIframeAPIReady() {
-    player3 = new YT.Player('player3', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'yOxNONblkb0',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
@@ -111,18 +140,18 @@
   function onPlayerStateChange(e) {
     if (e.data === YT.PlayerState.PLAYING && !interval) {
       interval = setInterval(() => {
-        const time = Math.floor(player3.getCurrentTime());
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 120 && !question1Shown) {
           exitFullscreen();
-          player3.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 540 && !question2Shown) {
           exitFullscreen();
-          player3.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
@@ -166,7 +195,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player3.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -177,8 +206,13 @@
     }
   }
 
+  function togglePodcast() {
+  const playerDiv = document.getElementById('podcast-player');
+  playerDiv.style.display = (playerDiv.style.display === 'none') ? 'block' : 'none';
+  }
+
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player3')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });

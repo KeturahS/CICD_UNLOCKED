@@ -1,143 +1,146 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>Git - פקודות מתקדמות</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      padding: 40px;
-      text-align: center;
-    }
+<section id="section4"
+         style="padding: 40px 25px; max-width: 900px; margin: auto; background-color: #ffffff; color: #333; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;">
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      padding: 30px;
-    }
+  <h2 style="font-size: 2em; margin-bottom: 10px;">{{ video.title }}</h2>
+  <p style="font-size: 1.1em; color: #555;">{{ video.description }}</p>
 
-    .question {
-      display: none;
-      margin-top: 20px;
-      text-align: right;
-    }
+  {% if podcasts %}
+  <div id="podcast-block" style="margin: 30px 0;">
+    <button onclick="togglePodcast()" style="background-color: #007acc; color: white; padding: 10px 22px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em;">
+      🎧 לחץ להשמעת פודקאסט בנושא זה
+    </button>
+    <div id="podcast-player" style="display:none; margin-top: 20px;">
+      <audio controls style="width: 100%; margin-bottom: 10px;">
+        <source src="{{ podcasts.0.audio_file.url }}" type="audio/wav">
+        הדפדפן שלך לא תומך בניגון אודיו.
+      </audio>
+      <a href="{{ podcasts.0.audio_file.url }}" download
+         style="text-decoration: none; background-color: #4CAF50; color: white; padding: 10px 18px; border-radius: 6px; display: inline-block;">
+        ⬇️ הורד פודקאסט למחשב
+      </a>
+    </div>
+  </div>
+  {% endif %}
 
-    .question p {
-      font-weight: bold;
-    }
+  <!-- נגן יוטיוב -->
+  <div id="player" style="margin-top: 20px;"></div>
 
-    .question input {
-      margin: 5px 0;
-    }
-
-    .feedback {
-      display: none;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .resume-btn {
-      display: none;
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 14px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <h2>4. פקודות מתקדמות ב-Git</h2>
-  <p style="font-size: 1.1em;">
-    כאן תלמד על פקודות מתקדמות כמו <code>git diff</code> ו־<code>.gitignore</code> – כלים חשובים להתנהלות חכמה מול קוד במאגרים.
-  </p>
-
-  <div id="player4"></div>
-
-  <!-- שאלה ראשונה -->
-  <div id="question1" class="question">
-    <p>מה עושה הפקודה <code>git diff</code>?</p>
-    <input type="radio" name="q1" value="a"> מאחדת בין סניפים<br>
-    <input type="radio" name="q1" value="b"> מציגה הבדל בין שינויים שטרם נשמרו<br>
-    <input type="radio" name="q1" value="c"> שומרת שינויים עם תגית<br><br>
-    <button onclick="checkAnswer('q1', 'b', 'feedback1')">בדוק תשובה</button>
-    <div id="feedback1" class="feedback"></div>
-    <button id="resume1" class="resume-btn" onclick="resumeVideo('question1', 'feedback1', 'resume1')">המשך צפייה</button>
+  <!-- שאלה 1 -->
+  <div id="question1" style="display:none; margin-top: 30px; background-color: #f4f4f4; padding: 20px; border-radius: 12px;">
+    <p style="font-weight: bold;">מה עושה הפקודה <code>git diff</code>?</p>
+    <label><input type="radio" name="q1" value="a"> מאחדת בין סניפים</label><br>
+    <label><input type="radio" name="q1" value="b"> מציגה הבדל בין שינויים שטרם נשמרו</label><br>
+    <label><input type="radio" name="q1" value="c"> שומרת שינויים עם תגית</label><br><br>
+    <button onclick="checkAnswer('q1', 'b', 'feedback1')" class="btn-check">בדוק תשובה</button>
+    <div id="feedback1" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume1" onclick="resumeVideo('question1', 'feedback1', 'resume1')" class="btn-resume" style="display:none;">המשך צפייה</button>
   </div>
 
-  <!-- שאלה שנייה -->
-  <div id="question2" class="question">
-    <p>מה המטרה של קובץ <code>.gitignore</code>?</p>
-    <input type="radio" name="q2" value="a"> למחוק את כל הקבצים<br>
-    <input type="radio" name="q2" value="b"> לשמור שינויים אוטומטית<br>
-    <input type="radio" name="q2" value="c"> להחריג קבצים מסוימים ממעקב Git<br><br>
-    <button onclick="checkAnswer('q2', 'c', 'feedback2')">בדוק תשובה</button>
-    <div id="feedback2" class="feedback"></div>
-    <button id="resume2" class="resume-btn" onclick="resumeVideo('question2', 'feedback2', 'resume2')">המשך צפייה</button>
+  <!-- שאלה 2 -->
+  <div id="question2" style="display:none; margin-top: 30px; background-color: #f4f4f4; padding: 20px; border-radius: 12px;">
+    <p style="font-weight: bold;">מה המטרה של קובץ <code>.gitignore</code>?</p>
+    <label><input type="radio" name="q2" value="a"> למחוק את כל הקבצים</label><br>
+    <label><input type="radio" name="q2" value="b"> לשמור שינויים אוטומטית</label><br>
+    <label><input type="radio" name="q2" value="c"> להחריג קבצים מסוימים ממעקב Git</label><br><br>
+    <button onclick="checkAnswer('q2', 'c', 'feedback2')" class="btn-check">בדוק תשובה</button>
+    <div id="feedback2" style="display:none; margin-top: 10px; font-weight: bold;"></div>
+    <button id="resume2" onclick="resumeVideo('question2', 'feedback2', 'resume2')" class="btn-resume" style="display:none;">המשך צפייה</button>
   </div>
+</section>
 
-  <div style="margin-top: 30px; text-align: left;">
-    <a href="?step=4q" class="btn-next">👉 עבור לשאלות נוספות בנושא</a>
-  </div>
-</div>
+<style>
+  .btn-check {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+  }
 
+  .btn-check:hover {
+    background-color: #1976d2;
+  }
+
+  .btn-resume {
+    margin-top: 10px;
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  label {
+    display: block;
+    margin: 6px 0;
+    cursor: pointer;
+  }
+
+  input[type="radio"] {
+    margin-left: 6px;
+  }
+</style>
+
+
+<!-- YouTube API -->
 <script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
-  let player4;
+  const videoIdFromDB = "{{ video.youtube_id }}";
+
+  let player;
+  let interval = null;
   let question1Shown = false;
   let question2Shown = false;
 
   function onYouTubeIframeAPIReady() {
-    player4 = new YT.Player('player4', {
+    player = new YT.Player('player', {
       height: '360',
       width: '640',
-      videoId: 'aiPAryg4nHA',
+      videoId: videoIdFromDB,
       events: { 'onStateChange': onPlayerStateChange }
     });
   }
 
   function onPlayerStateChange(e) {
-    if (e.data === YT.PlayerState.PLAYING) {
-      const interval = setInterval(() => {
-        const time = Math.floor(player4.getCurrentTime());
+    if (e.data === YT.PlayerState.PLAYING && !interval) {
+      interval = setInterval(() => {
+        const time = Math.floor(player.getCurrentTime());
 
         if (time >= 125 && !question1Shown) {
           exitFullscreen();
-          player4.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question1').style.display = 'block';
           question1Shown = true;
         }
 
         if (time >= 260 && !question2Shown) {
           exitFullscreen();
-          player4.pauseVideo();
+          player.pauseVideo();
           document.getElementById('question2').style.display = 'block';
           question2Shown = true;
         }
 
         if (question1Shown && question2Shown) {
           clearInterval(interval);
+          interval = null;
         }
       }, 1000);
+    }
+
+    if (e.data === YT.PlayerState.PAUSED && interval) {
+      clearInterval(interval);
+      interval = null;
     }
   }
 
   function exitFullscreen() {
     if (document.fullscreenElement || document.webkitFullscreenElement) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      }
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     }
   }
 
@@ -159,7 +162,7 @@
     document.getElementById(qDivId).style.display = 'none';
     document.getElementById(fbId).style.display = 'none';
     document.getElementById(btnId).style.display = 'none';
-    player4.playVideo();
+    player.playVideo();
   }
 
   function getExplanation(qName) {
@@ -170,12 +173,18 @@
     }
   }
 
+   function togglePodcast() {
+    const playerDiv = document.getElementById('podcast-player');
+    if (playerDiv.style.display === 'none') {
+      playerDiv.style.display = 'block';
+    } else {
+      playerDiv.style.display = 'none';
+    }
+  }
+
   window.addEventListener('pageshow', function () {
-    if (!document.getElementById('player4')?.hasChildNodes()) {
+    if (!document.getElementById('player')?.hasChildNodes()) {
       onYouTubeIframeAPIReady();
     }
   });
 </script>
-
-</body>
-</html>
