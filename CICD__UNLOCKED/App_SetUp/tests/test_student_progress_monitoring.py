@@ -10,7 +10,6 @@ import uuid
 User = get_user_model()
 
 class MonitorStudentGitProgressTest(TestCase):
-
     def setUp(self):
         self.client = Client()
 
@@ -19,11 +18,13 @@ class MonitorStudentGitProgressTest(TestCase):
         self.cmd1_text = f"git init {uuid.uuid4().hex[:6]}"
         self.cmd2_text = f"git status {uuid.uuid4().hex[:6]}"
 
-        # ✅ לוודא שהמרצה הוא staff או lecturer (לפי המערכת שלך)
+        # יצירת מרצה עם הרשאות מתאימות
         self.lecturer_user = User.objects.create_user(username=self.lecturer_username, password='test123')
         self.lecturer_user.is_staff = True
+        self.lecturer_user.is_lecturer = True  # ✅ אם המערכת משתמשת בזה
         self.lecturer_user.save()
 
+        # יצירת סטודנט
         self.student_user = User.objects.create_user(username=self.student_username, password='test123')
         self.student_profile = StudentProfile.objects.create(user=self.student_user)
 
@@ -39,7 +40,7 @@ class MonitorStudentGitProgressTest(TestCase):
             defaults={'completed': False, 'attempts': 3}
         )
 
-        # ✅ ביצוע login ובדיקת הצלחה
+        # התחברות כמרצה
         logged_in = self.client.login(username=self.lecturer_username, password='test123')
         self.assertTrue(logged_in)
 
@@ -71,7 +72,6 @@ class MonitorStudentGitProgressTest(TestCase):
 
 
 class DownloadStudentReportTest(TestCase):
-
     def setUp(self):
         self.client = Client()
 
@@ -81,7 +81,8 @@ class DownloadStudentReportTest(TestCase):
         self.cmd2_text = f"git push {uuid.uuid4().hex[:6]}"
 
         self.lecturer_user = User.objects.create_user(username=self.lecturer_username, password='test123')
-        self.lecturer_user.is_staff = True  # ✅ חובה כדי לעבור הרשאות
+        self.lecturer_user.is_staff = True
+        self.lecturer_user.is_lecturer = True  # ✅ כנ"ל
         self.lecturer_user.save()
 
         self.student_user = User.objects.create_user(username=self.student_username, password='test123')
