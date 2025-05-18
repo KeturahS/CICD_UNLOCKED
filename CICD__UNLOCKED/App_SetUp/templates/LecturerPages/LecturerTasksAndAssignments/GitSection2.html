@@ -1,10 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ניהול תרגולי Git - מרצה</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+    <style>
+        body {
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            padding: 2rem;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        form {
+            background: #ffffff;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .exercise-box {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        #exercise-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        #search {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        #terminal {
+            margin-top: 2rem;
+            width: 100%;
+            height: 300px;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+    </style>
 </head>
 <body>
+
+<h1>  ניהול תרגילי Git בטרמינל </h1>
+
+<!-- טופס הוספת תרגיל חדש -->
+<h2>➕ הוסף תרגיל חדש</h2>
+<form method="post">
+    {% csrf_token %}
+    <label>פקודת Git:</label>
+    <input type="text" name="command" placeholder="למשל: git status" required>
+
+    <label>תיאור התרגיל:</label>
+    <textarea name="description" rows="3" placeholder="מה לומדים בתרגיל הזה?" required></textarea>
+
+    <button type="submit" name="add_terminal_exercise">הוסף תרגיל</button>
+</form>
+
+
+
+<!-- רשימת תרגילים קיימים -->
+<h2>📋 תרגילים קיימים</h2>
+<div id="exercise-list">
+    {% for exercise in Terminal_Exercises %}
+    <div class="exercise-box">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+
+            <label>פקודה:</label>
+            <textarea name="command"  rows="1" required>{{ exercise.command }}</textarea>
+
+            <label> תיאור בעברית:</label>
+            <textarea name="description_he" rows="2" required>{{ exercise.Hebrew_Description }}</textarea>
+
+            <label> תיאור באנגלית:</label>
+            <textarea name="description_en" rows="2" required>{{ exercise.English_Description }}</textarea>
+
+            <label>פידבק מהגיט:</label>
+            <textarea name="feedback" rows="2" required>{{ exercise.git_feedback }}</textarea>
+
+            <label> רמה </label>
+            <select name="level" required>
+                {% for level in levels %}
+                    <option value="{{ level }}" {% if exercise.level == level %}selected{% endif %}>{{ level }}</option>
+                {% endfor %}
+            </select>
+
+
+            <label>תרחיש לפקודה</label>
+            <textarea name="scenario" rows="5" required>{{ exercise.git_command_scenario }}</textarea>
+
+
+
+            <button type="submit" name="update_terminal_exercise">💾 עדכן</button>
+            <button type="submit" name="delete_terminal_exercise" onclick="return confirm('האם אתה בטוח שברצונך למחוק תרגיל זה?')">🗑 מחק</button>
+        </form>
+    </div>
+    {% empty %}
+        <p>אין תרגילים כרגע.</p>
+    {% endfor %}
+</div>
+
 
 </body>
 </html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תרגול פקודות Git</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --bg-darker: #0f0f0f;
+            --bg-medium: #2a2a2a;
+            --bg-light: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-success: #4ade80;
+            --text-error: #f87171;
+            --text-warning: #facc15;
+            --text-info: #60a5fa;
+            --border-color: #4a4a4a;
+            --accent-color: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Conveyor Belt Styles */
+        .scenario-section {
+            margin-bottom: 30px;
+        }
+
+        .conveyor-container {
+            position: relative;
+            margin: 30px 0;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-medium);
+        }
+
+        .conveyor {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px;
+            gap: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            min-height: 220px;
+        }
+
+        .conveyor::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Edge */
+        }
+
+        .scenario-item {
+            flex: 0 0 280px;
+            background-color: var(--bg-darker);
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: grab;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            user-select: none;
+        }
+
+        .scenario-item:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .scenario-item.active {
+            border-color: var(--accent-color);
+            background-color: var(--bg-light);
+        }
+
+        .scenario-item.dragging {
+            opacity: 0.7;
+            cursor: grabbing;
+        }
+
+        .scenario-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .conveyor-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: var(--bg-darker);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .conveyor-btn {
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .conveyor-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-darker);
+        }
+
+        .conveyor-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Main content layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Drop Zone Styles */
+        .drop-zone {
+            background-color: var(--bg-medium);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.highlight {
+            border-color: var(--accent-color);
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+
+        .drop-zone-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .drop-zone-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .drop-zone-subtext {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .active-scenario {
+            background-color: var(--bg-medium);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-color);
+            display: none;
+        }
+
+        .active-scenario.visible {
+            display: block;
+        }
+
+        .active-scenario h3 {
+            margin-bottom: 15px;
+            color: var(--text-info);
+        }
+
+        .scenario-content {
+            background-color: var(--bg-darker);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .scenario-feedback {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .scenario-feedback.success {
+            display: block;
+            background-color: rgba(74, 222, 128, 0.2);
+            color: var(--text-success);
+        }
+
+        .scenario-feedback.error {
+            display: block;
+            background-color: rgba(248, 113, 113, 0.2);
+            color: var(--text-error);
+        }
+
+        /* Terminal Styles */
+        .terminal-section {
+            background-color: var(--bg-medium);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .terminal-header {
+            background-color: var(--bg-light);
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-path {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .terminal-body {
+            background-color: var(--bg-darker);
+            padding: 15px;
+            border-radius: 0 0 8px 8px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 14px;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-input-line {
+            display: flex;
+            margin-top: 10px;
+            direction: ltr;
+        }
+
+        .prompt {
+            color: var(--text-success);
+            margin-right: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        #terminal-input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Animation for conveyor - FASTER SPEED */
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .conveyor.animate {
+            animation: scroll 10s linear infinite; /* Even faster: 10s instead of 15s */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-item {
+                flex: 0 0 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>תרגול פקודות Git</h1>
+        <p class="subtitle">למד פקודות Git באמצעות תרגול אינטראקטיבי</p>
+    </header>
+
+    <div class="scenario-section">
+        <h2>תרחישי Git</h2>
+        <p class="subtitle">עצור את המסוע, גרור תרחיש לאזור המיועד והקלד את הפקודה המתאימה</p>
+
+        <div class="conveyor-container">
+            <div class="conveyor" id="scenario-conveyor">
+                 {% for section in PersonalGitScenarioExercise %}
+
+                        <div class="scenario-item" draggable="true" data-command="{{ section.command.command }}">
+                            <div class="scenario-text">{{ section.command.git_command_scenario }}</div>
+                        </div>
+
+                {% endfor %}
+            </div>
+
+            <div class="conveyor-controls">
+                <button id="stop-conveyor" class="conveyor-btn">עצור את המסוע</button>
+                <button id="start-conveyor" class="conveyor-btn" disabled>התחל מסוע</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-icon">⬇️</div>
+                <div class="drop-zone-text">גרור תרחיש לכאן</div>
+                <div class="drop-zone-subtext">עצור את המסוע קודם</div>
+            </div>
+
+            <div class="terminal-section">
+                <div class="terminal-header">
+                    <div class="terminal-path">git@practice:~/project</div>
+                    <div>הקלד את הפקודה המתאימה</div>
+                </div>
+                <div class="terminal-body" id="terminal-body">
+                    <div>Welcome to Git Practice Terminal! Drag a scenario and type the appropriate command.</div>
+                </div>
+                <form id="terminal-form">
+                    <div class="terminal-input-line">
+                        <span class="prompt">$</span>
+                        <input type="text" id="terminal-input" autocomplete="off" autofocus placeholder="הקלד פקודת Git כאן...">
+                    </div>
+                </form>
+
+                <div class="active-scenario" id="active-scenario">
+                    <h3>תרחיש נוכחי:</h3>
+                    <div class="scenario-content" id="scenario-content"></div>
+                    <div class="scenario-feedback" id="scenario-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="update-command-form" method="POST" action="{% url 'update_command_status' %}" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="command" id="command-input">
+    </form>
+
+     <form id="update-command-attempts-form" method="POST" action="{% url 'update_command_attempts_status' %}" target="hidden-iframe" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="command" id="command-attempts-input">
+    </form>
+    <iframe name="hidden-iframe" style="display: none;"></iframe>
+
+    <script>
+        // DOM Elements
+        const conveyor = document.getElementById('scenario-conveyor');
+        const stopButton = document.getElementById('stop-conveyor');
+        const startButton = document.getElementById('start-conveyor');
+        const dropZone = document.getElementById('drop-zone');
+        const scenarioContent = document.getElementById('scenario-content');
+        const scenarioFeedback = document.getElementById('scenario-feedback');
+        const terminalInput = document.getElementById('terminal-input');
+        const terminalBody = document.getElementById('terminal-body');
+        const activeScenario = document.getElementById('active-scenario');
+        const scenarioItems = document.querySelectorAll('.scenario-item');
+
+        // State
+        let isConveyorMoving = true;
+        let currentScenario = null;
+        let draggedItem = null;
+
+        // Start the conveyor animation initially
+        startConveyor();
+
+        // Stop conveyor button
+        stopButton.addEventListener('click', () => {
+            if (isConveyorMoving) {
+                stopConveyor();
+            }
+        });
+
+        // Start conveyor button
+        startButton.addEventListener('click', () => {
+            if (!isConveyorMoving) {
+                startConveyor();
+            }
+        });
+
+        // Function to start the conveyor
+        function startConveyor() {
+            // Remove any existing animation
+            conveyor.classList.remove('animate');
+
+            // Force a reflow to restart the animation
+            void conveyor.offsetWidth;
+
+            // Add the animation class back
+            conveyor.classList.add('animate');
+
+            isConveyorMoving = true;
+            startButton.disabled = true;
+            stopButton.disabled = false;
+
+            // Disable dragging
+            scenarioItems.forEach(item => {
+                item.setAttribute('draggable', 'false');
+            });
+
+            // Reset drop zone
+            dropZone.innerHTML = `
+                <div class="drop-zone-icon">⬇️</div>
+                <div class="drop-zone-text">גרור תרחיש לכאן</div>
+                <div class="drop-zone-subtext">עצור את המסוע קודם</div>
+            `;
+
+            // Hide active scenario
+            activeScenario.classList.remove('visible');
+
+            // Reset current scenario
+            currentScenario = null;
+
+            // Add message to terminal
+            const infoLine = document.createElement('div');
+            infoLine.style.color = 'var(--text-info)';
+            infoLine.textContent = 'Conveyor started. Stop it to select a scenario.';
+            terminalBody.appendChild(infoLine);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        // Function to stop the conveyor
+        function stopConveyor() {
+            conveyor.classList.remove('animate');
+            isConveyorMoving = false;
+            stopButton.disabled = true;
+            startButton.disabled = false;
+
+            // Enable dragging
+            scenarioItems.forEach(item => {
+                item.setAttribute('draggable', 'true');
+            });
+
+            // Add message to terminal
+            const infoLine = document.createElement('div');
+            infoLine.style.color = 'var(--text-info)';
+            infoLine.textContent = 'Conveyor stopped. Drag a scenario to the drop zone.';
+            terminalBody.appendChild(infoLine);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        // Drag and Drop functionality
+        scenarioItems.forEach(item => {
+            // Drag start
+            item.addEventListener('dragstart', function(e) {
+                if (!isConveyorMoving) {
+                    draggedItem = this;
+                    setTimeout(() => {
+                        this.classList.add('dragging');
+                    }, 0);
+
+                    // Set data for drag operation
+                    e.dataTransfer.setData('text/plain', this.dataset.command);
+                    e.dataTransfer.effectAllowed = 'move';
+                } else {
+                    e.preventDefault(); // Prevent dragging if conveyor is moving
+                }
+            });
+
+            // Drag end
+            item.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+        });
+
+        // Drop zone event listeners
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            if (!isConveyorMoving) {
+                this.classList.add('highlight');
+            }
+        });
+
+        dropZone.addEventListener('dragleave', function() {
+            this.classList.remove('highlight');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('highlight');
+
+            if (isConveyorMoving) return;
+
+            if (draggedItem) {
+                // Clone the dragged item
+                const clone = draggedItem.cloneNode(true);
+                clone.classList.remove('dragging');
+                clone.setAttribute('draggable', 'false');
+
+                // Clear drop zone and add the clone
+                this.innerHTML = '';
+                this.appendChild(clone);
+
+                // Set as current scenario
+                currentScenario = draggedItem;
+
+                // Show active scenario with content
+                activeScenario.classList.add('visible');
+                scenarioContent.textContent = draggedItem.querySelector('.scenario-text').textContent;
+                scenarioFeedback.className = 'scenario-feedback';
+                scenarioFeedback.textContent = '';
+
+                // Focus on terminal input
+                terminalInput.focus();
+
+                // Add message to terminal
+                const infoLine = document.createElement('div');
+                infoLine.style.color = 'var(--text-info)';
+                infoLine.textContent = 'Scenario selected. Type the appropriate Git command.';
+                terminalBody.appendChild(infoLine);
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+        });
+
+        // Terminal form submission
+        document.getElementById('terminal-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const input = terminalInput.value.trim();
+            if (!input) return;
+
+            // Add command to terminal
+            const commandLine = document.createElement('div');
+            commandLine.innerHTML = `<span style="color: var(--text-success);">$</span> ${input}`;
+            terminalBody.appendChild(commandLine);
+
+            // Check if a scenario is selected
+            if (currentScenario) {
+                const expectedCommand = currentScenario.dataset.command;
+
+              // Check if command is correct
+            if (input === expectedCommand) {
+                // Success feedback
+                scenarioFeedback.className = 'scenario-feedback success';
+                scenarioFeedback.textContent = 'כל הכבוד! הפקודה נכונה.';
+
+                // Add success message to terminal
+                const successLine = document.createElement('div');
+                successLine.style.color = 'var(--text-success)';
+                successLine.textContent = 'Command executed successfully!';
+                terminalBody.appendChild(successLine);
+
+                // Add visual success indicator to drop zone
+                const dropZoneItem = dropZone.querySelector('.scenario-item');
+                if (dropZoneItem) {
+                    dropZoneItem.style.borderColor = 'var(--text-success)';
+                }
+
+                // Submit the form to update the command status
+                const commandInput = document.getElementById('command-input');
+                commandInput.value = expectedCommand;
+                document.getElementById('update-command-form').submit();
+            } else {
+                    // Error feedback
+                    scenarioFeedback.className = 'scenario-feedback error';
+                    scenarioFeedback.textContent = 'הפקודה לא נכונה. נסה שוב.';
+
+                    // Add error message to terminal
+                    const errorLine = document.createElement('div');
+                    errorLine.style.color = 'var(--text-error)';
+                    errorLine.textContent = 'Command not recognized. Try again.';
+                    terminalBody.appendChild(errorLine);
+
+                    // Submit the form to update the command status
+                    const commandInput = document.getElementById('command-attempts-input');
+                    commandInput.value = expectedCommand;
+                    document.getElementById('update-command-attempts-form').submit();
+
+
+
+                }
+            } else {
+                // No scenario selected
+                const errorLine = document.createElement('div');
+                errorLine.style.color = 'var(--text-warning)';
+                errorLine.textContent = 'Please drag a scenario to the drop zone first.';
+                terminalBody.appendChild(errorLine);
+            }
+
+            // Clear input and scroll terminal to bottom
+            terminalInput.value = '';
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        });
+
+        // Focus terminal input when clicking on terminal body
+        terminalBody.addEventListener('click', () => {
+            terminalInput.focus();
+        });
+    </script>
+</body>
+</html>

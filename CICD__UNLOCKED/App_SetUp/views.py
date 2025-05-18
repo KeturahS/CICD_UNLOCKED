@@ -10,7 +10,7 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 from .models import User
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile
@@ -29,12 +29,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import LearningModuleRating
 
-
-
-
 from django.shortcuts import render, redirect
-from GitExercises.models import GitSentence, GitHubSentence
-from .forms import GitSentenceForm, GitHubSentenceForm
+from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress
+from .forms import GitSentenceForm, GitHubSentenceForm, TerminalExercisesGitCommandsForm
 
 
 # Create your views here.
@@ -461,15 +458,40 @@ def learning_home(request):
 def git_module_view(request):
     git_sentences = list(GitSentence.objects.all())
     github_sentences = list(GitHubSentence.objects.all())
+    from django.db.models import Q
+    try:
+        CurrentStudentGitCommandProgress = StudentGitCommandProgress.objects.filter(
+            student=request.user.student_profile)
+        categorized_commands = {
+            'basic': CurrentStudentGitCommandProgress.filter(command__level='basic'),
+            'branches': CurrentStudentGitCommandProgress.filter(command__level='branches'),
+            'advanced': CurrentStudentGitCommandProgress.filter(command__level='advanced'),
 
+        }
+    except StudentProfile.DoesNotExist:
+        categorized_commands = {
+            'basic': [],
+            'branches': [],
+            'advanced': [],
+        }
     # Combine and shuffle the sentences
     all_sentences = git_sentences + github_sentences
     random.shuffle(all_sentences)
 
+    CurrentStudentGitCommandProgress = StudentGitCommandProgress.objects.filter(
+        student=request.user.student_profile)
+
     context = {
         'all_sentences': all_sentences,
-    }
+        'basic_git_terminal_commands': categorized_commands['basic'],
+        'branches_git_terminal_commands': categorized_commands['branches'],
+        'advanced_git_terminal_commands': categorized_commands['advanced'],
+        'git_terminal_commands': CurrentStudentGitCommandProgress,}
     return render(request, 'learning_modules/git_module.html', context)
+
+
+
+
 
 
 @login_required
@@ -480,8 +502,6 @@ def jenkins_module_view(request):
 @login_required
 def docker_module_view(request):
     return render(request, 'learning_modules/docker_module.html')
-
-
 
 
 def manage_tasks_and_check_assignments(request):
@@ -545,12 +565,70 @@ def GitSection1(request):
             GitHubSentence.objects.filter(id=sentence_id).delete()
 
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection1.html', context)
+
+
 def GitSection2(request):
-    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection2.html')
+    Terminal_Exercises = Terminal_Exercises_Git_Commands.objects.all()
+
+    Terminal_Exercises_form = TerminalExercisesGitCommandsForm()
+
+    levels = Terminal_Exercises_Git_Commands.LEVELS
+
+    context = {
+        'Terminal_Exercises': Terminal_Exercises,
+        'Terminal_Exercises_form': Terminal_Exercises_form,
+        'levels': levels,
+    }
+    if request.method == 'POST':
+        if 'add_terminal_exercise' in request.POST:
+            exercise_id = request.POST.get('exercise_id')
+            command = request.POST.get('command')
+            description = request.POST.get('description_en')
+            Hebrew_Command = request.POST.get('Hebrew_Command')
+            git_feedback = request.POST.get('feedback')
+            git_command_scenario = request.POST.get('scenario')
+            Hebrew_Description = request.POST.get('description_he')
+            level = request.POST.get('level')
+
+            if command and description and Hebrew_Description and Hebrew_Command and git_feedback and git_command_scenario:  # Ensure the input is not empty
+                Terminal_Exercises_Git_Commands.objects.create(
+                    command=command,
+                    Hebrew_Command=Hebrew_Command,
+                    English_Description=description,
+                    Hebrew_Description=Hebrew_Description,
+                    git_feedback=git_feedback,
+                    git_command_scenario=git_command_scenario,
+                    level=level
+                )
+
+        elif 'update_terminal_exercise' in request.POST:
+            exercise_id = request.POST.get('exercise_id')
+            try:
+                exercise = Terminal_Exercises_Git_Commands.objects.get(id=exercise_id)
+                exercise.command = request.POST.get('command')
+                exercise.Hebrew_Description = request.POST.get('description_he')
+                exercise.English_Description = request.POST.get('description_en')
+                exercise.git_feedback = request.POST.get('feedback')
+                exercise.git_command_scenario = request.POST.get('scenario')
+                exercise.level = request.POST.get('level')
+                exercise.save()
+            except Terminal_Exercises_Git_Commands.DoesNotExist:
+                pass  # Handle the case where the exercise does not exist
+
+    elif 'delete_terminal_exercise' in request.POST:
+        exercise_id = request.POST.get('exercise_id')
+        Terminal_Exercises_Git_Commands.objects.filter(id=exercise_id).delete()
+
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection2.html', context)
+
+
 def GitSection3(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection3.html')
+
+
 def GitSection4(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection4.html')
+
 
 #
 # @login_required
@@ -625,8 +703,10 @@ def rate_learning_modules(request):
 
     return render(request, 'learning_modules/rate_learning_modules.html')
 
+
 def is_lecturer(user):
     return user.is_authenticated and hasattr(user, 'lecturer_profile')
+
 
 @login_required
 @user_passes_test(is_lecturer)
@@ -634,10 +714,7 @@ def view_module_ratings(request):
     ratings = LearningModuleRating.objects.select_related('student').all().order_by('-submitted_at')
     return render(request, 'view_module_ratings.html', {'ratings': ratings})
 
-
-
-#@login_required
-#def view_module_ratings(request):
- #   ratings = LearningModuleRating.objects.all()
-  #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
-
+# @login_required
+# def view_module_ratings(request):
+#   ratings = LearningModuleRating.objects.all()
+#  return render(request, 'view_module_ratings.html', {'ratings': ratings})

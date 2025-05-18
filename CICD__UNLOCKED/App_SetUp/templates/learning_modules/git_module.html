@@ -50,7 +50,7 @@
     {% endif %}
 
   {% elif request.GET.step == '2q' %}
-    {% include 'GitExercises/section2_questions.html' %}
+    {% include 'GitExercises/section2_questions.html' with git_terminal_commands=git_terminal_commands branches_git_terminal_commands=branches_git_terminal_commands advanced_git_terminal_commands=advanced_git_terminal_commands basic_git_terminal_commands=basic_git_terminal_commands %}
 
   {% elif request.GET.step == '3' %}
     {% if request.GET.accessible %}

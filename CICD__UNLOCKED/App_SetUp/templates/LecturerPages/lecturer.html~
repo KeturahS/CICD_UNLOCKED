@@ -32,7 +32,6 @@
 <body>
     <div class="navbar">
         <a href="{% url 'lecturer_profile' %}">פרופיל מרצה</a>
-
     </div>
     <div class="container py-5">
         <div class="row">
@@ -45,7 +44,7 @@
                         <h4 class="mb-4">מערכת ניהול מרצים</h4>
 
                         <div class="row mb-4">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <div class="card text-center bg-light">
                                     <div class="card-body">
                                         <h5 class="card-title">הקורסים שלי</h5>
@@ -54,21 +53,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <div class="card text-center bg-light">
                                     <div class="card-body">
                                         <h5 class="card-title">מטלות ומבחנים</h5>
                                         <p class="card-text">ניהול מטלות ובדיקת עבודות</p>
-                                        <a href="{% url 'LecturerPages:LecturerTasksAndAssignments:manage_tasks_and_check_assignments' %}" class="btn btn-outline-primary">כניסה</a>
+                                        <a href="#" class="btn btn-outline-primary">כניסה</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <div class="card text-center bg-light">
                                     <div class="card-body">
                                         <h5 class="card-title">לוח זמנים</h5>
                                         <p class="card-text">מערכת שעות ואירועים</p>
                                         <a href="#" class="btn btn-outline-primary">כניסה</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="card text-center bg-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">דירוגי לומדות</h5>
+                                        <p class="card-text">צפייה בדירוגים והערות של סטודנטים</p>
+                                        <a href="{% url 'view_module_ratings' %}" class="btn btn-outline-primary">כניסה</a>
                                     </div>
                                 </div>
                             </div>
@@ -88,13 +96,13 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between">
                             <a href="{% url 'index' %}" class="btn btn-secondary">חזרה לדף הראשי</a>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

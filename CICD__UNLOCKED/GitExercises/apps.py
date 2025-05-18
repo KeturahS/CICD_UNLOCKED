@@ -1,6 +1,15 @@
 from django.apps import AppConfig
 
+import GitExercises
 
+# Register GitExercises.signals
 class GitExercisesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'GitExercises'
+
+    def ready(self):
+        # Import signals to register them
+
+
+
+        import GitExercises.signals
