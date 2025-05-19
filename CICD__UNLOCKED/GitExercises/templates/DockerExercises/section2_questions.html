@@ -2,40 +2,2001 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>שאלות -Docker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לומדה אינטראקטיבית - Docker</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 40px;
+        :root {
+            --docker-blue: #0db7ed;
+            --docker-dark-blue: #066da5;
+            --docker-light-blue: #71c5e7;
+            --docker-very-dark-blue: #03436a;
+            --docker-green: #4caf50;
+            --docker-light-green: #8bc34a;
+            --docker-red: #f44336;
+            --docker-light-red: #ff5252;
+            --docker-bg: #f5fafd;
+            --docker-gray: #e0e0e0;
+            --docker-dark: #333;
+            --docker-yellow: #ffeb3b;
+            --docker-orange: #ff9800;
         }
 
-        .btn-back {
-            background-color: #007acc;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--docker-bg);
+            color: var(--docker-dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--docker-blue) 0%, var(--docker-dark-blue) 100%);
             color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .docker-logo {
+            display: block;
+            width: 120px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-container {
+            background-color: var(--docker-very-dark-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .main-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Edge */
+        }
+
+        .nav-tab {
+            padding: 15px 20px;
+            color: white;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab.active {
+            color: var(--docker-blue);
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--docker-blue);
+        }
+
+        .mode-switch {
+            display: flex;
+            align-items: center;
+        }
+
+        .mode-switch button {
+            background-color: var(--docker-red);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .mode-switch button:hover {
+            background-color: var(--docker-light-red);
+        }
+
+        .mode-switch button.active {
+            background-color: var(--docker-green);
+        }
+
+        .content-section {
+            display: none;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .content-section h2 {
+            color: var(--docker-dark-blue);
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-bottom: 2px solid var(--docker-blue);
+            padding-bottom: 10px;
+        }
+
+        .content-section h3 {
+            color: var(--docker-very-dark-blue);
+            margin: 25px 0 15px;
+            font-size: 20px;
+        }
+
+        .content-section p {
+            margin-bottom: 15px;
             font-size: 16px;
         }
 
-        .btn-back:hover {
-            background-color: #005fa3;
+        .content-section ul, .content-section ol {
+            margin-bottom: 15px;
+            padding-right: 20px;
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+        }
+
+        .concept-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-right: 5px solid var(--docker-blue);
+            transition: all 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .concept-card h3 {
+            color: var(--docker-dark-blue);
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .concept-icon {
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            background-color: var(--docker-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .code-example {
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            border-right: 3px solid var(--docker-blue);
+        }
+
+        .interactive-demo {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .interactive-demo h2 {
+            color: var(--docker-dark-blue);
+            margin-bottom: 20px;
+        }
+
+        .demo-container {
+            border: 2px solid var(--docker-gray);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            min-height: 300px;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .demo-button {
+            padding: 10px 20px;
+            background-color: var(--docker-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background-color: var(--docker-dark-blue);
+        }
+
+        .demo-button:disabled {
+            background-color: var(--docker-gray);
+            cursor: not-allowed;
+        }
+
+        .docker-flow {
+            margin: 30px 0;
+            position: relative;
+            height: 200px;
+        }
+
+        .docker-step {
+            position: absolute;
+            width: 120px;
+            height: 80px;
+            background-color: var(--docker-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .docker-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .docker-step.active {
+            background-color: var(--docker-green);
+        }
+
+        .docker-arrow {
+            position: absolute;
+            height: 4px;
+            background-color: var(--docker-dark-blue);
+            top: 40px;
+        }
+
+        .docker-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -8px;
+            border-left: 12px solid var(--docker-dark-blue);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .step-info {
+            background-color: var(--docker-light-blue);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .step-info.active {
+            display: block;
+        }
+
+        .step-info h3 {
+            color: var(--docker-very-dark-blue);
+            margin-bottom: 10px;
+        }
+
+        .exercise-section {
+            display: none;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .exercise-section.active {
+            display: block;
+        }
+
+        .exercise-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: var(--docker-gray);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .exercise-tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .exercise-tab:hover {
+            background-color: #ddd;
+        }
+
+        .exercise-tab.active {
+            background-color: var(--docker-blue);
+            color: white;
+        }
+
+        .exercise-content {
+            display: none;
+        }
+
+        .exercise-content.active {
+            display: block;
+        }
+
+        .quiz-container {
+            margin-top: 20px;
+        }
+
+        .quiz-question {
+            background-color: var(--docker-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-options {
+            margin-top: 15px;
+        }
+
+        .quiz-option {
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 2px solid var(--docker-gray);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background-color: var(--docker-gray);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--docker-blue);
+            background-color: rgba(13, 183, 237, 0.1);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--docker-green);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--docker-red);
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .quiz-feedback.correct {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--docker-green);
+            display: block;
+        }
+
+        .quiz-feedback.incorrect {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--docker-red);
+            display: block;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .command-exercise {
+            margin-top: 20px;
+        }
+
+        .command-editor {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            padding: 15px;
+            border: 2px solid var(--docker-gray);
+            border-radius: 5px;
+            resize: vertical;
+            direction: ltr;
+        }
+
+        .command-validation {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .command-validation.valid {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--docker-green);
+            display: block;
+        }
+
+        .command-validation.invalid {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--docker-red);
+            display: block;
+        }
+
+        .drag-drop-exercise {
+            margin-top: 20px;
+        }
+
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .draggable {
+            padding: 10px 15px;
+            background-color: var(--docker-blue);
+            color: white;
+            border-radius: 5px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .draggable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .draggable.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .drop-targets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .drop-target {
+            min-height: 150px;
+            border: 2px dashed var(--docker-gray);
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-target.highlight {
+            border-color: var(--docker-green);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .drop-target-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--docker-dark-blue);
+        }
+
+        .dropped-item {
+            padding: 10px 15px;
+            background-color: var(--docker-blue);
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropped-item .remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--docker-gray);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--docker-green);
+            width: 0;
+            transition: width 0.5s ease;
+        }
+
+        .completion-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(76, 175, 80, 0.1);
+            border-radius: 10px;
+            color: var(--docker-green);
+            font-weight: bold;
+            display: none;
+        }
+
+        .completion-message.show {
+            display: block;
+        }
+
+        .certificate {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border: 5px solid var(--docker-blue);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .certificate h2 {
+            color: var(--docker-dark-blue);
+            margin-bottom: 20px;
+        }
+
+        .certificate .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+        }
+
+        .certificate .name {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--docker-dark);
+        }
+
+        .certificate .date {
+            font-style: italic;
+            color: var(--docker-dark);
+            margin-bottom: 20px;
+        }
+
+        .certificate .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 30px;
+            color: var(--docker-blue);
+            margin-top: 20px;
+        }
+
+        .print-button {
+            padding: 10px 20px;
+            background-color: var(--docker-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .print-button:hover {
+            background-color: var(--docker-dark-blue);
+        }
+
+        footer {
+            background: linear-gradient(135deg, var(--docker-blue) 0%, var(--docker-dark-blue) 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .nav-tab {
+                flex: 1 0 auto;
+            }
+
+            .docker-flow {
+                height: 400px;
+            }
+
+            .docker-step {
+                width: 80px;
+                height: 60px;
+                font-size: 14px;
+            }
+
+            .drop-targets {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .command-exercise {
+            margin-top: 20px;
+        }
+
+        .command-instructions {
+            background-color: var(--docker-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-right: 4px solid var(--docker-blue);
+        }
+
+        .command-drag-container {
+            margin-bottom: 20px;
+        }
+
+        .command-pieces {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            min-height: 60px;
+            padding: 10px;
+            background-color: var(--docker-bg);
+            border-radius: 10px;
+        }
+
+        .command-piece {
+            background-color: var(--docker-blue);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            font-family: monospace;
+            white-space: pre;
+        }
+
+        .command-piece:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .command-piece.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .command-editor-container {
+            margin-bottom: 20px;
+        }
+
+        .command-editor {
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            white-space: pre;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            border-right: 3px solid var(--docker-blue);
+        }
+
+        .code-line {
+            margin: 0;
+            padding: 0;
+            font-family: monospace;
+        }
+
+        .drop-zone {
+            min-height: 40px;
+            border: 2px dashed var(--docker-gray);
+            border-radius: 5px;
+            margin: 5px 0;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.highlight {
+            border-color: var(--docker-green);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+
+        .drop-zone.filled {
+            border: none;
+            padding: 0;
+        }
+
+        .drop-placeholder {
+            color: #888;
+            font-style: italic;
+            padding: 5px;
+        }
+
+        .command-hint {
+            background-color: var(--docker-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-right: 4px solid var(--docker-yellow);
+            display: none;
+        }
+
+        .command-hint.show {
+            display: block;
+        }
+
+        .command-hint ul {
+            margin-top: 10px;
+            padding-right: 20px;
+        }
+
+        .command-hint li {
+            margin-bottom: 5px;
+        }
+
+        .docker-architecture {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .docker-layer {
+            width: 80%;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .docker-layer.app {
+            background-color: var(--docker-blue);
+        }
+
+        .docker-layer.docker {
+            background-color: var(--docker-dark-blue);
+        }
+
+        .docker-layer.os {
+            background-color: var(--docker-very-dark-blue);
+        }
+
+        .docker-layer.infra {
+            background-color: #333;
+        }
+
+        .docker-container-visual {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .docker-container {
+            width: 150px;
+            height: 100px;
+            background-color: var(--docker-blue);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .docker-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .docker-host {
+            width: 100%;
+            padding: 20px;
+            background-color: var(--docker-very-dark-blue);
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .docker-image-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .docker-image-layer {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: var(--docker-blue);
+            border-radius: 5px;
+            color: white;
+            text-align: center;
+        }
+
+        .docker-image-layer:nth-child(odd) {
+            background-color: var(--docker-dark-blue);
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <img src="https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png" alt="Docker Logo" class="docker-logo">
+        <h1>לומדה אינטראקטיבית - Docker</h1>
+        <p>למד את המושגים והכלים המרכזיים בעולם של Docker</p>
+    </div>
 
-<h1>❓ שאלות בנושא Docker</h1>
+    <div class="nav-container">
+        <div class="main-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-section="intro">מבוא</button>
+                <button class="nav-tab" data-section="concepts">מושגים מרכזיים</button>
+                <button class="nav-tab" data-section="commands">פקודות Docker</button>
+                <button class="nav-tab" data-section="exercises">תרגילים</button>
+            </div>
+            <div class="mode-switch">
+                <button id="learn-mode" class="active">מצב לימוד</button>
+                <button id="practice-mode">מצב תרגול</button>
+            </div>
+        </div>
+    </div>
 
-<!-- כאן יבואו השאלות שלך -->
+    <div class="container">
+        <!-- מבוא -->
+        <section id="intro" class="content-section active">
+            <h2>מבוא ל-Docker</h2>
 
-<!-- 🔙 כפתור חזרה ל־SECTION2 -->
-<div style="margin-top: 40px;">
-  <a href="?step=3{% if request.GET.accessible %}&accessible=1{% endif %}" class="btn-back">
-    🔙 חזרה לסרטון
-  </a>
-</div>
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">D</div>
+                    מהו Docker?
+                </h3>
+                <p>Docker הוא פלטפורמת קוד פתוח שמאפשרת לפתח, להפיץ ולהריץ אפליקציות בסביבות מבודדות הנקראות קונטיינרים (containers). הטכנולוגיה מאפשרת לארוז אפליקציה יחד עם כל הדרישות והתלויות שלה לתוך יחידה סטנדרטית אחת.</p>
+                <p>Docker פותח לראשונה ב-2013 על ידי חברת dotCloud (שלימים שינתה את שמה ל-Docker, Inc) והפך במהירות לסטנדרט תעשייתי לפיתוח ופריסת אפליקציות.</p>
+            </div>
 
+            <h3>למה משתמשים ב-Docker?</h3>
+            <ul>
+                <li><strong>עקביות סביבה:</strong> "עובד במחשב שלי" כבר לא תירוץ - Docker מבטיח שהאפליקציה תרוץ באותה צורה בכל סביבה</li>
+                <li><strong>בידוד:</strong> אפליקציות רצות בסביבות מבודדות ללא הפרעה הדדית</li>
+                <li><strong>יעילות משאבים:</strong> קל יותר וקטן יותר ממכונות וירטואליות מסורתיות</li>
+                <li><strong>מהירות פריסה:</strong> קונטיינרים מופעלים במהירות ומאפשרים סקילביליות גבוהה</li>
+                <li><strong>גמישות:</strong> תומך במגוון רחב של אפליקציות ושפות תכנות</li>
+                <li><strong>אקוסיסטם עשיר:</strong> מאגר ענק של תמונות (images) מוכנות לשימוש</li>
+            </ul>
+
+            <h3>ההבדל בין Docker למכונות וירטואליות</h3>
+
+            <div class="docker-architecture">
+                <h4>ארכיטקטורת מכונה וירטואלית:</h4>
+                <div class="docker-layer app">אפליקציה 1</div>
+                <div class="docker-layer app">מערכת הפעלה אורחת 1</div>
+                <div class="docker-layer app">אפליקציה 2</div>
+                <div class="docker-layer app">מערכת הפעלה אורחת 2</div>
+                <div class="docker-layer docker">Hypervisor</div>
+                <div class="docker-layer os">מערכת הפעלה מארחת</div>
+                <div class="docker-layer infra">תשתית</div>
+            </div>
+
+            <div class="docker-architecture">
+                <h4>ארכיטקטורת Docker:</h4>
+                <div class="docker-layer app">אפליקציה 1</div>
+                <div class="docker-layer app">אפליקציה 2</div>
+                <div class="docker-layer app">אפליקציה 3</div>
+                <div class="docker-layer docker">Docker Engine</div>
+                <div class="docker-layer os">מערכת הפעלה מארחת</div>
+                <div class="docker-layer infra">תשתית</div>
+            </div>
+
+            <p>כפי שניתן לראות, Docker חוסך את הצורך במערכות הפעלה מרובות ומשתמש במנגנון בידוד ברמת מערכת ההפעלה, מה שהופך אותו ליעיל יותר במשאבים.</p>
+
+            <div class="interactive-demo">
+                <h3>הדגמה: תהליך בסיסי ב-Docker</h3>
+                <p>לחצו על השלבים השונים כדי לראות מה קורה בכל שלב:</p>
+
+                <div class="docker-flow">
+                    <div class="docker-step" data-step="build" style="left: 5%; top: 60px;">בניית Image</div>
+                    <div class="docker-arrow" style="left: 15%; width: 15%;"></div>
+
+                    <div class="docker-step" data-step="push" style="left: 30%; top: 60px;">דחיפה למאגר</div>
+                    <div class="docker-arrow" style="left: 40%; width: 15%;"></div>
+
+                    <div class="docker-step" data-step="pull" style="left: 55%; top: 60px;">משיכה מהמאגר</div>
+                    <div class="docker-arrow" style="left: 65%; width: 15%;"></div>
+
+                    <div class="docker-step" data-step="run" style="left: 80%; top: 60px;">הרצת קונטיינר</div>
+                </div>
+
+                <div id="build-info" class="step-info">
+                    <h3>בניית Image</h3>
+                    <p>בשלב זה יוצרים תמונת Docker (Docker Image) באמצעות Dockerfile. התמונה מכילה את האפליקציה וכל התלויות שלה.</p>
+                    <p>דוגמה לפקודה:</p>
+                    <div class="code-example">docker build -t my-app:1.0 .</div>
+                </div>
+
+                <div id="push-info" class="step-info">
+                    <h3>דחיפה למאגר (Push to Registry)</h3>
+                    <p>לאחר בניית התמונה, ניתן לדחוף אותה למאגר תמונות כמו Docker Hub, כדי שאחרים יוכלו להשתמש בה.</p>
+                    <p>דוגמה לפקודה:</p>
+                    <div class="code-example">docker push username/my-app:1.0</div>
+                </div>
+
+                <div id="pull-info" class="step-info">
+                    <h3>משיכה מהמאגר (Pull from Registry)</h3>
+                    <p>בשרת היעד, מושכים את התמונה מהמאגר כדי להשתמש בה.</p>
+                    <p>דוגמה לפקודה:</p>
+                    <div class="code-example">docker pull username/my-app:1.0</div>
+                </div>
+
+                <div id="run-info" class="step-info">
+                    <h3>הרצת קונטיינר (Run Container)</h3>
+                    <p>לבסוף, מריצים קונטיינר מהתמונה שנמשכה. הקונטיינר מכיל את האפליקציה הרצה בסביבה מבודדת.</p>
+                    <p>דוגמה לפקודה:</p>
+                    <div class="code-example">docker run -d -p 8080:80 username/my-app:1.0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- מושגים מרכזיים -->
+        <section id="concepts" class="content-section">
+            <h2>מושגים מרכזיים ב-Docker</h2>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">C</div>
+                    Container (קונטיינר)
+                </h3>
+                <p>קונטיינר הוא מופע ריצה של תמונת Docker. זוהי סביבה מבודדת שמכילה את כל מה שהאפליקציה צריכה כדי לרוץ.</p>
+                <p><strong>מאפיינים:</strong></p>
+                <ul>
+                    <li>קל משקל ומכיל רק את הנדרש להרצת האפליקציה</li>
+                    <li>מבודד מקונטיינרים אחרים ומהמערכת המארחת</li>
+                    <li>ניתן להפעיל, לעצור, להשהות ולהסיר בקלות</li>
+                    <li>השינויים בקונטיינר אינם משפיעים על התמונה המקורית</li>
+                </ul>
+            </div>
+
+            <div class="docker-container-visual">
+                <div class="docker-host">Docker Host</div>
+                <div class="docker-container">Container 1</div>
+                <div class="docker-container">Container 2</div>
+                <div class="docker-container">Container 3</div>
+            </div>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">I</div>
+                    Image (תמונה)
+                </h3>
+                <p>תמונת Docker היא תבנית לקריאה בלבד שממנה נוצרים קונטיינרים. התמונה מכילה את קוד האפליקציה, הספריות, התלויות, כלים וקבצים אחרים הנדרשים להרצת האפליקציה.</p>
+                <p><strong>מאפיינים:</strong></p>
+                <ul>
+                    <li>בנויה משכבות (layers) שמאפשרות שיתוף וחיסכון במקום</li>
+                    <li>ניתנת לשיתוף במאגרי תמונות כמו Docker Hub</li>
+                    <li>מוגדרת באמצעות Dockerfile</li>
+                    <li>בעלת תגית (tag) שמציינת את הגרסה</li>
+                </ul>
+            </div>
+
+            <div class="docker-image-visual">
+                <div class="docker-image-layer">שכבת אפליקציה</div>
+                <div class="docker-image-layer">שכבת תלויות</div>
+                <div class="docker-image-layer">שכבת ספריות</div>
+                <div class="docker-image-layer">שכבת מערכת בסיסית</div>
+            </div>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">D</div>
+                    Dockerfile
+                </h3>
+                <p>Dockerfile הוא קובץ טקסט שמכיל את כל הפקודות הנדרשות לבניית תמונת Docker. הוא מגדיר את הסביבה, התלויות והפעולות שיש לבצע כדי ליצור את התמונה.</p>
+                <p><strong>דוגמה בסיסית:</strong></p>
+                <div class="code-example">FROM node:14
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]</div>
+            </div>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">R</div>
+                    Registry (מאגר)
+                </h3>
+                <p>מאגר Docker הוא מקום לאחסון ושיתוף של תמונות Docker. המאגר הציבורי הנפוץ ביותר הוא Docker Hub, אך ניתן גם להקים מאגרים פרטיים.</p>
+                <p><strong>סוגי מאגרים:</strong></p>
+                <ul>
+                    <li><strong>Docker Hub:</strong> מאגר ציבורי עם אלפי תמונות מוכנות לשימוש</li>
+                    <li><strong>מאגרים פרטיים:</strong> כמו Amazon ECR, Google Container Registry, Azure Container Registry</li>
+                    <li><strong>מאגרים מקומיים:</strong> כמו Docker Registry, Harbor</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">V</div>
+                    Volume (נפח)
+                </h3>
+                <p>נפחי Docker הם מנגנון לשמירת נתונים מחוץ לקונטיינר. הם מאפשרים לשמור מידע גם לאחר שהקונטיינר נמחק ולשתף מידע בין קונטיינרים.</p>
+                <p><strong>סוגי נפחים:</strong></p>
+                <ul>
+                    <li><strong>נפחים מנוהלים (Managed volumes):</strong> נוצרים ומנוהלים על ידי Docker</li>
+                    <li><strong>נפחים מקושרים (Bind mounts):</strong> מקשרים תיקייה במערכת המארחת לתיקייה בקונטיינר</li>
+                    <li><strong>נפחי tmpfs:</strong> נשמרים רק בזיכרון ולא בדיסק</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">N</div>
+                    Network (רשת)
+                </h3>
+                <p>רשתות Docker מאפשרות לקונטיינרים לתקשר זה עם זה ועם העולם החיצוני. Docker מספק מספר סוגי רשתות מובנים.</p>
+                <p><strong>סוגי רשתות:</strong></p>
+                <ul>
+                    <li><strong>bridge:</strong> הרשת המובנית המשמשת כברירת מחדל</li>
+                    <li><strong>host:</strong> משתמשת ברשת של המארח ללא בידוד</li>
+                    <li><strong>none:</strong> ללא גישה לרשת</li>
+                    <li><strong>overlay:</strong> מאפשרת תקשורת בין קונטיינרים במספר מארחי Docker</li>
+                    <li><strong>macvlan:</strong> מאפשרת להקצות כתובת MAC לקונטיינר</li>
+                </ul>
+            </div>
+
+            <div class="concept-card">
+                <h3>
+                    <div class="concept-icon">S</div>
+                    Swarm
+                </h3>
+                <p>Docker Swarm הוא כלי לניהול אשכול (cluster) של מארחי Docker. הוא מאפשר להפעיל ולנהל קונטיינרים על פני מספר מכונות.</p>
+                <p><strong>מאפיינים:</strong></p>
+                <ul>
+                    <li>מובנה בתוך Docker Engine</li>
+                    <li>מאפשר סקילביליות אופקית</li>
+                    <li>מספק איזון עומסים מובנה</li>
+                    <li>תומך בעדכוני גרסה מתגלגלים (rolling updates)</li>
+                    <li>מספק ניהול סודות (secrets) מובנה</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- פקודות Docker -->
+        <section id="commands" class="content-section">
+            <h2>פקודות Docker נפוצות</h2>
+
+            <h3>פקודות בסיסיות</h3>
+            <div class="code-example"># בדיקת גרסת Docker
+docker --version
+
+# הצגת מידע על התקנת Docker
+docker info
+
+# הצגת עזרה
+docker help</div>
+
+            <h3>עבודה עם תמונות (Images)</h3>
+            <div class="code-example"># הצגת כל התמונות המקומיות
+docker images
+
+# חיפוש תמונה במאגר
+docker search ubuntu
+
+# משיכת תמונה מהמאגר
+docker pull ubuntu:20.04
+
+# בניית תמונה מ-Dockerfile
+docker build -t my-app:1.0 .
+
+# דחיפת תמונה למאגר
+docker push username/my-app:1.0
+
+# מחיקת תמונה מקומית
+docker rmi ubuntu:20.04
+
+# הצגת היסטוריית שכבות של תמונה
+docker history ubuntu:20.04</div>
+
+            <h3>עבודה עם קונטיינרים</h3>
+            <div class="code-example"># הרצת קונטיינר
+docker run -d -p 8080:80 nginx
+
+# הרצת קונטיינר עם שם
+docker run --name my-nginx -d nginx
+
+# הרצת קונטיינר עם נפח
+docker run -v /host/path:/container/path -d nginx
+
+# הרצת קונטיינר עם משתני סביבה
+docker run -e VAR_NAME=value -d nginx
+
+# הצגת קונטיינרים פעילים
+docker ps
+
+# הצגת כל הקונטיינרים (כולל כבויים)
+docker ps -a
+
+# עצירת קונטיינר
+docker stop container_id
+
+# הפעלת קונטיינר שנעצר
+docker start container_id
+
+# הפעלה מחדש של קונטיינר
+docker restart container_id
+
+# מחיקת קונטיינר
+docker rm container_id
+
+# מחיקת כל הקונטיינרים שאינם פעילים
+docker container prune</div>
+
+            <h3>ניטור ודיבאג</h3>
+            <div class="code-example"># הצגת לוגים של קונטיינר
+docker logs container_id
+
+# מעקב אחר לוגים בזמן אמת
+docker logs -f container_id
+
+# הצגת סטטיסטיקות שימוש משאבים
+docker stats
+
+# הרצת פקודה בתוך קונטיינר פעיל
+docker exec -it container_id bash
+
+# הצגת תהליכים הרצים בקונטיינר
+docker top container_id
+
+# הצגת מידע מפורט על קונטיינר
+docker inspect container_id</div>
+
+            <h3>עבודה עם נפחים (Volumes)</h3>
+            <div class="code-example"># יצירת נפח
+docker volume create my-volume
+
+# הצגת כל הנפחים
+docker volume ls
+
+# הצגת מידע מפורט על נפח
+docker volume inspect my-volume
+
+# מחיקת נפח
+docker volume rm my-volume
+
+# מחיקת כל הנפחים שאינם בשימוש
+docker volume prune</div>
+
+            <h3>עבודה עם רשתות</h3>
+            <div class="code-example"># יצירת רשת
+docker network create my-network
+
+# הצגת כל הרשתות
+docker network ls
+
+# חיבור קונטיינר לרשת
+docker network connect my-network container_id
+
+# ניתוק קונטיינר מרשת
+docker network disconnect my-network container_id
+
+# הצגת מידע מפורט על רשת
+docker network inspect my-network
+
+# מחיקת רשת
+docker network rm my-network</div>
+
+            <h3>ניקוי מערכת</h3>
+            <div class="code-example"># מחיקת כל הקונטיינרים, הרשתות והתמונות שאינם בשימוש
+docker system prune
+
+# מחיקת כל הקונטיינרים, הרשתות, התמונות והנפחים שאינם בשימוש
+docker system prune -a --volumes
+
+# הצגת מידע על שימוש בדיסק
+docker system df</div>
+        </section>
+
+        <!-- תרגילים -->
+        <section id="exercises" class="exercise-section">
+            <h2>תרגילים אינטראקטיביים</h2>
+
+            <div class="exercise-tabs">
+                <button class="exercise-tab active" data-exercise="quiz">חידון מושגים</button>
+                <button class="exercise-tab" data-exercise="command">השלמת פקודות</button>
+                <button class="exercise-tab" data-exercise="drag-drop">גרור ושחרר</button>
+            </div>
+
+            <div id="quiz" class="exercise-content active">
+                <h3>חידון מושגים ב-Docker</h3>
+                <p>ענה על השאלות הבאות כדי לבדוק את הידע שלך:</p>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="quiz-progress"></div>
+                </div>
+
+                <div class="quiz-container" id="quiz-container">
+                    <!-- שאלות יתווספו כאן על ידי JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button id="quiz-prev" class="demo-button" disabled>הקודם</button>
+                    <button id="quiz-next" class="demo-button">הבא</button>
+                    <button id="quiz-submit" class="demo-button" style="display: none;">סיים</button>
+                </div>
+
+                <div class="completion-message" id="quiz-completion">
+                    <h3>כל הכבוד!</h3>
+                    <p>סיימת את החידון בהצלחה. הציון שלך: <span id="quiz-score">0</span>%</p>
+                </div>
+            </div>
+
+            <div id="command" class="exercise-content">
+                <h3>השלמת פקודות Docker</h3>
+                <p>גרור את חלקי הפקודה למקומות המתאימים:</p>
+
+                <div class="command-exercise">
+                    <div class="command-instructions">
+                        <p><strong>משימה:</strong> השלם את פקודות ה-Docker על ידי גרירת החלקים הנכונים למקומות המסומנים.</p>
+                        <p><strong>רמז:</strong> חשוב על הפעולות הנפוצות שמבצעים עם Docker.</p>
+                    </div>
+
+                    <div class="command-drag-container">
+                        <h4>חלקי פקודה זמינים:</h4>
+                        <div class="command-pieces" id="command-pieces">
+                            <!-- חלקי פקודה יתווספו כאן על ידי JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="command-editor-container">
+                        <h4>פקודה:</h4>
+                        <div class="command-editor" id="command-editor">
+                            <!-- תוכן הפקודה יתווסף כאן על ידי JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="command-validation" id="command-validation"></div>
+
+                    <div class="command-hint" id="command-hint">
+                        <p><strong>רמז:</strong></p>
+                        <p id="command-hint-text"></p>
+                    </div>
+
+                    <div class="command-controls">
+                        <div>
+                            <button id="command-hint-btn" class="demo-button" style="background-color: var(--docker-yellow); color: var(--docker-dark);">הצג רמז</button>
+                            <button id="command-reset" class="demo-button" style="background-color: var(--docker-red);">אפס</button>
+                        </div>
+                        <div>
+                            <button id="command-check" class="demo-button">בדוק</button>
+                            <button id="command-next" class="demo-button" style="background-color: var(--docker-green);" disabled>הבא</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="completion-message" id="command-completion">
+                    <h3>כל הכבוד!</h3>
+                    <p>סיימת את תרגילי הפקודות בהצלחה. הציון שלך: <span id="command-score">0</span>%</p>
+                </div>
+            </div>
+
+            <div id="drag-drop" class="exercise-content">
+                <h3>מיון פקודות Docker</h3>
+                <p>גרור את הפקודות לקטגוריות המתאימות:</p>
+
+                <div class="drag-container" id="drag-items">
+                    <!-- פריטים לגרירה יתווספו כאן על ידי JavaScript -->
+                </div>
+
+                <div class="drop-targets" id="drop-targets">
+                    <!-- יעדי שחרור יתווספו כאן על ידי JavaScript -->
+                </div>
+
+                <div class="command-validation" id="drag-validation"></div>
+
+                <div class="drag-controls">
+                    <button id="drag-reset" class="demo-button" style="background-color: var(--docker-red);">אפס</button>
+                    <button id="drag-check" class="demo-button">בדוק</button>
+                </div>
+
+                <div class="completion-message" id="drag-completion">
+                    <h3>כל הכבוד!</h3>
+                    <p>סיימת את תרגיל המיון בהצלחה. הציון שלך: <span id="drag-score">0</span>%</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>לומדה אינטראקטיבית - Docker &copy; 2024</p>
+    </footer>
+
+    <script>
+        // ניווט בין חלקי הלומדה
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // הסרת המחלקה 'active' מכל הלשוניות
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                // הוספת המחלקה 'active' ללשונית הנוכחית
+                tab.classList.add('active');
+
+                // הסרת המחלקה 'active' מכל החלקים
+                document.querySelectorAll('.content-section, .exercise-section').forEach(section => section.classList.remove('active'));
+
+                // הצגת החלק המתאים
+                const sectionId = tab.getAttribute('data-section');
+                if (sectionId === 'exercises') {
+                    document.getElementById('exercises').classList.add('active');
+                } else {
+                    document.getElementById(sectionId).classList.add('active');
+                }
+            });
+        });
+
+        // מעבר בין מצב לימוד למצב תרגול
+        document.getElementById('learn-mode').addEventListener('click', () => {
+            document.getElementById('learn-mode').classList.add('active');
+            document.getElementById('practice-mode').classList.remove('active');
+        });
+
+        document.getElementById('practice-mode').addEventListener('click', () => {
+            document.getElementById('learn-mode').classList.remove('active');
+            document.getElementById('practice-mode').classList.add('active');
+        });
+
+        // הדגמה אינטראקטיבית - תהליך Docker
+        document.querySelectorAll('.docker-step').forEach(step => {
+            step.addEventListener('click', () => {
+                // הסרת המחלקה 'active' מכל השלבים
+                document.querySelectorAll('.docker-step').forEach(s => s.classList.remove('active'));
+                // הוספת המחלקה 'active' לשלב הנוכחי
+                step.classList.add('active');
+
+                // הסרת המחלקה 'active' מכל המידע
+                document.querySelectorAll('.step-info').forEach(info => info.classList.remove('active'));
+
+                // הצגת המידע המתאים
+                const stepId = step.getAttribute('data-step');
+                document.getElementById(`${stepId}-info`).classList.add('active');
+            });
+        });
+
+        // ניווט בין תרגילים
+        document.querySelectorAll('.exercise-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // הסרת המחלקה 'active' מכל הלשוניות
+                document.querySelectorAll('.exercise-tab').forEach(t => t.classList.remove('active'));
+                // הוספת המחלקה 'active' ללשונית הנוכחית
+                tab.classList.add('active');
+
+                // הסרת המחלקה 'active' מכל התרגילים
+                document.querySelectorAll('.exercise-content').forEach(content => content.classList.remove('active'));
+
+                // הצגת התרגיל המתאים
+                const exerciseId = tab.getAttribute('data-exercise');
+                document.getElementById(exerciseId).classList.add('active');
+            });
+        });
+
+        // חידון מושגים
+        const quizQuestions = [
+            {
+                question: "מהו Docker?",
+                options: [
+                    "מערכת הפעלה חדשה",
+                    "פלטפורמה לפיתוח, הפצה והרצה של אפליקציות בסביבות מבודדות",
+                    "שפת תכנות חדשה",
+                    "כלי לניהול בסיסי נתונים"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "מהו קונטיינר ב-Docker?",
+                options: [
+                    "קובץ המכיל את קוד האפליקציה",
+                    "מופע ריצה של תמונת Docker",
+                    "שרת וירטואלי",
+                    "מערכת הפעלה מלאה"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "מהו Dockerfile?",
+                options: [
+                    "קובץ המכיל את התוצאה של הרצת Docker",
+                    "קובץ המכיל את הלוגים של Docker",
+                    "קובץ טקסט המכיל את הפקודות לבניית תמונת Docker",
+                    "קובץ בינארי המכיל את תמונת Docker"
+                ],
+                correctAnswer: 2
+            },
+            {
+                question: "איזו פקודה משמשת להצגת כל הקונטיינרים הפעילים?",
+                options: [
+                    "docker list",
+                    "docker ps",
+                    "docker containers",
+                    "docker show"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "מהו Docker Hub?",
+                options: [
+                    "ממשק ניהול גרפי ל-Docker",
+                    "מאגר ציבורי לשיתוף תמונות Docker",
+                    "כלי לניהול קונטיינרים",
+                    "מערכת הפעלה מבוססת Docker"
+                ],
+                correctAnswer: 1
+            }
+        ];
+
+        let currentQuizQuestion = 0;
+        let quizScore = 0;
+        let selectedOption = null;
+
+        function renderQuizQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            const question = quizQuestions[currentQuizQuestion];
+
+            let questionHTML = `
+                <div class="quiz-question">
+                    <h4>שאלה ${currentQuizQuestion + 1} מתוך ${quizQuestions.length}</h4>
+                    <p>${question.question}</p>
+                    <div class="quiz-options">
+            `;
+
+            question.options.forEach((option, index) => {
+                questionHTML += `
+                    <div class="quiz-option" data-index="${index}">${option}</div>
+                `;
+            });
+
+            questionHTML += `
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+            `;
+
+            quizContainer.innerHTML = questionHTML;
+
+            // עדכון סרגל התקדמות
+            const progressBar = document.getElementById('quiz-progress');
+            progressBar.style.width = `${((currentQuizQuestion + 1) / quizQuestions.length) * 100}%`;
+
+            // הוספת מאזיני אירועים לאפשרויות
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    if (selectedOption !== null) return; // אם כבר נבחרה אפשרות, לא לעשות כלום
+
+                    selectedOption = parseInt(option.getAttribute('data-index'));
+
+                    // הסרת המחלקה 'selected' מכל האפשרויות
+                    document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                    // הוספת המחלקה 'selected' לאפשרות הנבחרת
+                    option.classList.add('selected');
+
+                    // בדיקה אם התשובה נכונה
+                    const isCorrect = selectedOption === question.correctAnswer;
+
+                    if (isCorrect) {
+                        quizScore++;
+                    }
+
+                    // הצגת משוב
+                    const feedback = document.querySelector('.quiz-feedback');
+                    feedback.textContent = isCorrect ? 'נכון! תשובה מצוינת.' : 'לא נכון. התשובה הנכונה היא: ' + question.options[question.correctAnswer];
+                    feedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                    // סימון האפשרויות הנכונות והשגויות
+                    document.querySelectorAll('.quiz-option').forEach((opt, idx) => {
+                        if (idx === question.correctAnswer) {
+                            opt.classList.add('correct');
+                        } else if (idx === selectedOption && idx !== question.correctAnswer) {
+                            opt.classList.add('incorrect');
+                        }
+                    });
+
+                    // הפעלת כפתור 'הבא'
+                    document.getElementById('quiz-next').disabled = false;
+
+                    // אם זו השאלה האחרונה, להציג את כפתור 'סיים'
+                    if (currentQuizQuestion === quizQuestions.length - 1) {
+                        document.getElementById('quiz-next').style.display = 'none';
+                        document.getElementById('quiz-submit').style.display = 'block';
+                    }
+                });
+            });
+        }
+
+        // אתחול החידון
+        renderQuizQuestion();
+
+        // מאזיני אירועים לכפתורי החידון
+        document.getElementById('quiz-prev').addEventListener('click', () => {
+            if (currentQuizQuestion > 0) {
+                currentQuizQuestion--;
+                selectedOption = null;
+                renderQuizQuestion();
+
+                // הפעלת/ביטול כפתורים
+                document.getElementById('quiz-next').disabled = false;
+                document.getElementById('quiz-next').style.display = 'block';
+                document.getElementById('quiz-submit').style.display = 'none';
+
+                if (currentQuizQuestion === 0) {
+                    document.getElementById('quiz-prev').disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('quiz-next').addEventListener('click', () => {
+            if (currentQuizQuestion < quizQuestions.length - 1) {
+                currentQuizQuestion++;
+                selectedOption = null;
+                renderQuizQuestion();
+
+                // הפעלת כפתור 'הקודם'
+                document.getElementById('quiz-prev').disabled = false;
+
+                // ביטול כפתור 'הבא' עד לבחירת אפשרות
+                document.getElementById('quiz-next').disabled = true;
+            }
+        });
+
+        document.getElementById('quiz-submit').addEventListener('click', () => {
+            // הצגת הודעת סיום
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('quiz-prev').style.display = 'none';
+            document.getElementById('quiz-submit').style.display = 'none';
+
+            // חישוב ציון
+            const scorePercentage = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('quiz-score').textContent = scorePercentage;
+
+            // הצגת הודעת סיום
+            document.getElementById('quiz-completion').classList.add('show');
+        });
+
+        // תרגיל השלמת פקודות
+        const commandExercises = [
+            {
+                instruction: "השלם את הפקודה להרצת קונטיינר nginx עם מיפוי פורטים",
+                template: "docker run",
+                pieces: [
+                    { id: "piece1", text: "-d" },
+                    { id: "piece2", text: "-p 8080:80" },
+                    { id: "piece3", text: "--name my-nginx" },
+                    { id: "piece4", text: "nginx" },
+                    { id: "piece5", text: "-v /host:/container" }
+                ],
+                solution: "docker run -d -p 8080:80 nginx",
+                hint: "הפקודה צריכה לכלול את הפרמטרים הבאים: הרצה ברקע (-d), מיפוי פורטים (-p) ושם התמונה (nginx)"
+            },
+            {
+                instruction: "השלם את הפקודה לבניית תמונת Docker",
+                template: "docker",
+                pieces: [
+                    { id: "piece1", text: "build" },
+                    { id: "piece2", text: "-t my-app:1.0" },
+                    { id: "piece3", text: "." },
+                    { id: "piece4", text: "run" },
+                    { id: "piece5", text: "push" }
+                ],
+                solution: "docker build -t my-app:1.0 .",
+                hint: "הפקודה צריכה לכלול: פעולת בנייה (build), תגית לתמונה (-t) ונקודה המציינת את המיקום הנוכחי"
+            },
+            {
+                instruction: "השלם את הפקודה להצגת כל הקונטיינרים (כולל כבויים)",
+                template: "docker",
+                pieces: [
+                    { id: "piece1", text: "ps" },
+                    { id: "piece2", text: "-a" },
+                    { id: "piece3", text: "containers" },
+                    { id: "piece4", text: "ls" },
+                    { id: "piece5", text: "--all" }
+                ],
+                solution: "docker ps -a",
+                hint: "הפקודה צריכה לכלול את הפעולה להצגת תהליכים (ps) ודגל להצגת הכל (-a)"
+            }
+        ];
+
+        let currentCommandExercise = 0;
+        let commandScore = 0;
+        let currentCommand = "";
+
+        function renderCommandExercise() {
+            const exercise = commandExercises[currentCommandExercise];
+
+            // עדכון הוראות
+            document.querySelector('.command-instructions p:first-child').textContent = `משימה: ${exercise.instruction}`;
+
+            // איפוס חלקי הפקודה
+            const commandPieces = document.getElementById('command-pieces');
+            commandPieces.innerHTML = '';
+
+            // הוספת חלקי הפקודה
+            exercise.pieces.forEach(piece => {
+                const pieceElement = document.createElement('div');
+                pieceElement.className = 'command-piece';
+                pieceElement.textContent = piece.text;
+                pieceElement.setAttribute('draggable', 'true');
+                pieceElement.setAttribute('data-id', piece.id);
+
+                // הוספת מאזיני אירועים לגרירה
+                pieceElement.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', piece.text);
+                    pieceElement.classList.add('dragging');
+                });
+
+                pieceElement.addEventListener('dragend', () => {
+                    pieceElement.classList.remove('dragging');
+                });
+
+                commandPieces.appendChild(pieceElement);
+            });
+
+            // איפוס עורך הפקודה
+            const commandEditor = document.getElementById('command-editor');
+            commandEditor.textContent = exercise.template;
+            currentCommand = exercise.template;
+
+            // הוספת מאזיני אירועים לעורך הפקודה
+            commandEditor.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                commandEditor.classList.add('highlight');
+            });
+
+            commandEditor.addEventListener('dragleave', () => {
+                commandEditor.classList.remove('highlight');
+            });
+
+            commandEditor.addEventListener('drop', (e) => {
+                e.preventDefault();
+                commandEditor.classList.remove('highlight');
+
+                const pieceText = e.dataTransfer.getData('text/plain');
+                currentCommand += ` ${pieceText}`;
+                commandEditor.textContent = currentCommand;
+
+                // הסרת החלק שנגרר
+                const pieces = document.querySelectorAll('.command-piece');
+                pieces.forEach(p => {
+                    if (p.textContent === pieceText) {
+                        p.remove();
+                    }
+                });
+            });
+
+            // איפוס הודעות
+            document.getElementById('command-validation').className = 'command-validation';
+            document.getElementById('command-validation').textContent = '';
+            document.getElementById('command-hint').classList.remove('show');
+
+            // איפוס כפתורים
+            document.getElementById('command-next').disabled = true;
+            document.getElementById('command-hint-btn').textContent = 'הצג רמז';
+        }
+
+        // אתחול תרגיל הפקודות
+        renderCommandExercise();
+
+        // מאזיני אירועים לכפתורי תרגיל הפקודות
+        document.getElementById('command-check').addEventListener('click', () => {
+            const exercise = commandExercises[currentCommandExercise];
+            const isCorrect = currentCommand.trim() === exercise.solution.trim();
+
+            const validation = document.getElementById('command-validation');
+            validation.textContent = isCorrect ? 'נכון! הפקודה תקינה.' : 'לא נכון. נסה שוב.';
+            validation.className = `command-validation ${isCorrect ? 'valid' : 'invalid'}`;
+
+            if (isCorrect) {
+                commandScore++;
+                document.getElementById('command-next').disabled = false;
+            }
+        });
+
+        document.getElementById('command-reset').addEventListener('click', () => {
+            renderCommandExercise();
+        });
+
+        document.getElementById('command-hint-btn').addEventListener('click', () => {
+            const hint = document.getElementById('command-hint');
+            hint.classList.toggle('show');
+
+            const hintBtn = document.getElementById('command-hint-btn');
+            hintBtn.textContent = hint.classList.contains('show') ? 'הסתר רמז' : 'הצג רמז';
+
+            document.getElementById('command-hint-text').textContent = commandExercises[currentCommandExercise].hint;
+        });
+
+        document.getElementById('command-next').addEventListener('click', () => {
+            if (currentCommandExercise < commandExercises.length - 1) {
+                currentCommandExercise++;
+                renderCommandExercise();
+            } else {
+                // הצגת הודעת סיום
+                document.querySelector('.command-exercise').style.display = 'none';
+
+                // חישוב ציון
+                const scorePercentage = Math.round((commandScore / commandExercises.length) * 100);
+                document.getElementById('command-score').textContent = scorePercentage;
+
+                // הצגת הודעת סיום
+                document.getElementById('command-completion').classList.add('show');
+            }
+        });
+
+        // תרגיל גרור ושחרר
+        const dragItems = [
+            { id: "item1", text: "docker run", category: "" },
+            { id: "item2", text: "docker build", category: "" },
+            { id: "item3", text: "docker pull", category: "" },
+            { id: "item4", text: "docker push", category: "" },
+            { id: "item5", text: "docker ps", category: "" },
+            { id: "item6", text: "docker images", category: "" },
+            { id: "item7", text: "docker volume create", category: "" },
+            { id: "item8", text: "docker network create", category: "" }
+        ];
+
+        const dropTargets = [
+            { id: "container", name: "פקודות קונטיינר" },
+            { id: "image", name: "פקודות תמונה" },
+            { id: "system", name: "פקודות מערכת" }
+        ];
+
+        const correctCategories = {
+            "item1": "container",
+            "item2": "image",
+            "item3": "image",
+            "item4": "image",
+            "item5": "container",
+            "item6": "image",
+            "item7": "system",
+            "item8": "system"
+        };
+
+        function renderDragDropExercise() {
+            // איפוס פריטים לגרירה
+            const dragContainer = document.getElementById('drag-items');
+            dragContainer.innerHTML = '';
+
+            // הוספת פריטים לגרירה
+            dragItems.forEach(item => {
+                if (item.category === "") {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'draggable';
+                    itemElement.textContent = item.text;
+                    itemElement.setAttribute('draggable', 'true');
+                    itemElement.setAttribute('data-id', item.id);
+
+                    // הוספת מאזיני אירועים לגרירה
+                    itemElement.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', item.id);
+                        itemElement.classList.add('dragging');
+                    });
+
+                    itemElement.addEventListener('dragend', () => {
+                        itemElement.classList.remove('dragging');
+                    });
+
+                    dragContainer.appendChild(itemElement);
+                }
+            });
+
+            // איפוס יעדי שחרור
+            const dropContainer = document.getElementById('drop-targets');
+            dropContainer.innerHTML = '';
+
+            // הוספת יעדי שחרור
+            dropTargets.forEach(target => {
+                const targetElement = document.createElement('div');
+                targetElement.className = 'drop-target';
+                targetElement.setAttribute('data-id', target.id);
+
+                const headerElement = document.createElement('div');
+                headerElement.className = 'drop-target-header';
+                headerElement.textContent = target.name;
+                targetElement.appendChild(headerElement);
+
+                // הוספת פריטים שכבר נמצאים בקטגוריה
+                dragItems.forEach(item => {
+                    if (item.category === target.id) {
+                        const droppedItem = document.createElement('div');
+                        droppedItem.className = 'dropped-item';
+
+                        const itemText = document.createElement('span');
+                        itemText.textContent = item.text;
+                        droppedItem.appendChild(itemText);
+
+                        const removeButton = document.createElement('span');
+                        removeButton.className = 'remove';
+                        removeButton.textContent = '×';
+                        removeButton.addEventListener('click', () => {
+                            // עדכון הקטגוריה של הפריט
+                            dragItems.forEach(i => {
+                                if (i.id === item.id) {
+                                    i.category = "";
+                                }
+                            });
+
+                            // רענון התרגיל
+                            renderDragDropExercise();
+                        });
+
+                        droppedItem.appendChild(removeButton);
+                        targetElement.appendChild(droppedItem);
+                    }
+                });
+
+                // הוספת מאזיני אירועים ליעד שחרור
+                targetElement.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    targetElement.classList.add('highlight');
+                });
+
+                targetElement.addEventListener('dragleave', () => {
+                    targetElement.classList.remove('highlight');
+                });
+
+                targetElement.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    targetElement.classList.remove('highlight');
+
+                    const itemId = e.dataTransfer.getData('text/plain');
+
+                    // עדכון הקטגוריה של הפריט
+                    dragItems.forEach(item => {
+                        if (item.id === itemId) {
+                            item.category = target.id;
+                        }
+                    });
+
+                    // רענון התרגיל
+                    renderDragDropExercise();
+                });
+
+                dropContainer.appendChild(targetElement);
+            });
+
+            // איפוס הודעות
+            document.getElementById('drag-validation').className = 'command-validation';
+            document.getElementById('drag-validation').textContent = '';
+        }
+
+        // אתחול תרגיל גרור ושחרר
+        renderDragDropExercise();
+
+        // מאזיני אירועים לכפתורי תרגיל גרור ושחרר
+        document.getElementById('drag-check').addEventListener('click', () => {
+            let correctCount = 0;
+
+            dragItems.forEach(item => {
+                if (item.category === correctCategories[item.id]) {
+                    correctCount++;
+                }
+            });
+
+            const scorePercentage = Math.round((correctCount / dragItems.length) * 100);
+
+            const validation = document.getElementById('drag-validation');
+
+            if (scorePercentage === 100) {
+                // הצגת הודעת סיום
+                document.getElementById('drag-items').style.display = 'none';
+                document.getElementById('drop-targets').style.display = 'none';
+                document.querySelector('.drag-controls').style.display = 'none';
+                validation.style.display = 'none';
+
+                // הצגת הודעת סיום
+                document.getElementById('drag-score').textContent = scorePercentage;
+                document.getElementById('drag-completion').classList.add('show');
+            } else {
+                validation.textContent = `ציון: ${scorePercentage}%. המשך לנסות!`;
+                validation.className = 'command-validation invalid';
+            }
+        });
+
+        document.getElementById('drag-reset').addEventListener('click', () => {
+            // איפוס כל הקטגוריות
+            dragItems.forEach(item => {
+                item.category = "";
+            });
+
+            // רענון התרגיל
+            renderDragDropExercise();
+        });
+    </script>
 </body>
 </html>
