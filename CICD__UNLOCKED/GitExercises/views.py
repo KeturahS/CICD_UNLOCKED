@@ -3,13 +3,12 @@ from django.shortcuts import render, redirect
 
 from GitExercises.models import StudentGitCommandProgress
 
-
-
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 @login_required
 def update_command_status(request):
@@ -83,4 +82,29 @@ def GitScenarioExercise(request):
         'PersonalGitScenarioExercise': PersonalGitScenarioExercise,
     }
     return render(request, 'GitExercises/GitScenarioExercise.html', context)
+
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from .models import StudentJenkinsQuizExercise
+
+
+@login_required
+def update_jenkins_quiz_completion(request):
+    if request.method == 'POST' and request.POST.get('complete_quiz') == 'true':
+        student = request.user.student_profile
+        StudentJenkinsQuizExercise.objects.filter(student=student).update(completed=True)
+        # ניתן להפנות חזרה לעמוד התוצאות או לעמוד אחר
+        # חזרה לעמוד של השאלות או החומר של שלב 4
+        student_jenkins_quiz_exercise = StudentJenkinsQuizExercise.objects.filter(student=request.user.student_profile)
+
+        context = {
+            'student_jenkins_quiz_exercise': student_jenkins_quiz_exercise,
+        }
+        return render(request, 'JenkinsExercises/section4_questions.html')
+    return render(request, 'JenkinsExercises/section4_questions.html')
+
+
+
 

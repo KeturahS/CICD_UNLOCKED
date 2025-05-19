@@ -1,7 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from App_SetUp.models import StudentProfile
-from GitExercises.models import Terminal_Exercises_Git_Commands, StudentGitCommandProgress
+from GitExercises.models import Terminal_Exercises_Git_Commands, StudentGitCommandProgress, JenkinsConceptsQuiz, \
+    StudentJenkinsQuizExercise
 
 
 # Signal to create StudentGitCommandProgress entries when a new student profile is created
@@ -25,3 +26,25 @@ def create_command_for_all_students(sender, instance, created, **kwargs):
                 student=student,
                 command=instance
             )
+
+
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
+@receiver(post_save, sender=StudentProfile)
+def create_quiz_exercises_for_student(sender, instance, created, **kwargs):
+    if created:  # Only create exercises for new students
+        quizzes = JenkinsConceptsQuiz.objects.all()
+        for quiz in quizzes:
+            StudentJenkinsQuizExercise.objects.create(student=instance, quiz=quiz)
+
+@receiver(post_delete, sender=StudentProfile)
+def delete_quiz_exercises_for_student(sender, instance, **kwargs):
+    StudentJenkinsQuizExercise.objects.filter(student=instance).delete()
+
+
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from App_SetUp.models import StudentProfile
+
+

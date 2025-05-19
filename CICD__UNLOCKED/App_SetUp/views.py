@@ -10,10 +10,10 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required
 from .models import User
-from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm
+from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm, JenkinsConceptsQuizForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import LecturerProfile, StudentProfile, AdminProfile,Presentation
+from .models import LecturerProfile, StudentProfile, AdminProfile, Presentation
 from .forms import StudentProfileUpdateForm
 
 from .forms import ContactMessageForm
@@ -49,7 +49,8 @@ from GitExercises.models import StudentGitCommandProgress
 
 
 from django.shortcuts import render, redirect
-from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress
+from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress, \
+    StudentJenkinsQuizExercise, JenkinsConceptsQuiz
 from .forms import GitSentenceForm, GitHubSentenceForm, TerminalExercisesGitCommandsForm
 
 from io import BytesIO
@@ -210,7 +211,8 @@ def student(request):
 def admin(request):
     show_filter = request.GET.get('show')
     if show_filter == 'open':
-        contact_messages = ContactMessage.objects.filter(is_resolved=False, category__in=['support', 'admin']).order_by('-created_at')
+        contact_messages = ContactMessage.objects.filter(is_resolved=False, category__in=['support', 'admin']).order_by(
+            '-created_at')
     else:
         contact_messages = ContactMessage.objects.filter(category__in=['support', 'admin']).order_by('-created_at')
     lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
@@ -325,6 +327,7 @@ def manage_students(request):
     }
     return render(request, "AdminPages/admin_page_students_section.html", context)
 
+
 @login_required
 def resolve_request(request, message_id):
     if not request.user.is_admin:
@@ -360,6 +363,8 @@ def resolve_lecturer_request(request, message_id):
             fail_silently=False,
         )
     return redirect('lecturer')  # תחזיר את המרצה לעמוד שלו אחרי הטיפול
+
+
 def get_superuser_email():
     # Retrieve the first superuser
     superuser = User.objects.filter(is_superuser=True).first()
@@ -526,19 +531,19 @@ def learning_home(request):
     return render(request, 'learning_modules/learning_modules_homePage.html', {'visible_modules': visible_modules})
 
 
-#@login_required
-#def git_module_view(request):
- #   git_sentences = list(GitSentence.objects.all())
-  #  github_sentences = list(GitHubSentence.objects.all())
+# @login_required
+# def git_module_view(request):
+#   git_sentences = list(GitSentence.objects.all())
+#  github_sentences = list(GitHubSentence.objects.all())
 
-    # Combine and shuffle the sentences
-   # all_sentences = git_sentences + github_sentences
-    #random.shuffle(all_sentences)
+# Combine and shuffle the sentences
+# all_sentences = git_sentences + github_sentences
+# random.shuffle(all_sentences)
 
-    #context = {
-     #   'all_sentences': all_sentences,
-    #}
-    #return render(request, 'learning_modules/git_module.html', context)
+# context = {
+#   'all_sentences': all_sentences,
+# }
+# return render(request, 'learning_modules/git_module.html', context)
 
 @login_required
 def git_module_view(request):
@@ -568,9 +573,8 @@ def git_module_view(request):
     CurrentStudentGitCommandProgress = StudentGitCommandProgress.objects.filter(
         student=request.user.student_profile)
 
-
     podcasts = []
-    presentations =[]
+    presentations = []
     # שילוב לתרגול
     all_sentences = git_sentences + github_sentences
     random.shuffle(all_sentences)
@@ -582,7 +586,6 @@ def git_module_view(request):
         video = LearningVideo.objects.filter(module='Git', order=int(step)).first()
         podcasts = Podcast.objects.filter(module='Git', order=int(step))  # 🟢
         presentations = Presentation.objects.filter(module='Git', order=int(step))
-
 
     context = {
         'all_sentences': all_sentences,
@@ -596,16 +599,13 @@ def git_module_view(request):
         'visible_modules': ['git', 'jenkins', 'docker'],
     }
 
-
     return render(request, 'learning_modules/git_module.html', context)
-
-
-
-
 
 
 @login_required
 def jenkins_module_view(request):
+    student_jenkins_quiz_exercise = StudentJenkinsQuizExercise.objects.filter(student=request.user.student_profile)
+
     podcasts = []
     presentations = []
     # שליפת סרטון ופודקאסט לפי שלב (step)
@@ -621,6 +621,7 @@ def jenkins_module_view(request):
         'podcasts': podcasts,
         'presentations': presentations,
         'visible_modules': ['git', 'jenkins', 'docker'],
+        'student_jenkins_quiz_exercise': student_jenkins_quiz_exercise,
     }
 
     return render(request, 'learning_modules/jenkins_module.html', context)
@@ -634,7 +635,7 @@ def docker_module_view(request):
     # שליפת סרטון ופודקאסט לפי שלב (step)
     step = request.GET.get('step')
     video = None
-    if step in ['1', '2','3']:
+    if step in ['1', '2', '3']:
         video = LearningVideo.objects.filter(module='Docker', order=int(step)).first()
         podcasts = Podcast.objects.filter(module='Docker', order=int(step))
         presentations = Presentation.objects.filter(module='Docker', order=int(step))
@@ -767,13 +768,54 @@ def GitSection2(request):
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection2.html', context)
 
 
-def GitSection3(request):
-    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection3.html')
+def JenkinsSection(request):
+    JenkinsConceptsQuizs = JenkinsConceptsQuiz.objects.all()
+    JenkinsConceptsQuizs_form = JenkinsConceptsQuizForm()
+
+    if request.method == 'POST':
+        if 'add_question' in request.POST:
+            question = request.POST.get('question')
+            answer1 = request.POST.get('answer1')
+            answer2 = request.POST.get('answer2')
+            answer3 = request.POST.get('answer3')
+            answer4 = request.POST.get('answer4')
+            correct_answer = request.POST.get('correct_answer')
+
+            if question and answer1 and answer2 and answer3 and answer4 and correct_answer:  # Ensure the input is not empty
+                JenkinsConceptsQuiz.objects.create(
+                    question=question,
+                    option1=answer1,
+                    option2=answer2,
+                    option3=answer3,
+                    option4=answer4,
+                    answer=correct_answer
+                )
+        elif 'update_question' in request.POST:
+            question_id = request.POST.get('question_id')
+            try:
+                question = JenkinsConceptsQuiz.objects.get(id=question_id)
+                question.question = request.POST.get('question')
+                question.option1 = request.POST.get('answer1')
+                question.option2 = request.POST.get('answer2')
+                question.option3 = request.POST.get('answer3')
+                question.option4 = request.POST.get('answer4')
+                question.answer = request.POST.get('correct_answer')
+                question.save()
+            except JenkinsConceptsQuiz.DoesNotExist:
+                pass
+        elif 'delete_question' in request.POST:
+            question_id = request.POST.get('question_id')
+            JenkinsConceptsQuiz.objects.filter(id=question_id).delete()
+    context = {
+        'JenkinsConceptsQuiz': JenkinsConceptsQuizs,
+        'JenkinsConceptsQuizs_form': JenkinsConceptsQuizs_form,
+
+    }
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/JenkinsSection.html', context)
 
 
-def GitSection4(request):
-    return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection4.html')
-
+def DockerSection(request):
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/DockerSection.html')
 
 
 @login_required
@@ -781,15 +823,18 @@ def git_section1(request):
     video = LearningVideo.objects.filter(module='Git', order=1).first()
     return render(request, 'learning_modules/git/section1.html', {'video': video})
 
+
 @login_required
 def git_section2(request):
     video = LearningVideo.objects.filter(module='Git', order=2).first()
     return render(request, 'learning_modules/git/section2.html', {'video': video})
 
+
 @login_required
 def git_section3(request):
     video = LearningVideo.objects.filter(module='Git', order=3).first()
     return render(request, 'learning_modules/git/section3.html', {'video': video})
+
 
 @login_required
 def git_section4(request):
@@ -797,22 +842,23 @@ def git_section4(request):
     return render(request, 'learning_modules/git/section4.html', {'video': video})
 
 
-
-
 @login_required
 def jenkins_section1(request):
     video = LearningVideo.objects.filter(module='Jenkins', order=1).first()
     return render(request, 'learning_modules/jenkins/section1.html', {'video': video})
+
 
 @login_required
 def jenkins_section2(request):
     video = LearningVideo.objects.filter(module='Jenkins', order=2).first()
     return render(request, 'learning_modules/jenkins/section2.html', {'video': video})
 
+
 @login_required
 def jenkins_section3(request):
     video = LearningVideo.objects.filter(module='Jenkins', order=3).first()
     return render(request, 'learning_modules/jenkins/section3.html', {'video': video})
+
 
 @login_required
 def jenkins_section4(request):
@@ -820,21 +866,23 @@ def jenkins_section4(request):
     return render(request, 'learning_modules/jenkins/section4.html', {'video': video})
 
 
-
 @login_required
 def docker_section1(request):
     video = LearningVideo.objects.filter(module='Docker', order=1).first()
     return render(request, 'learning_modules/docker/section1.html', {'video': video})
+
 
 @login_required
 def docker_section2(request):
     video = LearningVideo.objects.filter(module='Docker', order=2).first()
     return render(request, 'learning_modules/docker/section2.html', {'video': video})
 
+
 @login_required
 def docker_section3(request):
     video = LearningVideo.objects.filter(module='Docker', order=3).first()
     return render(request, 'learning_modules/docker/section3.html', {'video': video})
+
 
 #
 # @login_required
@@ -927,11 +975,10 @@ def view_module_ratings(request):
 #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
 
 
-
-#@login_required
-#def view_module_ratings(request):
- #   ratings = LearningModuleRating.objects.all()
-  #  return render(request, 'view_module_ratings.html', {'ratings': ratings})
+# @login_required
+# def view_module_ratings(request):
+#   ratings = LearningModuleRating.objects.all()
+#  return render(request, 'view_module_ratings.html', {'ratings': ratings})
 
 
 def is_lecturer(user):
@@ -953,12 +1000,11 @@ def send_private_message(request):
 
     return render(request, 'messages/send_message.html', {'form': form})
 
+
 @login_required
 def view_my_messages(request):
     messages = PrivateMessage.objects.filter(recipient=request.user).order_by('-created_at')
     return render(request, 'messages/view_messages.html', {'messages': messages})
-
-
 
 
 def student_modules_view(request):
@@ -968,10 +1014,13 @@ def student_modules_view(request):
             visible_modules.append(content.module)
     return render(request, 'learning_modules/learning_modules_homePage.html', {'visible_modules': visible_modules})
 
+
 @login_required
 def lecturer_manage_content(request):
     contents = CourseContent.objects.all()
-    return render(request, 'LecturerPages/LecturerTasksAndAssignments/lecturer_content_manage.html', {'contents': contents})
+    return render(request, 'LecturerPages/LecturerTasksAndAssignments/lecturer_content_manage.html',
+                  {'contents': contents})
+
 
 @login_required
 def update_module_visibility(request, content_id):
@@ -982,6 +1031,7 @@ def update_module_visibility(request, content_id):
             content.visibility_mode = visibility_mode
             content.save()
     return redirect('lecturer_manage_content')
+
 
 @login_required
 @user_passes_test(is_lecturer)

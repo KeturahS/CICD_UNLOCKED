@@ -7,7 +7,7 @@ from .models import ContactMessage
 from django.core.exceptions import ValidationError
 from datetime import date
 
-from GitExercises.models import GitHubSentence, GitSentence, Terminal_Exercises_Git_Commands
+from GitExercises.models import GitHubSentence, GitSentence, Terminal_Exercises_Git_Commands, JenkinsConceptsQuiz
 
 from django import forms
 from .models import PrivateMessage
@@ -181,6 +181,22 @@ class TerminalExercisesGitCommandsForm(forms.ModelForm):
     class Meta:
         model = Terminal_Exercises_Git_Commands
         fields = ['command', 'English_Description','Hebrew_Description', 'git_feedback', 'git_command_scenario', 'level']
+
+
+class JenkinsConceptsQuizForm(forms.ModelForm):
+
+    class Meta:
+        model = JenkinsConceptsQuiz
+        fields = ['question', 'option1', 'option2', 'option3', 'option4', 'answer']
+        widgets = {
+            'question': forms.TextInput(attrs={'class': 'form-control'}),
+            'option1': forms.TextInput(attrs={'class': 'form-control'}),
+            'option2': forms.TextInput(attrs={'class': 'form-control'}),
+            'option3': forms.TextInput(attrs={'class': 'form-control'}),
+            'option4': forms.TextInput(attrs={'class': 'form-control'}),
+            'answer': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
 
 
 
