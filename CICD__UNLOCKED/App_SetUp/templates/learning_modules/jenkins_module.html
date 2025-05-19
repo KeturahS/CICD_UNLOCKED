@@ -54,9 +54,6 @@
       {% include 'learning_modules/jenkins/section1.html' with video=video podcasts=podcasts %}
     {% endif %}
 
-  {% elif request.GET.step == '1q' %}
-    {% include 'JenkinsExercises/section1_questions.html' %}
-
   {% elif request.GET.step == '2' %}
     {% if request.GET.accessible %}
       {% include 'learning_modules/jenkins/accessible/section2.html' with video=video podcasts=podcasts %}
@@ -64,18 +61,14 @@
       {% include 'learning_modules/jenkins/section2.html' with video=video podcasts=podcasts %}
     {% endif %}
 
-  {% elif request.GET.step == '2q' %}
-    {% include 'JenkinsExercises/section2_questions.html' %}
-
-  {% elif request.GET.step == '3' %}
+   {% elif request.GET.step == '3' %}
     {% if request.GET.accessible %}
       {% include 'learning_modules/jenkins/accessible/section3.html' with video=video podcasts=podcasts %}
     {% else %}
       {% include 'learning_modules/jenkins/section3.html' with video=video podcasts=podcasts %}
     {% endif %}
 
-  {% elif request.GET.step == '3q' %}
-    {% include 'JenkinsExercises/section3_questions.html' %}
+
 
   {% elif request.GET.step == '4' %}
     {% if request.GET.accessible %}
@@ -89,7 +82,7 @@
     {% endif %}
 
   {% elif request.GET.step == '4q' %}
-    {% include 'JenkinsExercises/section4_questions.html' %}
+    {% include 'JenkinsExercises/section4_questions.html' with student_jenkins_quiz_exercise=student_jenkins_quiz_exercise  %}
 
   {% endif %}
 </div>

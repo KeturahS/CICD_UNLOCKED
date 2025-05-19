@@ -52,8 +52,8 @@ urlpatterns = [
     path('LecturerPages/LecturerTasksAndAssignments/Lecturer_manage_jenkins.html', views.Lecturer_manage_jenkins, name='Lecturer_manage_jenkins'),
     path('LecturerPages/LecturerTasksAndAssignments/GitSection1.html', views.GitSection1, name='GitSection1'),
     path('LecturerPages/LecturerTasksAndAssignments/GitSection2.html', views.GitSection2, name='GitSection2'),
-    path('LecturerPages/LecturerTasksAndAssignments/GitSection3.html', views.GitSection3, name='GitSection3'),
-    path('LecturerPages/LecturerTasksAndAssignments/GitSection4.html', views.GitSection4, name='GitSection4'),
+    path('LecturerPages/LecturerTasksAndAssignments/JenkinsSection.html', views.JenkinsSection, name='JenkinsSection'),
+    path('LecturerPages/LecturerTasksAndAssignments/DockerSection.html', views.DockerSection, name='DockerSection'),
 
     path('student/rate_modules/', views.rate_learning_modules, name='rate_modules'),
     path('lecturer/view_ratings/', views.view_module_ratings, name='view_module_ratings'),
