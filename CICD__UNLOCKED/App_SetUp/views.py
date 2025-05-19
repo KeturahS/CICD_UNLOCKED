@@ -761,9 +761,9 @@ def GitSection2(request):
             except Terminal_Exercises_Git_Commands.DoesNotExist:
                 pass  # Handle the case where the exercise does not exist
 
-    elif 'delete_terminal_exercise' in request.POST:
-        exercise_id = request.POST.get('exercise_id')
-        Terminal_Exercises_Git_Commands.objects.filter(id=exercise_id).delete()
+        elif 'delete_terminal_exercise' in request.POST:
+            exercise_id = request.POST.get('exercise_id')
+            Terminal_Exercises_Git_Commands.objects.filter(id=exercise_id).delete()
 
     return render(request, 'LecturerPages/LecturerTasksAndAssignments/GitSection2.html', context)
 
