@@ -37,12 +37,26 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required, user_passes_test
+from GitExercises.models import StudentGitCommandProgress
+
+
 from django.shortcuts import render, redirect
 from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress, \
     StudentJenkinsQuizExercise, JenkinsConceptsQuiz
 from .forms import GitSentenceForm, GitHubSentenceForm, TerminalExercisesGitCommandsForm
 
-
+from io import BytesIO
+import base64
+import pandas as pd
+import matplotlib.pyplot as plt
 # Create your views here.
 
 
@@ -1017,3 +1031,105 @@ def update_module_visibility(request, content_id):
             content.visibility_mode = visibility_mode
             content.save()
     return redirect('lecturer_manage_content')
+
+
+@login_required
+@user_passes_test(is_lecturer)
+def monitor_student_git_progress(request):
+    data = StudentGitCommandProgress.objects.select_related('student__user', 'command').values(
+        'student__user__username', 'command__command', 'completed', 'attempts'
+    )
+
+    df = pd.DataFrame(data)
+    student_list = df['student__user__username'].unique().tolist() if not df.empty else []
+    selected_student = request.GET.get('student') or (student_list[0] if student_list else None)
+    filter_option = request.GET.get('table_filter')  # Use distinct filter name for table only
+
+    pie_chart = bar_graph = None
+    summary_data = []
+
+    if not df.empty:
+        df_grouped = df.groupby(['student__user__username']).agg(
+            total_attempts=('attempts', 'sum'),
+            total_completed=('completed', 'sum'),
+        )
+        df_grouped['avg_attempts'] = df_grouped['total_attempts'] / df_grouped['total_completed'].replace(0, 1)
+        df_grouped = df_grouped.reset_index()
+
+        # Filtering table data only
+        if filter_option == 'best':
+            df_grouped = df_grouped[(df_grouped['avg_attempts'] <= 2.5) & (df_grouped['avg_attempts'] != 0)]
+        elif filter_option == 'struggle':
+            df_grouped = df_grouped[(df_grouped['avg_attempts'] >= 2.5) | (df_grouped['avg_attempts'] == 0)]
+
+        summary_data = df_grouped.to_dict('records')
+
+        # Bar Graph for selected student
+        if selected_student:
+            student_df = df[df['student__user__username'] == selected_student]
+            plt.figure(figsize=(8, 4))
+            plt.bar(student_df['command__command'], student_df['attempts'], color='steelblue')
+            plt.xticks(rotation=45, ha='right')
+            plt.ylabel('attempts')
+            plt.title(f'progress of {selected_student}')
+            buffer = BytesIO()
+            plt.tight_layout()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            bar_graph = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            buffer.close()
+            plt.close()
+
+            # Pie Chart
+            completed = student_df['completed'].sum()
+            total = len(student_df)
+            not_completed = total - completed
+            plt.figure()
+            plt.pie([completed, not_completed], labels=['completed', 'not completed'], autopct='%1.1f%%', colors=['green', 'red'])
+            plt.title(f'complete commands of {selected_student}')
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            pie_chart = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            buffer.close()
+            plt.close()
+
+    context = {
+        'student_list': student_list,
+        'selected_student': selected_student,
+        'filter': filter_option,
+        'pie_chart': pie_chart,
+        'bar_graph': bar_graph,
+        'summary': summary_data
+    }
+    return render(request, 'LecturerPages/monitor_student_progress.html', context)
+
+
+@login_required
+@user_passes_test(is_lecturer)
+def download_student_report(request):
+    filter_option = request.POST.get('filter')  # Make sure to get from POST
+
+    data = StudentGitCommandProgress.objects.select_related('student__user', 'command').values(
+        'student__user__username', 'command__command', 'completed', 'attempts'
+    )
+    df = pd.DataFrame(data)
+    df_grouped = df.groupby(['student__user__username']).agg(
+        total_attempts=('attempts', 'sum'),
+        total_completed=('completed', 'sum')
+    )
+    df_grouped['avg_attempts'] = df_grouped['total_attempts'] / df_grouped['total_completed'].replace(0, 1)
+    df_grouped = df_grouped.reset_index()
+
+    if filter_option == 'best':
+        df_grouped = df_grouped[df_grouped['avg_attempts'] <= 2.5]
+    elif filter_option == 'struggle':
+        df_grouped = df_grouped[df_grouped['avg_attempts'] > 2.5]
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="student_git_progress_report.csv"'
+    df_grouped.to_csv(path_or_buf=response, index=False)
+    return response
+
+
+
