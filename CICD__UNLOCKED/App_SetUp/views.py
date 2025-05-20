@@ -727,7 +727,7 @@ def GitSection2(request):
     }
     if request.method == 'POST':
         if 'add_terminal_exercise' in request.POST:
-            exercise_id = request.POST.get('exercise_id')
+
             command = request.POST.get('command')
             description = request.POST.get('description_en')
             Hebrew_Command = request.POST.get('Hebrew_Command')

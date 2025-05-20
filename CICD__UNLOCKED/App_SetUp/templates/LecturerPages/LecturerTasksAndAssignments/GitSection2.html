@@ -85,14 +85,36 @@
 
 <!-- טופס הוספת תרגיל חדש -->
 <h2>➕ הוסף תרגיל חדש</h2>
-<form method="post">
+<form method="POST">
     {% csrf_token %}
-    <label>פקודת Git:</label>
-    <input type="text" name="command" placeholder="למשל: git status" required>
 
-    <label>תיאור התרגיל:</label>
-    <textarea name="description" rows="3" placeholder="מה לומדים בתרגיל הזה?" required></textarea>
+    <label for="command">פקודה</label>
+    <input type="text" id="command" name="command" required>
 
+    <label for="description_en">תיאור באנגלית</label>
+    <input type="text" id="description_en" name="description_en" required>
+
+    <label for="Hebrew_Command">פקודה בעברית</label>
+    <input type="text" id="Hebrew_Command" name="Hebrew_Command" required>
+
+    <label for="feedback">פידבק</label>
+    <input type="text" id="feedback" name="feedback" required>
+
+    <label for="scenario">תרחיש</label>
+    <input type="text" id="scenario" name="scenario" required>
+
+    <label for="description_he">תיאור בעברית</label>
+    <input type="text" id="description_he" name="description_he" required>
+
+    <label for="level">רמת קושי</label>
+    <select id="level" name="level" required>
+        <option value="basic">basic</option>
+        <option value="branches">branches</option>
+        <option value="advanced">advanced</option>
+
+    </select>
+
+    <br><br>
     <button type="submit" name="add_terminal_exercise">הוסף תרגיל</button>
 </form>
 
