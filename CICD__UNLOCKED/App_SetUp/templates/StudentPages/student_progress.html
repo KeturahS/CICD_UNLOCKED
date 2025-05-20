@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>התקדמות הסטודנט</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Assistant', sans-serif;
+            background: linear-gradient(to bottom right, #e6f0fa, #f7faff);
+            color: #2c3e50;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(to left, #0d6efd, #2568ef);
+            padding: 18px 40px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            background-color: #ffffff;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
+        }
+
+        .navbar a:hover {
+            color: #d9f1ff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-container {
+            margin: 40px auto;
+            max-width: 600px;
+        }
+
+        .label {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .git-progress {
+            background-color: #0d6efd;
+        }
+
+        .jenkins-progress {
+            background-color: #20c997;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'student_profile' %}">פרופיל סטודנט</a>
+        <a href="{% url 'contact_us' %}">צור קשר עם צוות האתר</a>
+        <a href="{% url 'view_my_messages' %}">צפייה בהודעות שלי</a>
+        <a href="{% url 'student_messages' %}">צפייה בפניות שלי</a>
+        <a href="{% url 'rate_modules' %}">דרג את הלומדות</a>
+        <a href="{% url 'student_progress' %}">התקדמות בלמידה</a>
+    </div>
+
+    <div style="background-color: #f0f4f8; padding: 20px; border-radius: 10px;
+        margin-top: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: #0d3b66; margin-bottom: 15px;">
+            תאריך היעד שלך להשלמת הלומדה: {{ target_date }}
+        </h3>
+        {% if days_remaining >= 0 %}
+            <p style="color: #0d3b66; font-weight: bold; font-size: 18px;">
+                נותרו לך עוד {{ days_remaining }} ימים לסיום הלומדה.
+            </p>
+        {% else %}
+            <p style="color: red; font-weight: bold; font-size: 18px;">
+                תאריך היעד חלף לפני {{ abs_days_remaining }} ימים.
+            </p>
+        {% endif %}
+        <div style="margin-top: 20px;">
+            <a href="{% url 'student' %}" style="
+                display: inline-block; background-color: #0d3b66; color: white;
+                padding: 10px 20px; border-radius: 5px; text-decoration: none;
+                font-weight: bold; transition: background-color 0.3s ease;">
+                חזרה לדף הבית
+            </a>
+        </div>
+    </div>
+
+
+    <div class="progress-container">
+        <div class="label">התקדמות בתרגולי Git</div>
+        <div class="progress">
+            <div class="progress-bar git-progress" style="width: {{ git_progress }}%;">
+                {{ git_progress }}%
+            </div>
+        </div>
+
+        <div class="label">התקדמות בתרגולי Jenkins</div>
+        <div class="progress">
+            <div class="progress-bar jenkins-progress" style="width: {{ jenkins_progress }}%;">
+                {{ jenkins_progress }}%
+            </div>
+        </div>
+    </div>
+</body>
+</html>
