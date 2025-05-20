@@ -33,6 +33,8 @@ from .forms import PrivateMessageForm
 from .models import PrivateMessage, CourseContent
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from datetime import date
+
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
@@ -43,9 +45,7 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
-from GitExercises.models import StudentGitCommandProgress
 
 
 from django.shortcuts import render, redirect
@@ -1131,5 +1131,36 @@ def download_student_report(request):
     df_grouped.to_csv(path_or_buf=response, index=False)
     return response
 
+
+
+from datetime import date
+
+@login_required
+def student_progress(request):
+    student = request.user.student_profile
+
+    # Git progress
+    git_total = StudentGitCommandProgress.objects.filter(student=student).count()
+    git_completed = StudentGitCommandProgress.objects.filter(student=student, completed=True).count()
+    git_progress = int((git_completed / git_total) * 100) if git_total > 0 else 0
+
+    # Jenkins progress
+    jenkins_total = StudentJenkinsQuizExercise.objects.filter(student=student).count()
+    jenkins_completed = StudentJenkinsQuizExercise.objects.filter(student=student, completed=True).count()
+    jenkins_progress = int((jenkins_completed / jenkins_total) * 100) if jenkins_total > 0 else 0
+
+    today = date.today()
+    target_date = student.target_completion_date
+
+    days_remaining = (target_date - today).days if target_date else None
+    abs_days_remaining = abs(days_remaining) if days_remaining is not None else None
+
+    return render(request, 'StudentPages/student_progress.html', {
+        'git_progress': git_progress,
+        'jenkins_progress': jenkins_progress,
+        'days_remaining': days_remaining,
+        'abs_days_remaining': abs_days_remaining,
+        'target_date': target_date
+    })
 
 
