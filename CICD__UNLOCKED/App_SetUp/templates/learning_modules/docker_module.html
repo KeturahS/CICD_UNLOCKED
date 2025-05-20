@@ -53,8 +53,6 @@
       {% include 'learning_modules/docker/section1.html' with video=video podcasts=podcasts %}
     {% endif %}
 
-  {% elif request.GET.step == '1q' %}
-    {% include 'DockerExercises/section1_questions.html' %}
 
   {% elif request.GET.step == '2' %}
     {% if request.GET.accessible %}
