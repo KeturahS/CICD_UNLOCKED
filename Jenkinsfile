@@ -11,7 +11,7 @@ pipeline {
             steps {
                 sh '''
                     pip3 install --upgrade pip
-                    pip3 install django pytest pytest-django pandas
+                    pip3 install django pytest pytest-django pandas matplotlib
                 '''
             }
         }
