@@ -29,11 +29,11 @@
 
   <!-- כפתור מעבר לשאלות -->
   <div id="questions-btn" style="margin-top: 40px; display: none;" role="region" aria-label="מעבר לשאלות בנושא">
-    <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
+    <a href="/learning/{% if request.GET.accessible %}&accessible=1{% endif %}"
        class="btn-next"
        role="button"
        aria-label="עבור לשאלות בנושא Docker">
-      ✅ עבור לשאלות בנושא Docker
+     כל הכבוד סיימת את הלומדה! לחץ למעבר ללומדות נוספות
     </a>
   </div>
 </section>

@@ -18,24 +18,28 @@
 
     <hr style="margin: 40px auto; width: 60%; border: 1px solid #ef5350;">
 
-    <!-- תוכן עניינים -->
-    <div style="background-color: #ffebee; padding: 30px; border-radius: 12px;">
-      <h2 style="text-align: center; color: #c62828;">📚 תוכן עניינים</h2>
-      <ol style="font-size: 1.1em; line-height: 2; color: #444; text-align: right; direction: rtl; padding-right: 20px;">
-        <li>היכרות עם Jenkins</li>
-        <li>התקנת Jenkins</li>
-        <li>בניית Job ראשון ב־Jenkins</li>
-        <li>מצגת על Jenkins</li>
-      </ol>
-    </div>
 
-    <!-- כפתור התחלה -->
-    <div style="text-align: center; margin-top: 40px;">
+    <!-- ניווט בין חלקי הלומדה -->
+    <div style="text-align: center; margin-top: 30px;">
+
+      <!-- מודולים לימודיים -->
       <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
-         class="btn-next"
-         style="background-color: #c62828; padding: 14px 28px; font-size: 18px; border-radius: 10px;">
-        🎬 התחל את הלמידה
+         style="background-color: #0288d1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+        🎓 מודולים לימודיים
       </a>
+
+      <!-- תרגולים -->
+      <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}"
+         style="background-color: #388e3c; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+        🧪 תרגולים
+      </a>
+
+      <!-- דירוג -->
+      <a href="{% url 'jenkins_rating' %}"
+         style="background-color: #f57c00; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+        ⭐ דירוג הלומדה
+      </a>
+
     </div>
 
     <!-- מצב נגישות -->
