@@ -439,7 +439,7 @@
 
   function goToNext() {
     const urlParams = new URLSearchParams(window.location.search);
-    const nextStep = "?step=2" + (urlParams.has("accessible") ? "&accessible=1" : "");
+    const nextStep = "?step=2q" + (urlParams.has("accessible") ? "&accessible=1" : "");
     location.href = nextStep;
   }
 

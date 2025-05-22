@@ -1164,4 +1164,55 @@ def student_progress(request):
         'target_date': target_date
     })
 
+@login_required
+def git_rating(request):
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        if rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Git',
+                rating=int(rating),
+                comment=comment,
+                submitted_at=timezone.now()
+            )
+            return render(request, 'thank_you.html')
+    return render(request, 'learning_modules/git/git_rating.html')
+
+
+@login_required
+def jenkins_rating(request):
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        if rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Jenkins',
+                rating=int(rating),
+                comment=comment,
+                submitted_at=timezone.now()
+            )
+            return render(request, 'thank_you.html')
+    return render(request, 'learning_modules/jenkins/jenkins_rating.html')
+
+
+@login_required
+def docker_rating(request):
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        if rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Docker',
+                rating=int(rating),
+                comment=comment,
+                submitted_at=timezone.now()
+            )
+            return render(request, 'thank_you.html')
+    return render(request, 'learning_modules/docker/docker_rating.html')
+
+
 
