@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('App_SetUp.urls')),        # ✅ כל הכתובות יתחילו מ־/
     path('exercises/', include('GitExercises.urls')),  # 🧩 שמור את זה כמו שהוא אם יש לך שאלות בגיט
+    path('qa/', include('QA.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

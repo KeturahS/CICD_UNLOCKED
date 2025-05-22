@@ -125,7 +125,7 @@
 <div id="exercise-list">
     {% for exercise in Terminal_Exercises %}
     <div class="exercise-box">
-        <form method="post">
+            <form method="post">
             {% csrf_token %}
             <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
 
