@@ -1,5 +1,5 @@
 import random
-
+from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
@@ -487,6 +487,7 @@ def update_student_profile(request):
         form = StudentProfileUpdateForm(request.POST, instance=profile, user=user)
         if form.is_valid():
             form.save()
+            update_session_auth_hash(request, user)  # ✅ שימור התחברות גם לאחר שינוי סיסמה
             return redirect('student_profile')
     else:
         form = StudentProfileUpdateForm(instance=profile, user=user)

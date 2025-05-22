@@ -85,7 +85,48 @@
         <div class="info-text">נא לעדכן את המידע שלך ולשמור את השינויים</div>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            {% if form.non_field_errors %}
+              <ul class="errorlist">
+                {% for error in form.non_field_errors %}
+                  <li style="color:red;">{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            <div class="form-group">
+                {{ form.institution.label_tag }}
+                {{ form.institution }}
+            </div>
+
+            <div class="form-group">
+                {{ form.target_completion_date.label_tag }}
+                {{ form.target_completion_date }}
+            </div>
+
+            <div class="form-group">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+            </div>
+
+            <div class="form-group">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+
+            <!-- ✅ שדה חדש לסיסמה -->
+            <div class="form-group">
+                {{ form.new_password.label_tag }}
+                {{ form.new_password }}
+                {% if form.new_password.errors %}
+                    <div style="color:red;">{{ form.new_password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
             <button type="submit">שמור שינויים</button>
         </form>
     </div>
