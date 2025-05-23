@@ -17,20 +17,20 @@
 
       <hr style="margin: 40px auto; width: 60%; border: 1px solid #00acc1;">
 
-      <div style="background-color: #f0f9ff; padding: 30px; border-radius: 12px;">
-        <h2 style="text-align: center; color: #006064;">📚 תוכן עניינים</h2>
-        <ol style="font-size: 1.1em; line-height: 2; color: #333; text-align: right; direction: rtl; padding-right: 20px;">
-          <li>מה זה Docker ולמה זה חשוב?</li>
-          <li>מה זה קונטיינר ואיך יוצרים אחד?</li>
-          <li>מצגת מסכמת בנושא Docker</li>
-        </ol>
-      </div>
-
-      <div style="text-align: center; margin-top: 40px;">
+      <div style="text-align: center; margin-top: 30px;">
         <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
-           class="btn-next"
-           style="background-color: #00796b; padding: 14px 28px; font-size: 18px; border-radius: 10px;">
-          🎬 התחל את הלמידה
+           style="background-color: #0288d1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+          🎓 מודולים לימודיים
+        </a>
+
+        <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
+           style="background-color: #388e3c; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+          🧪 תרגולים
+        </a>
+
+        <a href="{% url 'docker_rating' %}"
+           style="background-color: #f57c00; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+          ⭐ דירוג הלומדה
         </a>
       </div>
 
@@ -71,7 +71,6 @@
       {% endif %}
     {% endif %}
 
-    <!-- תיבת כתיבת הערה -->
     <form method="post" action="{% url 'add_student_note' %}" class="mt-5">
       {% csrf_token %}
       <input type="hidden" name="module" value="Docker">

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>דירוג לומדת Docker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Assistant', sans-serif;
+            background: linear-gradient(to bottom right, #e6f0fa, #f7faff);
+            color: #2c3e50;
+            min-height: 100vh;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #0d3b66;
+        }
+
+        form {
+            width: 100%;
+            max-width: 650px;
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 12px 30px rgba(0, 123, 255, 0.2);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #cce5ff;
+            border-radius: 12px;
+            background-color: #f7fbff;
+            font-size: 16px;
+            transition: 0.3s ease;
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0,123,255,0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background-color: #0d6efd;
+            color: white;
+            font-size: 18px;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #084cdf;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>דרג את לומדת Docker ⭐</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="rating">בחר דירוג:</label>
+        <select name="rating" id="rating" required>
+            <option value="">בחר דירוג</option>
+            <option value="1">⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+        </select>
+
+        <label for="comment" style="margin-top: 20px;">הוסף הערה:</label>
+        <textarea name="comment" id="comment" placeholder="הוסף הערה ללומדה..."></textarea>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="submit">שלח דירוג 🚀</button>
+        </div>
+    </form>
+
+</body>
+</html>

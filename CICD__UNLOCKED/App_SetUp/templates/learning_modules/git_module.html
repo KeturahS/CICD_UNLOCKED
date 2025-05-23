@@ -12,26 +12,25 @@
       </h1>
 
       <p style="text-align: center; font-size: 1.2em; color: #333;">
-        לומדה זו תסייע לך להכיר את Git ו־GitHub – הכלים המובילים בעולם ניהול הגרסאות. תוכל לצפות בסרטונים, לענות על שאלות ולתרגל באופן חווייתי.
+        לומדה זו תסיעה לך להכיר את Git ו‏GitHub – הכלים המובילים בעולם ניהול הגרסאות. תוכל לצפות בסרטונים, לענות על שאלות ולתרגל באופן חווייתי.
       </p>
 
       <hr style="margin: 40px auto; width: 60%; border: 1px solid #00acc1;">
 
-      <div style="background-color: #e3f2fd; padding: 30px; border-radius: 12px;">
-        <h2 style="text-align: center; color: #01579b;">📚 תוכן עניינים</h2>
-        <ol style="font-size: 1.1em; line-height: 2; color: #333; text-align: right; direction: rtl; padding-right: 20px;">
-          <li>מה זה Git ו-GitHub ולמה זה חשוב?</li>
-          <li>פקודות Git בסיסיות</li>
-          <li>עבודה עם ענפים (Branches)</li>
-          <li>פקודות מתקדמות ב-Git</li>
-        </ol>
-      </div>
-
-      <div style="text-align: center; margin-top: 40px;">
+      <div style="text-align: center; margin-top: 30px;">
         <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
-           class="btn-next"
-           style="background-color: #00695c; padding: 14px 28px; font-size: 18px; border-radius: 10px;">
-          🎬 התחל את הלמידה
+           style="background-color: #0288d1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+          🎓 מודולים לימודיים
+        </a>
+
+        <a href="?step=1q{% if request.GET.accessible %}&accessible=1{% endif %}"
+           style="background-color: #388e3c; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+          🧪 תרגולים
+        </a>
+
+        <a href="{% url 'git_rating' %}"
+           style="background-color: #f57c00; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+          ⭐ דירוג הלומדה
         </a>
       </div>
 
@@ -90,7 +89,6 @@
       {% include 'GitExercises/section4_questions.html' %}
     {% endif %}
 
-    <!-- תיבת כתיבת הערה -->
     <form method="post" action="{% url 'add_student_note' %}" class="mt-5">
       {% csrf_token %}
       <input type="hidden" name="module" value="Git">

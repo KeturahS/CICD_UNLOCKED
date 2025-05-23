@@ -6,293 +6,284 @@
   <title>Git vs GitHub - פעילות אינטראקטיבית</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap">
   <style>
-    :root {
-      --primary-color: #2a3990;
-      --secondary-color: #6e5494;
-      --git-color: #f05033;
-      --github-color: #24292e;
-      --success-color: #2ea44f;
-      --error-color: #d73a49;
-      --light-bg: #f6f8fa;
-      --border-color: #e1e4e8;
-      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s ease;
-    }
+  :root {
+    --primary-color: #7aa2f7;
+    --secondary-color: #bb9af7;
+    --git-color: #f7768e;
+    --github-color: #414868;
+    --success-color: #9ece6a;
+    --error-color: #f7768e;
+    --dark-bg: #1a1b26;
+    --darker-bg: #12121a;
+    --light-text: #c0caf5;
+    --border-color: #2f2f43;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+    --transition: all 0.3s ease;
+  }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  body {
+    font-family: 'Rubik', Arial, sans-serif;
+    background: var(--dark-bg);
+    color: var(--light-text);
+    min-height: 100vh;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
 
-    body {
-      font-family: 'Rubik', Arial, sans-serif;
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-      min-height: 100vh;
-      padding: 40px 20px;
-      color: #333;
-      line-height: 1.6;
-    }
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
 
-    .page-header {
-      text-align: center;
-      margin-bottom: 40px;
-      position: relative;
-    }
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+  }
 
-    h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 15px;
-      position: relative;
-      display: inline-block;
-    }
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--git-color), var(--github-color));
+    border-radius: 2px;
+  }
 
-    h2::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--git-color), var(--github-color));
-      border-radius: 2px;
-    }
+  .subtitle {
+    font-size: 1.1rem;
+    color: #a9b1d6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: #666;
-      max-width: 600px;
-      margin: 0 auto;
-    }
+  .container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+  }
 
+  .zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    background-color: var(--darker-bg);
+    width: 300px;
+    min-height: 400px;
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .zone:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-5px);
+  }
+
+  .zone::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: #2d2f4a;
+    border-radius: 6px 6px 0 0;
+  }
+
+  #git::before {
+    background: var(--git-color);
+  }
+
+  #github::before {
+    background: var(--github-color);
+  }
+
+  .zone h3 {
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    font-size: 1.4rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+  }
+
+  #warehouse h3 {
+    color: #a9b1d6;
+  }
+
+  #git h3 {
+    color: var(--git-color);
+  }
+
+  #github h3 {
+    color: var(--primary-color);
+  }
+
+  .zone-content {
+    min-height: 300px;
+  }
+
+  .item {
+    background-color: #2a2f4a;
+    border-left: 4px solid #3b4261;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: grab;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    font-size: 0.95rem;
+    color: var(--light-text);
+  }
+
+  #warehouse .item {
+    border-left-color: #7c7f9c;
+  }
+
+  #git .item {
+    border-left-color: var(--git-color);
+  }
+
+  #github .item {
+    border-left-color: var(--primary-color);
+  }
+
+  .item:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .item.dragging {
+    opacity: 0.6;
+    transform: scale(0.95);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    min-width: 200px;
+  }
+
+  button:hover {
+    background-color: #6183bb;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  button:active {
+    transform: translateY(1px);
+  }
+
+  #check-btn {
+    background-color: var(--success-color);
+  }
+
+  #check-btn:hover {
+    background-color: #7ecf62;
+  }
+
+  #next-section-btn {
+    background-color: var(--secondary-color);
+    display: none;
+  }
+
+  #next-section-btn:hover {
+    background-color: #9d7fe7;
+  }
+
+  #result {
+    margin: 25px 0;
+    font-weight: 500;
+    font-size: 1.2rem;
+    padding: 15px 25px;
+    border-radius: 8px;
+    display: inline-block;
+    transition: var(--transition);
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  #result.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #result.success {
+    background-color: rgba(158, 206, 106, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(158, 206, 106, 0.2);
+  }
+
+  #result.error {
+    background-color: rgba(247, 118, 142, 0.1);
+    color: var(--error-color);
+    border: 1px solid rgba(247, 118, 142, 0.2);
+  }
+
+  @media (max-width: 768px) {
     .container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-      max-width: 1200px;
-      margin: 40px auto;
+      flex-direction: column;
+      align-items: center;
     }
 
     .zone {
-      border: 2px dashed var(--border-color);
-      border-radius: 16px;
-      background-color: white;
-      width: 300px;
-      min-height: 400px;
-      padding: 20px;
-      box-shadow: var(--shadow-md);
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
+      width: 100%;
+      max-width: 400px;
     }
 
-    .zone:hover {
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-5px);
+    h2 {
+      font-size: 1.6rem;
     }
+  }
 
-    .zone::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: #ddd;
-      border-radius: 6px 6px 0 0;
-    }
+  .zone.highlight {
+    border-color: #7aa2f7;
+    background-color: rgba(122, 162, 247, 0.08);
+  }
 
-    #git::before {
-      background: var(--git-color);
-    }
+  .zone:empty::after {
+    content: 'גרור פריטים לכאן';
+    display: block;
+    text-align: center;
+    color: #5c5e7e;
+    margin-top: 40px;
+    font-style: italic;
+  }
+  .incorrect {
+    outline: 3px solid red !important;
+    box-shadow: 0 0 10px red !important;
+  }
+</style>
 
-    #github::before {
-      background: var(--github-color);
-    }
-
-    .zone h3 {
-      margin: 0 0 20px 0;
-      padding-bottom: 15px;
-      font-size: 1.4rem;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    #warehouse h3 {
-      color: #555;
-    }
-
-    #git h3 {
-      color: var(--git-color);
-    }
-
-    #github h3 {
-      color: var(--github-color);
-    }
-
-    .zone-content {
-      min-height: 300px;
-    }
-
-    .item {
-      background-color: white;
-      border-left: 4px solid #ccc;
-      padding: 12px 15px;
-      margin: 10px 0;
-      border-radius: 8px;
-      cursor: grab;
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-      font-size: 0.95rem;
-    }
-
-    #warehouse .item {
-      border-left-color: #aaa;
-      background-color: var(--light-bg);
-    }
-
-    #git .item {
-      border-left-color: var(--git-color);
-    }
-
-    #github .item {
-      border-left-color: var(--github-color);
-    }
-
-    .item:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-
-    .item.dragging {
-      opacity: 0.6;
-      transform: scale(0.95);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      margin-top: 40px;
-    }
-
-    button {
-      padding: 12px 24px;
-      font-size: 1rem;
-      font-weight: 500;
-      font-family: 'Rubik', Arial, sans-serif;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--shadow-sm);
-      min-width: 200px;
-    }
-
-    button:hover {
-      background-color: #3a4ca0;
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    #check-btn {
-      background-color: var(--success-color);
-    }
-
-    #check-btn:hover {
-      background-color: #2c974b;
-    }
-
-    #next-section-btn {
-      background-color: var(--secondary-color);
-      display: none;
-    }
-
-    #next-section-btn:hover {
-      background-color: #7d62a5;
-    }
-
-    #result {
-      margin: 25px 0;
-      font-weight: 500;
-      font-size: 1.2rem;
-      padding: 15px 25px;
-      border-radius: 8px;
-      display: inline-block;
-      transition: var(--transition);
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    #result.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    #result.success {
-      background-color: rgba(46, 164, 79, 0.1);
-      color: var(--success-color);
-      border: 1px solid rgba(46, 164, 79, 0.2);
-    }
-
-    #result.error {
-      background-color: rgba(215, 58, 73, 0.1);
-      color: var(--error-color);
-      border: 1px solid rgba(215, 58, 73, 0.2);
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .zone {
-        width: 100%;
-        max-width: 400px;
-      }
-
-      h2 {
-        font-size: 1.6rem;
-      }
-    }
-
-    /* Drop zone highlight effect */
-    .zone.highlight {
-      border-color: #4a9eff;
-      background-color: rgba(74, 158, 255, 0.05);
-    }
-
-    /* Empty state styling */
-    .zone:empty::after {
-      content: 'גרור פריטים לכאן';
-      display: block;
-      text-align: center;
-      color: #aaa;
-      margin-top: 40px;
-      font-style: italic;
-    }
-  </style>
 </head>
 <body>
 
@@ -332,6 +323,10 @@
 
 <script>
   const correctAnswers = { git: [], github: [] };
+
+  function removeIncorrect(element) {
+      element.classList.remove("incorrect");
+  }
 
   const allSentences = [
     {% for phrase in all_sentences %}
@@ -407,31 +402,48 @@
   function checkAnswers() {
     const gitBox = document.getElementById("git");
     const githubBox = document.getElementById("github");
-    const gitItems = Array.from(gitBox.querySelectorAll(".item")).map(i => i.id);
-    const githubItems = Array.from(githubBox.querySelectorAll(".item")).map(i => i.id);
+    const gitItems = Array.from(gitBox.querySelectorAll(".item"));
+    const githubItems = Array.from(githubBox.querySelectorAll(".item"));
 
-    const gitCorrect = arraysEqual(gitItems.sort(), correctAnswers.git.sort());
-    const githubCorrect = arraysEqual(githubItems.sort(), correctAnswers.github.sort());
+    const gitItemIds = gitItems.map(i => i.id);
+    const githubItemIds = githubItems.map(i => i.id);
+
+    const gitCorrect = arraysEqual(gitItemIds.sort(), correctAnswers.git.sort());
+    const githubCorrect = arraysEqual(githubItemIds.sort(), correctAnswers.github.sort());
 
     const result = document.getElementById("result");
     const nextBtn = document.getElementById("next-section-btn");
 
-    // Remove previous classes
     result.classList.remove('success', 'error', 'show');
-
-    // Force a reflow to restart animation
     void result.offsetWidth;
 
     if (gitCorrect && githubCorrect) {
-      result.textContent = "כל הכבוד! כל התשובות נכונות ✅";
-      result.classList.add('success', 'show');
-      nextBtn.style.display = "block";
+        result.textContent = "כל הכבוד! כל התשובות נכונות ✅";
+        result.classList.add('success', 'show');
+        nextBtn.style.display = "block";
     } else {
-      result.textContent = "יש טעויות, נסה שוב ❌";
-      result.classList.add('error', 'show');
-      nextBtn.style.display = "none";
+        result.textContent = "יש טעויות, נסה שוב ❌";
+        result.classList.add('error', 'show');
+        nextBtn.style.display = "none";
+
+        gitItems.forEach(item => {
+            if (!correctAnswers.git.includes(item.id)) {
+                item.classList.add("incorrect");
+            } else {
+                item.classList.remove("incorrect");
+            }
+        });
+
+        githubItems.forEach(item => {
+            if (!correctAnswers.github.includes(item.id)) {
+                item.classList.add("incorrect");
+            } else {
+                item.classList.remove("incorrect");
+            }
+        });
     }
-  }
+}
+
 
   function arraysEqual(a, b) {
     return JSON.stringify(a) === JSON.stringify(b);
@@ -439,7 +451,7 @@
 
   function goToNext() {
     const urlParams = new URLSearchParams(window.location.search);
-    const nextStep = "?step=2" + (urlParams.has("accessible") ? "&accessible=1" : "");
+    const nextStep = "?step=2q" + (urlParams.has("accessible") ? "&accessible=1" : "");
     location.href = nextStep;
   }
 
@@ -449,6 +461,12 @@
     const warehouseContent = document.querySelector('#warehouse .zone-content');
     document.querySelectorAll('.item').forEach(item => {
       warehouseContent.appendChild(item);
+    });
+  });
+
+  document.querySelectorAll(".item").forEach(item => {
+  item.addEventListener("dragstart", () => {
+    item.classList.remove("incorrect");
     });
   });
 </script>
