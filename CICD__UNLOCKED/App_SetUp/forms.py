@@ -16,6 +16,7 @@ from django.contrib.auth import get_user_model
 from django import forms
 from .models import PrivateMessage
 from django.contrib.auth import get_user_model
+from .models import StudentNote
 
 User = get_user_model()
 
@@ -226,3 +227,21 @@ class PrivateMessageForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['recipient'].queryset = User.objects.filter(is_student=True)
 
+
+
+
+class StudentNoteForm(forms.ModelForm):
+    class Meta:
+        model = StudentNote
+        fields = ['module', 'content']
+        widgets = {
+            'module': forms.HiddenInput(),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'כתוב כאן את ההערה שלך...'
+            })
+        }
+        labels = {
+            'content': 'הערה'
+        }
