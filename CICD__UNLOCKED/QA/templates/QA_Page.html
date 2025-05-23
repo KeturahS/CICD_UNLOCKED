@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git.Academy - שאלות ותשובות</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
+
+        body {
+            background-color: #0e0e14;
+            color: white;
+            min-height: 100vh;
+            overflow: hidden; /* מונע גלילה */
+            padding: 30px; /* פדינג לכל העמוד */
+        }
+
+        /* Main Content - ממורכז באמצע הדף */
+        .main-content {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: calc(100vh - 60px - 40px); /* גובה מחושב עם התחשבות בפדינג של הגוף ורווח בתחתית */
+            display: flex;
+            flex-direction: column;
+            background-color: #0e0e14;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px; /* רווח בתחתית המסך */
+        }
+
+        .header {
+            text-align: right;
+            margin-bottom: 20px;
+            padding: 20px 30px 0;
+        }
+
+        .date {
+            color: #8a8a9a;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .welcome {
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        /* Search Box */
+        .search-container {
+            background-color: #1a1a24;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 0 30px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            margin-left: 15px;
+            color: #8a41ff;
+            font-size: 25px;
+        }
+
+        .search-input {
+            background-color: #232330;
+            border: 1px solid #2a2a35;
+            border-radius: 5px;
+            padding: 12px 40px;
+            color: white;
+            font-size: 25px;
+            outline: none;
+            width: 200%;
+        }
+
+        .search-input::placeholder {
+            color: #8a8a9a;
+        }
+
+        .search-input:focus {
+            border-color: #8a41ff;
+        }
+
+        /* Content Layout - שני חלקים זה לצד זה */
+        .content-layout {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+            padding: 0 30px 30px;
+            height: calc(100vh - 180px - 60px - 40px); /* גובה מחושב כדי להתאים למסך אחד עם פדינג ורווח בתחתית */
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            background-color: #1a1a24;
+            border-radius: 10px;
+            padding: 20px;
+            flex: 3; /* תופס יותר מקום מאשר החלק השמאלי */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            order: 2; /* שינוי סדר - FAQ יהיה בצד ימין */
+        }
+
+        .faq-title {
+            font-size: 27px;
+            margin-bottom: 20px;
+            color: white;
+            text-align: right;
+        }
+
+        /* FAQ Scroll Container - קונטיינר פנימי עם גלילה */
+        .faq-scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-left: 5px; /* מרווח מהצד השמאלי */
+            direction: rtl; /* חשוב לסרגל גלילה בצד ימין */
+            padding-right: 5px; /* מרווח מהצד הימני */
+        }
+
+        /* Custom Scrollbar - בצד ימין לעברית */
+        .faq-scroll-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .faq-scroll-container::-webkit-scrollbar-track {
+            background: #232330;
+            border-radius: 10px;
+        }
+
+        .faq-scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #8a41ff, #00e1ff);
+            border-radius: 10px;
+        }
+
+        .faq-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #00e1ff, #8a41ff);
+        }
+
+        .faq-item {
+            background-color: #232330;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            padding: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            border-bottom: 1px solid #2a2a35;
+            font-size: 25px;
+        }
+
+        .faq-question::after {
+            content: "+";
+            position: absolute;
+            left: 15px;
+            font-size: 25px;
+            color: #00e1ff;
+        }
+
+        .faq-answer {
+            padding: 15px;
+            line-height: 1.6;
+            color: #c5c5d0;
+            font-size: 25px;
+        }
+
+        /* Contact Section - עכשיו בצד שמאל */
+        .contact-container {
+            background-color: #1a1a24;
+            border-radius: 10px;
+            padding: 25px;
+            flex: 1; /* תופס פחות מקום מאשר החלק הימני */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            order: 1; /* שינוי סדר - Contact יהיה בצד שמאל */
+        }
+
+        .contact-title {
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        .contact-text {
+            color: #c5c5d0;
+            margin-bottom: 15px; /* מרווח קטן יותר לפני הכפתור */
+            line-height: 1.6;
+            font-size: 25px;
+        }
+
+        .contact-button {
+            background: linear-gradient(135deg, #8a41ff, #00e1ff);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            font-size: 20px;
+            transition: transform 0.2s ease;
+            margin-top: 5px; /* מרווח קטן מהטקסט */
+        }
+
+        .contact-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Grid Layout for FAQ items */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .faq-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            body {
+                padding: 15px;
+                overflow-y: auto;
+            }
+
+            .main-content {
+                height: auto;
+                margin-bottom: 30px; /* רווח בתחתית במסכים קטנים */
+            }
+
+            .content-layout {
+                flex-direction: column;
+                height: auto;
+                padding: 0 15px 15px;
+            }
+
+            .faq-container, .contact-container {
+                width: 100%;
+                order: 0; /* מבטל את סדר הפריסה במסכים קטנים */
+            }
+
+            .contact-container {
+                margin-bottom: 15px; /* מרווח בין הקונטיינרים במסכים קטנים */
+            }
+
+            .faq-container {
+                max-height: 60vh;
+            }
+
+            .header, .search-container {
+                padding: 15px;
+                margin: 0 15px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Main Content -->
+<div class="main-content">
+    <div class="header">
+        <h1 class="welcome">שאלות ותשובות נפוצות</h1>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-container">
+        <div class="search-icon">🔍</div>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="search_query" class="search-input" placeholder="חפש שאלה..."/>
+            <button type="submit" class="contact-button" > כל השאלות</button>
+        </form>
+
+
+    </div>
+
+    <!-- Content Layout - מחלק את המסך לשני חלקים -->
+    <div class="content-layout">
+        <!-- FAQ Section - בצד ימין -->
+        <div class="faq-container">
+
+
+            <!-- קונטיינר פנימי עם גלילה בצד ימין -->
+            <div class="faq-scroll-container">
+                <div class="faq-grid">
+
+                    <!-- Filtered Results -->
+                    {% if filtered_faqs %}
+                    <h2 class="faq-title">שאלות מסוננות</h2>
+                    <br> </br>
+                    <div style="margin-top: 20px; text-align: right; width: 100%;">
+                        <h3 style="margin-bottom: 10px;">תוצאות חיפוש:</h3>
+                        <div class="faq-grid">
+                            {% for faq in filtered_faqs %}
+                            <div class="faq-item">
+                                <div class="faq-question">{{ faq.question }}</div>
+                                <div class="faq-answer">{{ faq.answer }}</div>
+                            </div>
+                            {% empty %}
+                            <p>לא נמצאו תוצאות.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- All FAQs -->
+                    {% if not filtered_faqs %}
+
+                    <br> </br>
+                    <h2 class="faq-title">שאלות נפוצות</h2>
+
+                    <br> </br>
+                    {% for faq in faqs %}
+                    <div class="faq-item">
+                        <div class="faq-question">{{ faq.question }}</div>
+                        <div class="faq-answer"> {{ faq.answer }}</div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section - בצד שמאל -->
+        <div class="contact-container">
+            <h2 class="contact-title">לא מצאת תשובה לשאלה שלך?</h2>
+            <h2 class="contact-text">
+                צוות התמיכה שלנו זמין לענות על כל שאלה. אנחנו כאן כדי לעזור לך להצליח בלימודים שלך.
+            </h2>
+            <a href="{% url 'contact_us' %}" class="contact-button">צור קשר עם צוות התמיכה</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

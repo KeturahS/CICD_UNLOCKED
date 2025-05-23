@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'App_SetUp.apps.AppSetupConfig',
     'GitExercises.apps.GitExercisesConfig',
+    'QA.apps.QaConfig',
 ]
 
 MEDIA_URL = '/media/'
