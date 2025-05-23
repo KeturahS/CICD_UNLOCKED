@@ -18,20 +18,27 @@
 
     <form method="post">
       {% csrf_token %}
-      <div class="mb-3">
-        <label for="{{ form.subject.id_for_label }}" style="display: block; margin-bottom: 6px; font-weight: 600;">נושא הפנייה</label>
-        {{ form.subject }}
-      </div>
+        <div class="mb-3">
+          <label for="{{ form.subject.id_for_label }}">נושא הפנייה</label>
+          {{ form.subject }}
+          {% for error in form.subject.errors %}
+            <div style="color: red; font-size: 0.9em;">{{ error }}</div>
+          {% endfor %}
+        </div>
 
       <div class="mb-3">
         <label for="{{ form.email.id_for_label }}" style="display: block; margin-bottom: 6px; font-weight: 600;"> </label>
         {{ form.email }}
       </div>
 
-      <div class="mb-3">
-        <label for="{{ form.message.id_for_label }}" style="display: block; margin-bottom: 6px; font-weight: 600;">תוכן הפנייה</label>
-        {{ form.message }}
-      </div>
+        <div class="mb-3">
+          <label for="{{ form.message.id_for_label }}">תוכן הפנייה</label>
+          {{ form.message }}
+          {% for error in form.message.errors %}
+            <div style="color: red; font-size: 0.9em;">{{ error }}</div>
+          {% endfor %}
+        </div>
+
 
       <button type="submit" style="
         background-color: #1565c0;
