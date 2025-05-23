@@ -8,19 +8,55 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to bottom right, #e6f0ff, #d0e2ff);
-            color: #1f2d3d;
+            background: linear-gradient(to bottom right, #1c1e26, #2a2c37);
+            color: #e0e0e0;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
         }
 
+        .navbar {
+            background-color: #12141b;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: #30F2F2 !important;
+            margin-left: 15px;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-signup {
+            background-color: #30F2F2;
+            color: #000;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 600;
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-signup:hover {
+            transform: scale(1.05);
+        }
+
         header {
-            background: linear-gradient(to right, #004b93, #005bb5);
-            padding: 80px 0;
             text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(to right, #2a2c37, #2a2c37);
             color: white;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             animation: fadeInDown 1s ease forwards;
         }
 
@@ -36,60 +72,30 @@
 
         section {
             padding: 60px 0;
-            opacity: 0;
-            transform: translateY(30px);
             animation: fadeInUp 1s ease forwards;
         }
 
         .feature-box {
-            background: white;
+            background: #2e313c;
             border-radius: 15px;
             padding: 30px;
-            border: 1px solid #dbe5f1;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+            border: 1px solid #424656;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
 
-        .feature-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-        }
-
         .feature-box h4 {
-            color: #003a70;
+            color: #30F2F2;
             margin-bottom: 15px;
         }
 
-        .btn-custom {
-            font-size: 1.1rem;
-            padding: 12px 30px;
-            border-radius: 30px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .btn-primary {
-            background-color: #004a99;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #003b7a;
-            transform: scale(1.05);
-        }
-
-        .btn-secondary {
-            background-color: #5a6f91;
-            border: none;
-        }
-
-        .btn-secondary:hover {
-            background-color: #455b75;
-            transform: scale(1.05);
+        .feature-box p {
+            color: #cfd8dc;
         }
 
         footer {
-            background: #002e5d;
-            color: white;
+            background: #12141b;
+            color: #9e9e9e;
             text-align: center;
             padding: 20px 0;
             animation: fadeIn 1.5s ease forwards;
@@ -97,7 +103,7 @@
 
         .section-title {
             font-size: 2.2rem;
-            color: #1f2d3d;
+            color: #ffffff;
             margin-bottom: 40px;
         }
 
@@ -135,6 +141,16 @@
 </head>
 <body>
 
+<!-- Navbar -->
+<nav class="navbar navbar-expand justify-content-between">
+    <a class="navbar-brand" href="#">CiCd Unlocked</a>
+    <div class="d-flex align-items-center">
+        <a class="nav-link" href="{% url 'login_view' %}">התחברות</a>
+        <a href="{% url 'register' %}" class="btn btn-signup">הרשמה</a>
+    </div>
+</nav>
+
+<!-- Header -->
 <header>
     <div class="container">
         <h1>ברוכים הבאים ל־CiCd Unlocked</h1>
@@ -142,7 +158,8 @@
     </div>
 </header>
 
-<section id="features" class="bg-white">
+<!-- Features -->
+<section id="features">
     <div class="container">
         <h2 class="text-center section-title">מה תקבלו בלומדה?</h2>
         <div class="row g-4">
@@ -168,15 +185,7 @@
     </div>
 </section>
 
-<section id="signup" class="text-center bg-light">
-    <div class="container">
-        <h2 class="section-title">רוצים להתחיל?</h2>
-        <p class="mb-4">הירשמו עכשיו והצטרפו למהפכת ה־DevOps!</p>
-        <a href="{% url 'register' %}" class="btn btn-primary btn-custom me-2">הרשמה</a>
-        <a href="{% url 'login_view' %}" class="btn btn-secondary btn-custom">התחברות</a>
-    </div>
-</section>
-
+<!-- Footer -->
 <footer>
     <div class="container">
         <p>&copy; 2025 CiCd Unlocked | כל הזכויות שמורות</p>
