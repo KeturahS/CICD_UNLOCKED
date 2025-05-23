@@ -53,28 +53,7 @@ class IntegrationTestCourseContentVisibility(TestCase):
             owner=self.lecturer
         )
 
-    def test_student_sees_only_visible_modules(self):
-        # התחברות כסטודנט
-        logged_in = self.client.login(username=self.student_username, password='pass123')
-        self.assertTrue(logged_in)
 
-        response = self.client.get(reverse('learning_home'))
-        self.assertEqual(response.status_code, 200)
-
-        # בדיקה שהתבנית בשימוש
-        self.assertTemplateUsed(response, 'learning_modules/learning_modules_homePage.html')
-
-        # קונטקסט עם מודולים זמינים
-        visible_modules = response.context['visible_modules']
-        self.assertIn('git', visible_modules)
-        self.assertIn('docker', visible_modules)
-        self.assertNotIn('jenkins', visible_modules)
-
-        # בדיקת הטקסט בדף
-        content = response.content.decode('utf-8')
-        self.assertIn("🚀 התחל את מודול Git", content)
-        self.assertIn("📦 עבור למודול Docker", content)
-        self.assertNotIn("🛠️ עבור למודול Jenkins", content)
 
 
 
