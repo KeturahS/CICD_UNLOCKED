@@ -43,12 +43,12 @@
 
         .date {
             color: #8a8a9a;
-            font-size: 14px;
+            font-size: 25px;
             margin-bottom: 10px;
         }
 
         .welcome {
-            font-size: 28px;
+            font-size: 25px;
             margin-bottom: 20px;
         }
 
@@ -65,7 +65,7 @@
         .search-icon {
             margin-left: 15px;
             color: #8a41ff;
-            font-size: 20px;
+            font-size: 25px;
         }
 
         .search-input {
@@ -74,7 +74,7 @@
             border-radius: 5px;
             padding: 12px 40px;
             color: white;
-            font-size: 20px;
+            font-size: 25px;
             outline: none;
             width: 200%;
         }
@@ -157,14 +157,14 @@
             cursor: pointer;
             position: relative;
             border-bottom: 1px solid #2a2a35;
-            font-size: 20px;
+            font-size: 25px;
         }
 
         .faq-question::after {
             content: "+";
             position: absolute;
             left: 15px;
-            font-size: 20px;
+            font-size: 25px;
             color: #00e1ff;
         }
 
@@ -172,7 +172,7 @@
             padding: 15px;
             line-height: 1.6;
             color: #c5c5d0;
-            font-size: 20px;
+            font-size: 25px;
         }
 
         /* Contact Section - עכשיו בצד שמאל */
@@ -190,7 +190,7 @@
         }
 
         .contact-title {
-            font-size: 22px;
+            font-size: 25px;
             margin-bottom: 20px;
         }
 
@@ -198,7 +198,7 @@
             color: #c5c5d0;
             margin-bottom: 15px; /* מרווח קטן יותר לפני הכפתור */
             line-height: 1.6;
-            font-size: 20px;
+            font-size: 25px;
         }
 
         .contact-button {
@@ -284,6 +284,7 @@
         <form method="POST">
             {% csrf_token %}
             <input type="text" name="search_query" class="search-input" placeholder="חפש שאלה..."/>
+            <button type="submit" class="contact-button" > כל השאלות</button>
         </form>
 
 
@@ -299,27 +300,30 @@
             <div class="faq-scroll-container">
                 <div class="faq-grid">
 
-                     <!-- Filtered Results -->
-            {% if filtered_faqs %}
-                     <h2 class="faq-title">שאלות מסוננות</h2>
+                    <!-- Filtered Results -->
+                    {% if filtered_faqs %}
+                    <h2 class="faq-title">שאלות מסוננות</h2>
                     <br> </br>
-            <div style="margin-top: 20px; text-align: right; width: 100%;">
-                <h3 style="margin-bottom: 10px;">תוצאות חיפוש:</h3>
-                <div class="faq-grid">
-                    {% for faq in filtered_faqs %}
-                    <div class="faq-item">
-                        <div class="faq-question">{{ faq.question }}</div>
-                        <div class="faq-answer">{{ faq.answer }}</div>
+                    <div style="margin-top: 20px; text-align: right; width: 100%;">
+                        <h3 style="margin-bottom: 10px;">תוצאות חיפוש:</h3>
+                        <div class="faq-grid">
+                            {% for faq in filtered_faqs %}
+                            <div class="faq-item">
+                                <div class="faq-question">{{ faq.question }}</div>
+                                <div class="faq-answer">{{ faq.answer }}</div>
+                            </div>
+                            {% empty %}
+                            <p>לא נמצאו תוצאות.</p>
+                            {% endfor %}
+                        </div>
                     </div>
-                    {% empty %}
-                    <p>לא נמצאו תוצאות.</p>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
+                    {% endif %}
+
+                    <!-- All FAQs -->
+                    {% if not filtered_faqs %}
 
                     <br> </br>
-             <h2 class="faq-title">שאלות נפוצות</h2>
+                    <h2 class="faq-title">שאלות נפוצות</h2>
 
                     <br> </br>
                     {% for faq in faqs %}
@@ -328,6 +332,7 @@
                         <div class="faq-answer"> {{ faq.answer }}</div>
                     </div>
                     {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>

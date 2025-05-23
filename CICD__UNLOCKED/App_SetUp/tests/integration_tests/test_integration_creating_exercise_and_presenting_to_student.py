@@ -11,6 +11,7 @@ class TestGitExerciseVisibility(TestCase):
     יצירת 3 תרגילי Git ע״י מרצה, שיוכו לסטודנט, ואימות הופעתם בעמוד המודול של הסטודנט.
     """
 
+
     def setUp(self):
         # יצירת לקוח לבדיקה (client = סימולציה של דפדפן)
         self.client = Client()
