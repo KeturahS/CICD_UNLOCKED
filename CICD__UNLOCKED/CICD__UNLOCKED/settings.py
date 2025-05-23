@@ -38,6 +38,7 @@ DEFAULT_FROM_EMAIL = 'cicd.unlocked.service@gmail.com'  # This will be the defau
 # Application definition
 
 INSTALLED_APPS = [
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

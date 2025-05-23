@@ -1,5 +1,6 @@
 <!doctype html>
 {% load static %}
+{% load widget_tweaks %}
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
@@ -10,39 +11,65 @@
   <style>
     body {
       font-family: 'Assistant', sans-serif;
-      background: linear-gradient(135deg, #e0f0ff, #dbefff);
+      background: linear-gradient(135deg, #1e1e2f, #2e2e3e);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #f1f1f1;
     }
 
     .card {
-      background: white;
+      background: #2b2b3c;
       border: none;
-      border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       padding: 2rem;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-    }
-
     .card h2 {
-      color: #0d3b66;
+      color: #81aaff;
       font-weight: 700;
     }
 
     label {
       font-weight: 500;
-      color: #444;
+    }
+
+    .form-label {
+      color: #f1f1f1;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 10px;
+      background-color: #3c3c4e;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .form-control:focus {
+      background-color: #3c3c4e;
+      border-color: #81aaff;
+      color: #fff;
+    }
+
+    .form-control.is-invalid {
+      border-color: #ff4d4d;
+    }
+
+    .text-danger {
+      color: #ff4d4d !important;
+      font-size: 0.9rem;
+    }
+
+    .form-check-label {
+      color: #f1f1f1;
     }
 
     .btn-primary {
-      background: linear-gradient(to right, #0d6efd, #3a8ee6);
+      background: linear-gradient(to right, #004a99, #3a8ee6);
       border: none;
       border-radius: 30px;
       padding: 12px;
@@ -55,104 +82,171 @@
       transform: scale(1.03);
     }
 
-    .form-check {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
     .alert-info {
-      background-color: #eaf4ff;
-      border-color: #b6d9ff;
-      color: #00529b;
+      background-color: #3a3f5c;
+      border-color: #5a7b9c;
+      color: #cfe4ff;
       border-radius: 10px;
       font-size: 14px;
     }
 
-    .text-danger {
-      font-size: 14px;
+    .alert-danger {
+      background-color: #5a1d1d;
+      border-color: #b33a3a;
+      color: #ffcfcf;
+    }
+
+    .form-check-input:checked {
+      background-color: #3a8ee6;
+      border-color: #3a8ee6;
+    }
+
+    .form-check-input {
+      cursor: pointer;
+    }
+
+    .form-check-label {
+      cursor: pointer;
+    }
+
+    .register-link {
+      color: #fff;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-8">
-        <div class="card">
-          <h2 class="text-center mb-3">הרשמה למערכת</h2>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card">
+        <h2 class="text-center mb-3">הרשמה למערכת</h2>
 
-          {% if msg %}
-            <div class="alert alert-info text-center">{{ msg | safe }}</div>
-          {% else %}
-            <p class="text-center text-muted mb-4">מלא את פרטיך כדי להצטרף למערכת המתקדמת שלנו</p>
-          {% endif %}
+        {% if msg %}
+          <div class="alert alert-info text-center">{{ msg|safe }}</div>
+        {% else %}
+          <p class="text-center text-muted mb-4">מלא את פרטיך כדי להצטרף למערכת המתקדמת שלנו</p>
+        {% endif %}
 
-          <form method="post" autocomplete="off" novalidate>
-            {% csrf_token %}
+        <form method="post" autocomplete="off" novalidate>
+          {% csrf_token %}
 
-            <input type="text" name="fake_username" autocomplete="username" style="display: none;">
-            <input type="password" name="fake_password" autocomplete="new-password" style="display: none;">
+          <input type="text" name="fake_username" autocomplete="username" style="display: none;">
+          <input type="password" name="fake_password" autocomplete="new-password" style="display: none;">
 
-            <div class="mb-3">
-              <label for="first_name" class="form-label">שם פרטי</label>
-              {{ form.first_name }}
+          <!-- First name -->
+          <div class="mb-3">
+            <label for="first_name" class="form-label {% if form.first_name.errors %}text-danger{% endif %}">שם פרטי</label>
+            {% if form.first_name.errors %}
+              {{ form.first_name|add_class:"form-control is-invalid" }}
+              {% for error in form.first_name.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            {% else %}
+              {{ form.first_name|add_class:"form-control" }}
+            {% endif %}
+          </div>
+
+          <!-- Last name -->
+          <div class="mb-3">
+            <label for="last_name" class="form-label {% if form.last_name.errors %}text-danger{% endif %}">שם משפחה</label>
+            {% if form.last_name.errors %}
+              {{ form.last_name|add_class:"form-control is-invalid" }}
+              {% for error in form.last_name.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            {% else %}
+              {{ form.last_name|add_class:"form-control" }}
+            {% endif %}
+          </div>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label for="username" class="form-label {% if form.username.errors %}text-danger{% endif %}">שם משתמש</label>
+            {% if form.username.errors %}
+              {{ form.username|add_class:"form-control is-invalid" }}
+              {% for error in form.username.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            {% else %}
+              {{ form.username|add_class:"form-control" }}
+            {% endif %}
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label {% if form.email.errors %}text-danger{% endif %}">אימייל</label>
+            {% if form.email.errors %}
+              {{ form.email|add_class:"form-control is-invalid" }}
+              {% for error in form.email.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            {% else %}
+              {{ form.email|add_class:"form-control" }}
+            {% endif %}
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label for="password1" class="form-label {% if form.password1.errors %}text-danger{% endif %}">סיסמה</label>
+            {% if form.password1.errors %}
+              {{ form.password1|add_class:"form-control is-invalid" }}
+              {% for error in form.password1.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            {% else %}
+              {{ form.password1|add_class:"form-control" }}
+            {% endif %}
+          </div>
+
+          <!-- Confirm password -->
+          <div class="mb-3">
+            <label for="password2" class="form-label {% if form.password2.errors %}text-danger{% endif %}">אישור סיסמה</label>
+            {% if form.password2.errors %}
+              {{ form.password2|add_class:"form-control is-invalid" }}
+              {% for error in form.password2.errors %}
+                <div class="text-danger">{{ error }}</div>
+              {% endfor %}
+            {% else %}
+              {{ form.password2|add_class:"form-control" }}
+            {% endif %}
+          </div>
+
+          <!-- Role selection -->
+          <div class="mb-3">
+            <label class="form-label">בחר תפקיד</label>
+            <div class="form-check">
+              <input type="radio" name="role" id="student" value="student" class="form-check-input" {% if request.POST.role == "student" %}checked{% endif %}>
+              <label for="student" class="form-check-label">סטודנט</label>
             </div>
-
-            <div class="mb-3">
-              <label for="last_name" class="form-label">שם משפחה</label>
-              {{ form.last_name }}
+            <div class="form-check">
+              <input type="radio" name="role" id="lecturer" value="lecturer" class="form-check-input" {% if request.POST.role == "lecturer" %}checked{% endif %}>
+              <label for="lecturer" class="form-check-label">מרצה</label>
             </div>
-
-            <div class="mb-3">
-              <label for="username" class="form-label">שם משתמש</label>
-              {{ form.username }}
+            <div class="form-check">
+              <input type="radio" name="role" id="admin" value="admin" class="form-check-input" {% if request.POST.role == "admin" %}checked{% endif %}>
+              <label for="admin" class="form-check-label">מנהל</label>
             </div>
+          </div>
 
-            <div class="mb-3">
-              <label for="email" class="form-label">אימייל</label>
-              {{ form.email }}
-            </div>
+          <!-- Info box -->
+          <div class="alert alert-info mt-3">
+            <strong>שים לב:</strong><br>
+            הרשמה כמרצה דורשת אישור מנהל.<br>
+            הרשמה כמנהל דורשת אישור ממנהל בכיר.<br>
+            תעודכן במייל לאחר אישור.
+          </div>
 
-            <div class="mb-3">
-              <label for="password1" class="form-label">סיסמה</label>
-              {{ form.password1 }}
-            </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary w-100">המשך</button>
+          </div>
+          <div class="text-center mt-3 register-link">
+                    יש לך חשבון? <a href="{% url 'login_view' %}">התחברות</a>
+          </div>
 
-            <div class="mb-3">
-              <label for="password2" class="form-label">אישור סיסמה</label>
-              {{ form.password2 }}
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">בחר תפקיד</label>
-              <div class="form-check">
-                <input type="radio" name="role" id="student" value="student" class="form-check-input">
-                <label for="student" class="form-check-label">סטודנט</label>
-              </div>
-              <div class="form-check">
-                <input type="radio" name="role" id="lecturer" value="lecturer" class="form-check-input">
-                <label for="lecturer" class="form-check-label">מרצה</label>
-              </div>
-              <div class="form-check">
-                <input type="radio" name="role" id="admin" value="admin" class="form-check-input">
-                <label for="admin" class="form-check-label">מנהל</label>
-              </div>
-            </div>
-
-            <div class="alert alert-info">
-              <strong>שים לב:</strong><br>
-              הרשמה כמרצה דורשת אישור מנהל.<br>
-              הרשמה כמנהל דורשת אישור ממנהל בכיר.<br>
-              תעודכן במייל לאחר אישור.
-            </div>
-
-            <div class="text-danger mb-3">{{ form.errors }}</div>
-
-            <button type="submit" class="btn btn-primary w-100">המשך לרישום</button>
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   </div>
+</div>
 </body>
 </html>
