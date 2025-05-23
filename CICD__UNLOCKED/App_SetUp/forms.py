@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.core.exceptions import ValidationError
 from datetime import date
 
-from .models import User, StudentProfile, ContactMessage, PrivateMessage
+from .models import User, StudentProfile, ContactMessage, PrivateMessage, StudentNote
 from GitExercises.models import GitHubSentence, GitSentence, Terminal_Exercises_Git_Commands, JenkinsConceptsQuiz
 
 User = get_user_model()
@@ -48,12 +48,7 @@ class StudentProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(label='שם פרטי', max_length=30)
     last_name = forms.CharField(label='שם משפחה', max_length=30)
     email = forms.EmailField(label='אימייל')
-
-    new_password = forms.CharField(
-        label='סיסמה חדשה',
-        widget=forms.PasswordInput,
-        required=False
-    )
+    new_password = forms.CharField(label='סיסמה חדשה', widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = StudentProfile
@@ -163,3 +158,19 @@ class PrivateMessageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['recipient'].queryset = User.objects.filter(is_student=True)
+
+class StudentNoteForm(forms.ModelForm):
+    class Meta:
+        model = StudentNote
+        fields = ['module', 'content']
+        widgets = {
+            'module': forms.HiddenInput(),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'כתוב כאן את ההערה שלך...'
+            })
+        }
+        labels = {
+            'content': 'הערה'
+        }

@@ -1,95 +1,73 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>צור קשר | CiCd Unlocked</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: linear-gradient(to bottom right, #e3f2fd, #ffffff);
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+{% extends 'base.html' %}
 
-    .contact-container {
+{% block title %}צור קשר | CiCd Unlocked{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; direction: rtl;">
+  <div style="
       background-color: #fff;
+      color: #333; /* ← זה התיקון החשוב להצגת הטקסט */
       padding: 40px;
       width: 100%;
       max-width: 550px;
       border-radius: 12px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
       animation: fadeIn 1s ease;
-    }
+    ">
+    <h2 style="text-align: center; color: #1565c0; margin-bottom: 20px;">צור קשר עם צוות התמיכה</h2>
 
-    h2 {
-      text-align: center;
-      color: #1565c0;
-      margin-bottom: 20px;
-    }
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="{{ form.subject.id_for_label }}" style="display: block; margin-bottom: 6px; font-weight: 600;">נושא הפנייה</label>
+        {{ form.subject }}
+      </div>
 
-    form p {
-      margin-bottom: 16px;
-    }
+      <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}" style="display: block; margin-bottom: 6px; font-weight: 600;"> </label>
+        {{ form.email }}
+      </div>
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
+      <div class="mb-3">
+        <label for="{{ form.message.id_for_label }}" style="display: block; margin-bottom: 6px; font-weight: 600;">תוכן הפנייה</label>
+        {{ form.message }}
+      </div>
 
-    input, select, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: border-color 0.3s;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: #2196f3;
-      outline: none;
-    }
-
-    button {
-      background-color: #1565c0;
-      color: white;
-      border: none;
-      padding: 12px;
-      width: 100%;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 15px;
-    }
-
-    button:hover {
-      background-color: #0d47a1;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
-</head>
-<body>
-
-<div class="contact-container">
-  <h2>צור קשר עם צוות התמיכה</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">שלח פנייה</button>
-  </form>
+      <button type="submit" style="
+        background-color: #1565c0;
+        color: white;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 15px;
+      ">שלח פנייה</button>
+    </form>
+  </div>
 </div>
 
-</body>
-</html>
+<style>
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: #2196f3;
+    outline: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+{% endblock %}

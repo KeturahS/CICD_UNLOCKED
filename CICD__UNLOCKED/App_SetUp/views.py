@@ -59,6 +59,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 # Create your views here.
 
+from .forms import StudentNoteForm
+from .models import StudentNote
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from .models import StudentNote
+
 
 def index(request):
     return render(request, 'index.html')
@@ -1216,3 +1222,23 @@ def docker_rating(request):
 
 
 
+@login_required
+def add_student_note(request):
+    if request.method == 'POST':
+        form = StudentNoteForm(request.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.student = request.user
+            note.save()
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        form = StudentNoteForm()
+
+    return render(request, 'notes/add_note.html', {'form': form})
+
+
+
+@login_required
+def view_student_notes(request):
+    notes = StudentNote.objects.filter(student=request.user).order_by('-created_at')
+    return render(request, 'notes/view_notes.html', {'notes': notes})

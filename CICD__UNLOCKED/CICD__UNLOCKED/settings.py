@@ -136,6 +136,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'App_SetUp.User'
+LOGIN_URL = '/login/'
+
+
+
+
 
 
 
