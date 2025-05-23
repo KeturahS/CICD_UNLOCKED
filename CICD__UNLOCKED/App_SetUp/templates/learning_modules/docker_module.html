@@ -1,44 +1,51 @@
 {% extends 'base.html' %}
 
-{% block title %}🐳 לומדת Docker - אינטראקטיבית ודיגיטלית{% endblock %}
+{% block title %} לומדת Docker - אינטראקטיבית ודיגיטלית{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <div style="max-width: 1000px; margin: auto; padding: 40px; background: linear-gradient(135deg, #e0f7fa, #ffffff); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+<div class="container mt-4" style="color: #f1f1f1; font-family: 'Assistant', sans-serif;">
+  <div style="max-width: 1000px; margin: auto; padding: 40px; background-color: #111827; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
 
     {% if not request.GET.step %}
-      <h1 style="text-align: center; font-size: 2.5em; color: #007acc; margin-bottom: 20px;">
-        🐳 ברוכים הבאים ללומדת Docker האינטראקטיבית
+      <h1 style="font-size: 2.5em; color: #38bdf8; margin-bottom: 20px;">
+         לומדת Docker אינטראקטיבית <span style="color: #facc15"></span>
       </h1>
 
-      <p style="text-align: center; font-size: 1.2em; color: #333;">
+      <p style="font-size: 1.2em; color: #d1d5db;">
         כאן תלמדו בצורה חווייתית מהו Docker, כיצד עובדים קונטיינרים, איך יוצרים אותם, ואיך הכלי הזה משפיע על עולם הפיתוח המודרני.
       </p>
 
-      <hr style="margin: 40px auto; width: 60%; border: 1px solid #00acc1;">
+      <p style="font-size: 1em; color: #93c5fd; margin-top: 30px;">
+        במהלך הלימוד יופיעו סרטונים הקשורים למודול הנוכחי. בעבור כל סרטון יהיו 2 נקודות עצירה שבהן תתבקשו לענות על שאלה הקשורה לנאמר.<br>
+        אין מה לדאוג – אין ציון על השאלה 😊
+      </p>
 
       <div style="text-align: center; margin-top: 30px;">
         <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
-           style="background-color: #0288d1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-          🎓 מודולים לימודיים
+           style="background-color: #6366f1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+           מודולים לימודיים
         </a>
 
         <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
-           style="background-color: #388e3c; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-          🧪 תרגולים
+           style="background-color: #7c3aed; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+           תרגולים
         </a>
 
         <a href="{% url 'docker_rating' %}"
-           style="background-color: #f57c00; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-          ⭐ דירוג הלומדה
+           style="background-color: #a855f7; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+           דירוג הלומדה
         </a>
       </div>
 
       <div style="text-align: center; margin-top: 25px;">
         {% if not request.GET.accessible %}
-          <a href="?accessible=1" class="btn-next" style="background-color: #555;">🔓 הפעל מצב נגישות</a>
+          <a href="?accessible=1" class="btn-next" style="background-color: #4b5563; color: white; padding: 10px 20px; border-radius: 10px; font-size: 16px;">
+             מצב נגישות מופעל
+          </a>
         {% else %}
-          <a href="?" class="btn-next" style="background-color: #999;">🔒 חזרה למצב רגיל</a>
+          <a href="?" class="btn-next" style="background-color: #9ca3af; color: black; padding: 10px 20px; border-radius: 10px; font-size: 16px;">
+            חזרה למצב רגיל
+          </a>
         {% endif %}
       </div>
 
@@ -75,10 +82,10 @@
       {% csrf_token %}
       <input type="hidden" name="module" value="Docker">
       <div class="mb-3">
-        <label for="id_content" class="form-label">📝 רשום לעצמך הערה:</label>
+        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רישום לעצמך הערה:</label>
         <textarea name="content" class="form-control" rows="3" placeholder="מה למדת? מה חשוב לזכור?"></textarea>
       </div>
-      <button type="submit" class="btn btn-success">שמור הערה</button>
+      <button type="submit" class="btn" style="background-color: #22c55e; color: white; font-weight: bold; padding: 10px 25px; border-radius: 10px;">שמור הערה</button>
     </form>
 
   </div>
