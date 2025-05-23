@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CiCd Unlocked{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <style>
+        body {
+            background-color: #0a0e1a;
+            color: white;
+            font-family: 'Assistant', sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(to right, #004b93, #6c1cb1);
+            padding: 10px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .navbar a:hover {
+            color: #00f6ff;
+        }
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff33;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .avatar-circle:hover {
+            background-color: #ffffff55;
+        }
+        .dropdown-menu a {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div>
+        <a href="{% url 'student' %}">דף הבית</a>
+        {% if request.user.is_authenticated and request.user.is_lecturer %}
+            <a href="{% url 'lecturer_profile' %}">פרופיל מרצה</a>
+            <a href="{% url 'view_module_ratings' %}">דירוגי לומדות</a>
+            <a href="{% url 'send_private_message' %}">שליחת הודעה</a>
+        {% elif request.user.is_authenticated and request.user.is_student %}
+
+            <a href="{% url 'contact_us' %}">צור קשר עם צוות האתר</a>
+
+            <a href="{% url 'student_progress' %}">התקדמות בלמידה</a>
+            <a href="{% url 'view_student_notes' %}">ההערות שלי</a>
+        {% endif %}
+    </div>
+
+    {% if request.user.is_authenticated and request.user.is_student %}
+    <div class="dropdown">
+        <div class="avatar-circle dropdown-toggle" id="avatarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ request.user.first_name|slice:":1"|upper }}
+        </div>
+        <ul class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="avatarDropdown">
+            <li><a class="dropdown-item" href="{% url 'view_my_messages' %}">צפייה בהודעות שלי</a></li>
+            <li><a class="dropdown-item" href="{% url 'student_messages' %}">צפייה בפניות שלי</a></li>
+            <li><a class="dropdown-item" href="{% url 'student_profile' %}">פרופיל סטודנט</a></li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

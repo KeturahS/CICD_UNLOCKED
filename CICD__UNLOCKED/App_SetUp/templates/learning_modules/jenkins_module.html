@@ -1,89 +1,100 @@
-{% extends 'learning_modules/base_learning_module.html' %}
+{% extends 'base.html' %}
 
-{% block title %}🛠️ לומדת Jenkins - אינטראקטיבית ודיגיטלית{% endblock %}
+{% block title %} לומדת Jenkins - אינטראקטיבית ודיגיטלית{% endblock %}
 
 {% block content %}
-<div style="max-width: 1000px; margin: auto; padding: 40px; background: linear-gradient(135deg, #f3f9ff, #ffffff); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+<div class="container mt-4" style="color: #f1f1f1; font-family: 'Assistant', sans-serif;">
+  <div style="max-width: 1000px; margin: auto; padding: 40px; background-color: #111827; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
 
-  {% if not request.GET.step %}
-    <!-- כותרת ראשית -->
-    <h1 style="text-align: center; font-size: 2.5em; color: #d32f2f; margin-bottom: 20px;">
-      🛠️ לומדת Jenkins אינטראקטיבית
-    </h1>
+    {% if not request.GET.step %}
+      <h1 style="font-size: 2.5em; color: #f97316; margin-bottom: 20px;">
+         לומדת <span style="color: #facc15">Jenkins אינטראקטיבית</span>
+      </h1>
 
-    <!-- תיאור כללי -->
-    <p style="text-align: center; font-size: 1.2em; color: #333;">
-      לומדה זו תכיר לך את Jenkins – הכלי המוביל לאוטומציה של תהליכי פיתוח (CI/CD). תלמד כיצד הוא עובד, כיצד מתקינים אותו ואיך יוצרים משימות ראשונות בצורה פשוטה ואינטראקטיבית.
-    </p>
+      <p style="font-size: 1.2em; color: #d1d5db;">
+        לומדה זו תכיר לך את Jenkins – הכלי המוביל לאוטומציה של תהליכי פיתוח (CI/CD). תלמד כיצד הוא עובד, כיצד מתקינים אותו ואיך יוצרים משימות ראשונות בצורה פשוטה ואינטראקטיבית.
+      </p>
 
-    <hr style="margin: 40px auto; width: 60%; border: 1px solid #ef5350;">
+      <p style="font-size: 1em; color: #93c5fd; margin-top: 30px;">
+        במהלך הלימוד יופיעו סרטונים הקשורים למודול הנוכחי. בעבור כל סרטון יהיו 2 נקודות עצירה שבהן תתבקשו לענות על שאלה הקשורה לנאמר.<br>
+        אין מה לדאוג – אין ציון על השאלה 😊
+      </p>
 
-    <!-- תוכן עניינים -->
-    <div style="background-color: #ffebee; padding: 30px; border-radius: 12px;">
-      <h2 style="text-align: center; color: #c62828;">📚 תוכן עניינים</h2>
-      <ol style="font-size: 1.1em; line-height: 2; color: #444; text-align: right; direction: rtl; padding-right: 20px;">
-        <li>היכרות עם Jenkins</li>
-        <li>התקנת Jenkins</li>
-        <li>בניית Job ראשון ב־Jenkins</li>
-        <li>מצגת על Jenkins</li>
-      </ol>
-    </div>
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
+           style="background-color: #6366f1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+            מודולים לימודיים
+        </a>
 
-    <!-- כפתור התחלה -->
-    <div style="text-align: center; margin-top: 40px;">
-      <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
-         class="btn-next"
-         style="background-color: #c62828; padding: 14px 28px; font-size: 18px; border-radius: 10px;">
-        🎬 התחל את הלמידה
-      </a>
-    </div>
+        <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}"
+           style="background-color: #7c3aed; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+            תרגולים
+        </a>
 
-    <!-- מצב נגישות -->
-    <div style="text-align: center; margin-top: 25px;">
-      {% if not request.GET.accessible %}
-        <a href="?accessible=1" class="btn-next" style="background-color: #444;">🔓 הפעל מצב נגישות</a>
+        <a href="{% url 'jenkins_rating' %}"
+           style="background-color: #a855f7; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
+            דירוג הלומדה
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 25px;">
+        {% if not request.GET.accessible %}
+          <a href="?accessible=1" class="btn-next" style="background-color: #4b5563; color: white; padding: 10px 20px; border-radius: 10px; font-size: 16px;">
+             מצב נגישות מופעל
+          </a>
+        {% else %}
+          <a href="?" class="btn-next" style="background-color: #9ca3af; color: black; padding: 10px 20px; border-radius: 10px; font-size: 16px;">
+            חזרה למצב רגיל
+          </a>
+        {% endif %}
+      </div>
+
+    {% elif request.GET.step == '1' %}
+      {% if request.GET.accessible %}
+        {% include 'learning_modules/jenkins/accessible/section1.html' with video=video podcasts=podcasts %}
       {% else %}
-        <a href="?" class="btn-next" style="background-color: #888;">🔒 חזרה למצב רגיל</a>
+        {% include 'learning_modules/jenkins/section1.html' with video=video podcasts=podcasts %}
       {% endif %}
-    </div>
 
-  {% elif request.GET.step == '1' %}
-    {% if request.GET.accessible %}
-      {% include 'learning_modules/jenkins/accessible/section1.html' with video=video podcasts=podcasts %}
-    {% else %}
-      {% include 'learning_modules/jenkins/section1.html' with video=video podcasts=podcasts %}
-    {% endif %}
-
-  {% elif request.GET.step == '2' %}
-    {% if request.GET.accessible %}
-      {% include 'learning_modules/jenkins/accessible/section2.html' with video=video podcasts=podcasts %}
-    {% else %}
-      {% include 'learning_modules/jenkins/section2.html' with video=video podcasts=podcasts %}
-    {% endif %}
-
-   {% elif request.GET.step == '3' %}
-    {% if request.GET.accessible %}
-      {% include 'learning_modules/jenkins/accessible/section3.html' with video=video podcasts=podcasts %}
-    {% else %}
-      {% include 'learning_modules/jenkins/section3.html' with video=video podcasts=podcasts %}
-    {% endif %}
-
-
-
-  {% elif request.GET.step == '4' %}
-    {% if request.GET.accessible %}
-      {% if presentations %}
-        {% include 'learning_modules/jenkins/accessible/section4.html' with presentation=presentations.0 %}
+    {% elif request.GET.step == '2' %}
+      {% if request.GET.accessible %}
+        {% include 'learning_modules/jenkins/accessible/section2.html' with video=video podcasts=podcasts %}
+      {% else %}
+        {% include 'learning_modules/jenkins/section2.html' with video=video podcasts=podcasts %}
       {% endif %}
-    {% else %}
-      {% if presentations %}
-        {% include 'learning_modules/jenkins/section4.html' with presentation=presentations.0 %}
+
+    {% elif request.GET.step == '3' %}
+      {% if request.GET.accessible %}
+        {% include 'learning_modules/jenkins/accessible/section3.html' with video=video podcasts=podcasts %}
+      {% else %}
+        {% include 'learning_modules/jenkins/section3.html' with video=video podcasts=podcasts %}
       {% endif %}
+
+    {% elif request.GET.step == '4' %}
+      {% if request.GET.accessible %}
+        {% if presentations %}
+          {% include 'learning_modules/jenkins/accessible/section4.html' with presentation=presentations.0 %}
+        {% endif %}
+      {% else %}
+        {% if presentations %}
+          {% include 'learning_modules/jenkins/section4.html' with presentation=presentations.0 %}
+        {% endif %}
+      {% endif %}
+
+    {% elif request.GET.step == '4q' %}
+      {% include 'JenkinsExercises/section4_questions.html' with student_jenkins_quiz_exercise=student_jenkins_quiz_exercise %}
     {% endif %}
 
-  {% elif request.GET.step == '4q' %}
-    {% include 'JenkinsExercises/section4_questions.html' with student_jenkins_quiz_exercise=student_jenkins_quiz_exercise  %}
+    <form method="post" action="{% url 'add_student_note' %}" class="mt-5">
+      {% csrf_token %}
+      <input type="hidden" name="module" value="Jenkins">
+      <div class="mb-3">
+        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רישום לעצמך הערה:</label>
+        <textarea name="content" class="form-control" rows="3" placeholder="מה למדת? מה חשוב לזכור?"></textarea>
+      </div>
+      <button type="submit" class="btn" style="background-color: #22c55e; color: white; font-weight: bold; padding: 10px 25px; border-radius: 10px;">שמור הערה</button>
+    </form>
 
-  {% endif %}
+  </div>
 </div>
 {% endblock %}

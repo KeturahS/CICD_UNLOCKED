@@ -1,37 +1,42 @@
-{% extends 'learning_modules/base_learning_module.html' %}
+{% extends "base.html" %}
 
 {% block title %}ברוך הבא ללומדת ה־CI/CD{% endblock %}
 
 {% block content %}
 <style>
+  body {
+    background-color: #0f172a;
+    font-family: 'Assistant', sans-serif;
+  }
+
   .intro-box {
     max-width: 900px;
-    margin: auto;
-    background: #ffffff;
-    padding: 40px 30px;
+    margin: 60px auto;
+    background: #1e293b;
+    padding: 50px 40px;
     border-radius: 16px;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
     text-align: center;
     animation: fadeIn 1s ease-in-out;
   }
 
   .intro-title {
-    font-size: 2em;
-    background: linear-gradient(90deg, #007acc, #00cc88);
+    font-size: 3em;
+    background: linear-gradient(90deg, #60a5fa, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .intro-text {
-    font-size: 1.15em;
-    color: #333;
-    margin-bottom: 16px;
+    font-size: 1.4em;
+    color: #f1f5f9;
+    margin-bottom: 20px;
   }
 
   .module-links {
-    margin-top: 40px;
+    margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -39,21 +44,21 @@
   }
 
   .btn-module {
-    background-color: #007acc;
+    background-color: #6366f1;
     color: white;
-    padding: 14px 26px;
-    font-size: 1em;
+    padding: 16px 32px;
+    font-size: 1.1em;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
     min-width: 220px;
   }
 
   .btn-module:hover {
-    background-color: #005fa3;
-    transform: translateY(-2px);
+    background-color: #4f46e5;
+    transform: translateY(-3px);
   }
 
   @keyframes fadeIn {
@@ -63,7 +68,7 @@
 </style>
 
 <div class="intro-box">
-  <h1 class="intro-title">🎓 ברוך הבא ללומדת ה־CI/CD</h1>
+  <h1 class="intro-title"> ברוך הבא ללומדת ה־CI/CD</h1>
 
   <p class="intro-text">
     בלומדה זו תלמד בצורה אינטראקטיבית על הכלים הנפוצים בעולם הפיתוח המודרני:<br>
@@ -78,13 +83,13 @@
 
   <div class="module-links">
     {% if 'git' in visible_modules %}
-      <a href="{% url 'git_module' %}" class="btn-module" aria-label="מודול Git">🚀 התחל את מודול Git</a>
+      <a href="{% url 'git_module' %}" class="btn-module" aria-label="מודול Git">  Git</a>
     {% endif %}
     {% if 'jenkins' in visible_modules %}
-      <a href="{% url 'jenkins_module' %}" class="btn-module" aria-label="מודול Jenkins">🛠️ עבור למודול Jenkins</a>
+      <a href="{% url 'jenkins_module' %}" class="btn-module" aria-label="מודול Jenkins">️  Jenkins</a>
     {% endif %}
     {% if 'docker' in visible_modules %}
-      <a href="{% url 'docker_module' %}" class="btn-module" aria-label="מודול Docker">📦 עבור למודול Docker</a>
+      <a href="{% url 'docker_module' %}" class="btn-module" aria-label="מודול Docker">  Docker</a>
     {% endif %}
   </div>
 </div>

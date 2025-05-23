@@ -4,6 +4,10 @@ from django.urls import path
 from .views import send_private_message
 from .views import view_my_messages
 from . import views
+from .views import add_student_note
+from .views import view_student_notes
+
+
 
 
 urlpatterns = [
@@ -77,7 +81,13 @@ urlpatterns = [
 
     path('lecturer/monitor-progress/', views.monitor_student_git_progress, name='monitor_student_git_progress'),
     path('lecturer/monitor-progress/download/', views.download_student_report, name='download_student_report'),
+    path('student/add-note/', add_student_note, name='add_student_note'),
+    path('student/notes/', view_student_notes, name='view_student_notes'),
 
 
+
+    path('learning/git/git_rating', views.git_rating, name='git_rating'),
+    path('learning/jenkins/jenkins_rating', views.jenkins_rating, name='jenkins_rating'),
+    path('learning/docker/docker_rating', views.docker_rating, name='docker_rating'),
 
 ]

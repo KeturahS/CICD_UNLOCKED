@@ -1,5 +1,5 @@
 import random
-
+from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
@@ -58,6 +58,12 @@ import base64
 import pandas as pd
 import matplotlib.pyplot as plt
 # Create your views here.
+
+from .forms import StudentNoteForm
+from .models import StudentNote
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from .models import StudentNote
 
 
 def index(request):
@@ -487,6 +493,7 @@ def update_student_profile(request):
         form = StudentProfileUpdateForm(request.POST, instance=profile, user=user)
         if form.is_valid():
             form.save()
+            update_session_auth_hash(request, user)  # ✅ שימור התחברות גם לאחר שינוי סיסמה
             return redirect('student_profile')
     else:
         form = StudentProfileUpdateForm(instance=profile, user=user)
@@ -1163,4 +1170,75 @@ def student_progress(request):
         'target_date': target_date
     })
 
+@login_required
+def git_rating(request):
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        if rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Git',
+                rating=int(rating),
+                comment=comment,
+                submitted_at=timezone.now()
+            )
+            return render(request, 'thank_you.html')
+    return render(request, 'learning_modules/git/git_rating.html')
 
+
+@login_required
+def jenkins_rating(request):
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        if rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Jenkins',
+                rating=int(rating),
+                comment=comment,
+                submitted_at=timezone.now()
+            )
+            return render(request, 'thank_you.html')
+    return render(request, 'learning_modules/jenkins/jenkins_rating.html')
+
+
+@login_required
+def docker_rating(request):
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+        if rating:
+            LearningModuleRating.objects.create(
+                student=request.user,
+                module_name='Docker',
+                rating=int(rating),
+                comment=comment,
+                submitted_at=timezone.now()
+            )
+            return render(request, 'thank_you.html')
+    return render(request, 'learning_modules/docker/docker_rating.html')
+
+
+
+@login_required
+def add_student_note(request):
+    if request.method == 'POST':
+        form = StudentNoteForm(request.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.student = request.user
+            note.save()
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        form = StudentNoteForm()
+
+    return render(request, 'notes/add_note.html', {'form': form})
+
+
+
+@login_required
+def view_student_notes(request):
+    notes = StudentNote.objects.filter(student=request.user).order_by('-created_at')
+    return render(request, 'notes/view_notes.html', {'notes': notes})

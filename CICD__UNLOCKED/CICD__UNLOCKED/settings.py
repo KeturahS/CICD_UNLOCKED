@@ -38,6 +38,7 @@ DEFAULT_FROM_EMAIL = 'cicd.unlocked.service@gmail.com'  # This will be the defau
 # Application definition
 
 INSTALLED_APPS = [
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,6 +137,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'App_SetUp.User'
+LOGIN_URL = '/login/'
+
+
+
+
 
 
 

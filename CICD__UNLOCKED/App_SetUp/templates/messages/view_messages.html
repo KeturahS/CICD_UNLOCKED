@@ -1,29 +1,25 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>ההודעות שלי</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-<div class="container mt-5">
-    <h2 class="text-center text-primary mb-4">ההודעות שלי</h2>
+{% extends 'base.html' %}
 
-    {% if messages %}
-        {% for msg in messages %}
-            <div class="card mb-3 shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <strong>{{ msg.subject }}</strong> | מאת: {{ msg.sender.username }}
-                </div>
-                <div class="card-body">
-                    <p>{{ msg.message }}</p>
-                    <p class="text-muted text-end">נשלח בתאריך: {{ msg.created_at|date:"d/m/Y H:i" }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="alert alert-info text-center">לא נמצאו הודעות.</div>
-    {% endif %}
+{% block title %}ההודעות שלי{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="direction: rtl;">
+  <h2 class="text-center text-primary mb-4">ההודעות שלי</h2>
+
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <strong>{{ msg.subject }}</strong> | מאת: {{ msg.sender.username }}
+        </div>
+        <div class="card-body">
+          <p>{{ msg.message }}</p>
+          <p class="text-muted text-end mb-0">נשלח בתאריך: {{ msg.created_at|date:"d/m/Y H:i" }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info text-center">לא נמצאו הודעות.</div>
+  {% endif %}
 </div>
-</body>
-</html>
+{% endblock %}
