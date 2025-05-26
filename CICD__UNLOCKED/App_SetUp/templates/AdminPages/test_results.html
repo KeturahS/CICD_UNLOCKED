@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}תוצאות בדיקות{% endblock %}
+
+{% block content %}
+<div style="direction: rtl; padding: 20px;">
+    <h2 style="color: #ffffff; font-weight: bold;">📋 תוצאות בדיקות אוטומטיות</h2>
+
+    <pre style="
+        background-color: #ffffff;
+        color: #000000;
+        padding: 20px;
+        border-radius: 12px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    ">
+{{ output }}
+    </pre>
+
+    <div style="margin-top: 20px;">
+        <a href="{% url 'admin' %}" class="btn btn-primary">חזרה לדף הניהול</a>
+    </div>
+</div>
+{% endblock %}
