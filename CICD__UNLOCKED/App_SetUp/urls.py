@@ -6,6 +6,9 @@ from .views import view_my_messages
 from . import views
 from .views import add_student_note
 from .views import view_student_notes
+from django.urls import path
+from . import views
+
 
 
 
@@ -89,5 +92,6 @@ urlpatterns = [
     path('learning/git/git_rating', views.git_rating, name='git_rating'),
     path('learning/jenkins/jenkins_rating', views.jenkins_rating, name='jenkins_rating'),
     path('learning/docker/docker_rating', views.docker_rating, name='docker_rating'),
+    path('run_tests/', views.run_tests, name='run_tests'),
 
 ]
