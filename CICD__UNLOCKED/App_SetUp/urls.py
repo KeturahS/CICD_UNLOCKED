@@ -89,5 +89,7 @@ urlpatterns = [
     path('learning/git/git_rating', views.git_rating, name='git_rating'),
     path('learning/jenkins/jenkins_rating', views.jenkins_rating, name='jenkins_rating'),
     path('learning/docker/docker_rating', views.docker_rating, name='docker_rating'),
+    path('run_tests/', views.run_tests, name='run_tests'),
+
 
 ]

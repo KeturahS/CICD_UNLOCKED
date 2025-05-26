@@ -100,6 +100,7 @@
                     {% endif %}
                     <li class="nav-item"><a class="nav-link active" href="{% url 'manage_lecturers' %}">📚 ניהול מרצים</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'manage_students' %}">🎓 ניהול סטודנטים</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'run_tests' %}">🧪 הרץ בדיקות אוטומטיות</a></li>
                 </ul>
             </div>
         </nav>
@@ -177,18 +178,16 @@
                 </div>
             </div>
             {% endif %}
-
         </main>
     </div>
 </div>
-
 
 <!-- ניהול פניות משתמשים -->
 <div class="card my-4">
     <div class="card-header">פניות משתמשים</div>
 
-        <a href="?show=open" class="btn btn-warning">הצג רק פניות פתוחות</a>
-        <a href="{% url 'admin' %}" class="btn btn-secondary">הצג את כל הפניות</a>
+    <a href="?show=open" class="btn btn-warning">הצג רק פניות פתוחות</a>
+    <a href="{% url 'admin' %}" class="btn btn-secondary">הצג את כל הפניות</a>
     <div class="card-body">
         <table class="table table-striped">
             <thead>
@@ -246,3 +245,4 @@
 
 </body>
 </html>
+

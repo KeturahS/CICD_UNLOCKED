@@ -50,6 +50,10 @@ import base64
 from io import BytesIO
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
+import subprocess
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import render, redirect
 
 
 from django.shortcuts import render, redirect
@@ -1242,3 +1246,22 @@ def add_student_note(request):
 def view_student_notes(request):
     notes = StudentNote.objects.filter(student=request.user).order_by('-created_at')
     return render(request, 'notes/view_notes.html', {'notes': notes})
+
+
+
+@staff_member_required
+def run_tests(request):
+    try:
+        messages.info(request, "מריץ בדיקות... אנא המתן.")
+        result = subprocess.run(['pytest'], capture_output=True, text=True)
+        output = result.stdout + "\n" + result.stderr
+
+        if "FAILED" in output or "ERROR" in output:
+            messages.warning(request, "הבדיקות הסתיימו, חלקן נכשלו או נזרקה שגיאה.")
+        else:
+            messages.success(request, "הבדיקות הסתיימו בהצלחה. הכל תקין.")
+
+        return render(request, 'AdminPages/test_results.html', {'output': output})
+    except Exception as e:
+        messages.error(request, f"שגיאה בהרצת בדיקות: {e}")
+        return redirect('admin')
