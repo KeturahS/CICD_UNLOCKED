@@ -1,14 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from django.urls import path
-from .views import send_private_message
-from .views import view_my_messages
+from .views import send_private_message, view_my_messages, add_student_note, view_student_notes
 from . import views
-from .views import add_student_note
-from .views import view_student_notes
-
-
-
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -75,7 +68,6 @@ urlpatterns = [
     path('learning/docker/section2/', views.docker_section2, name='docker_section2'),
     path('learning/docker/section3/', views.docker_section3, name='docker_section3'),
 
-
     path('lecturer/send-message/', send_private_message, name='send_private_message'),
     path('student/my-messages/', view_my_messages, name='view_my_messages'),
 
@@ -84,12 +76,9 @@ urlpatterns = [
     path('student/add-note/', add_student_note, name='add_student_note'),
     path('student/notes/', view_student_notes, name='view_student_notes'),
 
-
-
     path('learning/git/git_rating', views.git_rating, name='git_rating'),
     path('learning/jenkins/jenkins_rating', views.jenkins_rating, name='jenkins_rating'),
     path('learning/docker/docker_rating', views.docker_rating, name='docker_rating'),
+
     path('run_tests/', views.run_tests, name='run_tests'),
-
-
 ]

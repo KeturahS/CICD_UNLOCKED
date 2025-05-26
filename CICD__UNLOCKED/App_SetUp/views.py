@@ -29,6 +29,12 @@ from .models import LearningModuleRating
 from App_SetUp.models import CourseContent
 from App_SetUp.models import CourseContent
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+import subprocess
+
+
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import PrivateMessageForm
@@ -37,6 +43,12 @@ from .models import PrivateMessage, CourseContent
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import date
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.shortcuts import render, redirect
+import subprocess
+
 
 
 from datetime import datetime
@@ -72,6 +84,14 @@ from .models import StudentNote
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
 from .models import StudentNote
+
+
+
+import subprocess
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 
 def index(request):
@@ -1246,6 +1266,8 @@ def add_student_note(request):
 def view_student_notes(request):
     notes = StudentNote.objects.filter(student=request.user).order_by('-created_at')
     return render(request, 'notes/view_notes.html', {'notes': notes})
+
+
 
 
 

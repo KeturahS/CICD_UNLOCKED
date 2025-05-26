@@ -57,9 +57,7 @@
             <a href="{% url 'view_module_ratings' %}">דירוגי לומדות</a>
             <a href="{% url 'send_private_message' %}">שליחת הודעה</a>
         {% elif request.user.is_authenticated and request.user.is_student %}
-
             <a href="{% url 'contact_us' %}">צור קשר עם צוות האתר</a>
-
             <a href="{% url 'student_progress' %}">התקדמות בלמידה</a>
             <a href="{% url 'view_student_notes' %}">ההערות שלי</a>
             <a href="{% url 'qa:QA_Page' %}">שאלות ותשובות</a>
@@ -82,13 +80,13 @@
 
 <div class="container mt-4">
     {% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  {% endfor %}
-{% endif %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
     {% block content %}
     {% endblock %}
