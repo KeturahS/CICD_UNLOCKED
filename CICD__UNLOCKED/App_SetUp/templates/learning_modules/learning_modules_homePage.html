@@ -82,6 +82,13 @@
   </p>
 
   <div class="module-links">
+    {% with visible_modules|default:"" as vm %}
+    {% if 'git' not in vm and 'jenkins' not in vm and 'docker' not in vm %}
+    <p class="intro-text" style="color: #f87171;">אין לך הרשאות לגשת למודולים אלה.</p>
+    {% endif %}
+    {% endwith %}
+
+
     {% if 'git' in visible_modules %}
       <a href="{% url 'git_module' %}" class="btn-module" aria-label="מודול Git">  Git</a>
     {% endif %}
@@ -91,6 +98,7 @@
     {% if 'docker' in visible_modules %}
       <a href="{% url 'docker_module' %}" class="btn-module" aria-label="מודול Docker">  Docker</a>
     {% endif %}
+
   </div>
 </div>
 {% endblock %}

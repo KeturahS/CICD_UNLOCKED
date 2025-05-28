@@ -19,6 +19,16 @@ class GitSentence(models.Model):
         return self.sentence
 
 
+class StudentGitHubGitAssignment(models.Model):
+    student = models.OneToOneField(StudentProfile, on_delete=models.CASCADE, related_name='github_git_assignment')
+    completed = models.BooleanField(default=False)
+    last_attempt = models.DateTimeField(auto_now=True)
+    attempts = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.student.user.username} - {'הושלם' if self.completed else 'לא הושלם'}"
+
+
 class Terminal_Exercises_Git_Commands(models.Model):
     command = models.CharField(max_length=255)
     Hebrew_Command = models.CharField(max_length=255, default="")

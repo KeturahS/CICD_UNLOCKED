@@ -188,3 +188,49 @@ class StudentNote(models.Model):
     def __str__(self):
         return f"{self.student.username} - {self.module} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
 
+
+class StudentModuleProgress(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='module_progress')
+    module= models.CharField(max_length=100)
+    completed = models.BooleanField(default=False)
+    last_accessed = models.DateTimeField(auto_now=True)
+    progress_percentage = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.student.user.username} - {self.module} - {'Completed' if self.completed else 'In Progress'}"
+
+class StudentVideoCompletion(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='video_completions')
+    video = models.ForeignKey(LearningVideo, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('student', 'video')
+
+    def __str__(self):
+        return f"{self.student.user.username} - {self.video.title} - {'Completed' if self.completed else 'In Progress'}"
+
+class StudentPodcastCompletion(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='podcast_completions')
+    podcast = models.ForeignKey(Podcast, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('student', 'podcast')
+
+    def __str__(self):
+        return f"{self.student.user.username} - {self.podcast.title} - {'Completed' if self.completed else 'In Progress'}"
+
+class StudentPresentationCompletion(models.Model):
+    student = models.ForeignKey(StudentProfile, on_delete=models.CASCADE, related_name='presentation_completions')
+    presentation = models.ForeignKey(Presentation, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('student', 'presentation')
+
+    def __str__(self):
+        return f"{self.student.user.username} - {self.presentation.title} - {'Completed' if self.completed else 'In Progress'}"
