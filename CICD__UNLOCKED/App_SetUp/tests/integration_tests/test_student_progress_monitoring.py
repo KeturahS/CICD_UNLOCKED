@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from App_SetUp.models import StudentProfile
 from GitExercises.models import Terminal_Exercises_Git_Commands, StudentGitCommandProgress
 import uuid
-
+from datetime import date, timedelta
 User = get_user_model()
 
 class IntegrationTestStudentProgress(TestCase):
@@ -19,7 +19,13 @@ class IntegrationTestStudentProgress(TestCase):
         # יצירת משתמשים
         self.lecturer = User.objects.create_user(username=self.lecturer_username, password='pass123', is_lecturer=True)
         self.student_user = User.objects.create_user(username=self.student_username, password='pass123', is_student=True)
-        self.student_profile = StudentProfile.objects.create(user=self.student_user)
+        self.student_profile, _ = StudentProfile.objects.get_or_create(
+            user=self.student_user,
+            defaults={
+                'institution': 'SCE',
+                'target_completion_date': date.today() + timedelta(days=10)
+            }
+        )
 
         # יצירת פקודת Git ייחודית
         self.command = Terminal_Exercises_Git_Commands.objects.create(
