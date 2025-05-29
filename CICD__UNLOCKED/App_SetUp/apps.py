@@ -7,6 +7,9 @@ class AppSetupConfig(AppConfig):
     def ready(self):
         try:
             import App_SetUp.signals
-        except ImportError:
-            pass
 
+            from App_SetUp.utils.load_scheduler import start_scheduler
+            start_scheduler()
+
+        except Exception as e:
+            print(f"[Scheduler Error] {e}")

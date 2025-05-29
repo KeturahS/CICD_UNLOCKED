@@ -95,6 +95,8 @@
                 <hr>
                 <h5>ניהול מערכת</h5>
                 <ul class="nav flex-column mt-3">
+                    <a href="{% url 'server_load_report' %}" class="btn btn-outline-primary mb-3">⬇ הורד דוח עומס השרת (CSV)</a>
+
                     {% if request.user.is_superuser %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'manage_admins' %}">🛠 ניהול מנהלים</a></li>
                     {% endif %}
@@ -108,6 +110,41 @@
         <!-- תוכן ראשי -->
         <main class="col-md-10 px-4 py-4">
             <h2 class="main-title">דשבורד אדמין</h2>
+
+            {% if latest_load %}
+                <div class="card my-4">
+                    <div class="card-header">📊 סטטוס עומס השרת (עודכן לאחרונה ב־{{ latest_load.timestamp|date:"H:i:s d/m/Y" }})</div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <!-- CPU -->
+                            <div class="col-md-4">
+                                <h6>CPU</h6>
+                                <div class="p-2 rounded text-white {% if latest_load.cpu_percent > 85 %}bg-danger{% elif latest_load.cpu_percent > 65 %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ latest_load.cpu_percent }}%
+                                </div>
+                            </div>
+
+                            <!-- Memory -->
+                            <div class="col-md-4">
+                                <h6>RAM</h6>
+                                <div class="p-2 rounded text-white {% if latest_load.memory_percent > 85 %}bg-danger{% elif latest_load.memory_percent > 65 %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ latest_load.memory_percent }}%
+                                </div>
+                            </div>
+
+                            <!-- Disk -->
+                            <div class="col-md-4">
+                                <h6>Disk</h6>
+                                <div class="p-2 rounded text-white {% if latest_load.disk_percent > 85 %}bg-danger{% elif latest_load.disk_percent > 65 %}bg-warning{% else %}bg-success{% endif %}">
+                                    {{ latest_load.disk_percent }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
 
             <!-- ניהול מרצים -->
             <div class="card my-4">

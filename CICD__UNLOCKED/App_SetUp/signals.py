@@ -6,7 +6,7 @@ from .models import User, LecturerProfile, StudentProfile, AdminProfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from App_SetUp.models import StudentProfile
-from GitExercises.models import Terminal_Exercises_Git_Commands, StudentTerminalGitCommandExercise
+from GitExercises.models import Terminal_Exercises_Git_Commands
 
 
 @receiver(pre_save, sender=User)
