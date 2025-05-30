@@ -15,8 +15,6 @@ from .views import view_lecturer_messages
 
 
 
-
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.login_view, name='login_view'),
@@ -101,5 +99,9 @@ urlpatterns = [
     path('admin_page/lecturer-messages/', view_lecturer_messages, name='view_lecturer_messages'),
 
 
+
+
+    path('captcha/', views.captcha_challenge, name='captcha_challenge'),
+    path('server-load-report/', views.server_load_report, name='server_load_report'),
 
 ]
