@@ -8,7 +8,9 @@ from .views import add_student_note
 from .views import view_student_notes
 from django.urls import path
 from . import views
-from django.shortcuts import render
+from .views import send_message_to_admin
+from .views import view_lecturer_messages
+
 
 
 
@@ -93,6 +95,10 @@ urlpatterns = [
     path('learning/jenkins/jenkins_rating', views.jenkins_rating, name='jenkins_rating'),
     path('learning/docker/docker_rating', views.docker_rating, name='docker_rating'),
     path('run_tests/', views.run_tests, name='run_tests'),
+    path('lecturer/message-to-admin/', send_message_to_admin, name='send_message_to_admin'),
+    path('admin_page/lecturer-messages/', view_lecturer_messages, name='view_lecturer_messages'),
+
+
 
 
     path('captcha/', views.captcha_challenge, name='captcha_challenge'),

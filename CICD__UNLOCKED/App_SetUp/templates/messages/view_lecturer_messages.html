@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}הודעות ממרצים{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">📨 הודעות ממרצים</h2>
+
+    {% if messages %}
+        <ul class="list-group">
+            {% for msg in messages %}
+                <li class="list-group-item">
+                    <strong>משתמש:</strong> {{ msg.sender.username }}<br>
+                    <strong>תאריך:</strong> {{ msg.timestamp|date:"d/m/Y H:i" }}<br>
+                    <strong>תוכן:</strong> {{ msg.content }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info text-center">אין הודעות להצגה.</div>
+    {% endif %}
+</div>
+{% endblock %}

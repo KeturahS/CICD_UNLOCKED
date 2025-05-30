@@ -31,6 +31,13 @@ from .models import LearningModuleRating
 from App_SetUp.models import CourseContent
 from App_SetUp.models import CourseContent
 
+from .forms import LecturerToAdminMessageForm
+from .models import LecturerToAdminMessage
+from .models import LecturerToAdminMessage
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import PrivateMessageForm
@@ -1289,8 +1296,35 @@ def run_tests(request):
         return redirect('admin')
 
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.csrf import csrf_protect
+from django.http import HttpResponse
+import pandas as pd
+import requests
 
 
+@login_required
+def send_message_to_admin(request):
+    if not request.user.is_lecturer:
+        return redirect('login_view')  # רק מרצה יכול לשלוח
+
+    if request.method == 'POST':
+        form = LecturerToAdminMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return render(request, 'messages/success.html', {'message': 'הודעתך נשלחה בהצלחה!'})
+    else:
+        form = LecturerToAdminMessageForm()
+
+    return render(request, 'messages/send_message_to_admin.html', {'form': form})
+
+
+@staff_member_required
+def view_lecturer_messages(request):
+    messages = LecturerToAdminMessage.objects.all().order_by('-timestamp')
+    return render(request, 'messages/view_lecturer_messages.html', {'messages': messages})
 
 
 @csrf_protect
@@ -1325,7 +1359,6 @@ def captcha_challenge(request):
         return render(request, 'RegisterAndLogin/captcha_challenge.html', {'error': 'האימות נכשל. נסה שוב.'})
 
     return render(request, 'RegisterAndLogin/captcha_challenge.html')
-
 
 
 @staff_member_required
