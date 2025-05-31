@@ -51,16 +51,16 @@
 
     {% elif request.GET.step == '1' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/docker/accessible/section1.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/docker/accessible/section1.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/docker/section1.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/docker/section1.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '2' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/docker/accessible/section2.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/docker/accessible/section2.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/docker/section2.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/docker/section2.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '2q' %}

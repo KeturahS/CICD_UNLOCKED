@@ -51,23 +51,23 @@
 
     {% elif request.GET.step == '1' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/jenkins/accessible/section1.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/jenkins/accessible/section1.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/jenkins/section1.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/jenkins/section1.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '2' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/jenkins/accessible/section2.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/jenkins/accessible/section2.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/jenkins/section2.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/jenkins/section2.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '3' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/jenkins/accessible/section3.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/jenkins/accessible/section3.html' with video=video podcasts=podcasts completed=completed%}
       {% else %}
-        {% include 'learning_modules/jenkins/section3.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/jenkins/section3.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '4' %}

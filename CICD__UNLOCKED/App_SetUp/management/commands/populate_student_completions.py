@@ -6,9 +6,9 @@ from App_SetUp.models import (
     Presentation,
     StudentModuleProgress,
     StudentVideoCompletion,
-    StudentPodcastCompletion,
     StudentPresentationCompletion
 )
+
 
 class Command(BaseCommand):
     help = "Populate module progress and completion tables for all existing students"
@@ -34,13 +34,9 @@ class Command(BaseCommand):
                 if created:
                     created_count += 1
 
-            for podcast in podcasts:
-                obj, created = StudentPodcastCompletion.objects.get_or_create(student=student, podcast=podcast)
-                if created:
-                    created_count += 1
-
             for presentation in presentations:
-                obj, created = StudentPresentationCompletion.objects.get_or_create(student=student, presentation=presentation)
+                obj, created = StudentPresentationCompletion.objects.get_or_create(student=student,
+                                                                                   presentation=presentation)
                 if created:
                     created_count += 1
 

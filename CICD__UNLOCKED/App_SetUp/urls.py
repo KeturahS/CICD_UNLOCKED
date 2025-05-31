@@ -94,4 +94,6 @@ urlpatterns = [
     path('learning/docker/docker_rating', views.docker_rating, name='docker_rating'),
     path('run_tests/', views.run_tests, name='run_tests'),
 
+    path('toggle-completion/<int:video_id>/', views.toggle_completion, name='toggle_completion'),
+    path('toggle-presentation-completion/<int:presentation_id>/', views.toggle_presentation_completion, name='toggle_presentation_completion'),
 ]
