@@ -578,12 +578,104 @@ def student_progress(request):
     days_remaining = (target_date - today).days if target_date else None
     abs_days_remaining = abs(days_remaining) if days_remaining is not None else None
 
+    git_vids_total = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Git'
+    ).count()
+    git_vids_completed = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Git',
+        completed=True
+    ).count()
+    jenkins_vids_total = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Jenkins'
+    ).count()
+    jenkins_vids_completed = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Jenkins',
+        completed=True
+    ).count()
+    docker_vids_total = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Docker'
+    ).count()
+    docker_vids_completed = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Docker',
+        completed=True
+    ).count()
+
+    git_presentations_total = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Git'
+    ).count()
+    git_presentations_completed = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Git',
+        completed=True
+    ).count()
+    jenkins_presentations_total = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Jenkins'
+    ).count()
+    jenkins_presentations_completed = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Jenkins',
+        completed=True
+    ).count()
+    docker_presentations_total = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Docker'
+    ).count()
+    docker_presentations_completed = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Docker',
+        completed=True
+    ).count()
+
+    git_general_progress = int(((git_vids_completed + git_presentations_completed) /
+                                (git_vids_total + git_presentations_total)) * 100) if git_vids_total > 0 else 0
+    jenkins_general_progress = int(((jenkins_vids_completed + jenkins_presentations_completed) /
+                                    (
+                                                jenkins_vids_total + jenkins_presentations_total)) * 100) if jenkins_vids_total > 0 else 0
+    docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) /
+                                   (
+                                               docker_vids_total + docker_presentations_total)) * 100) if docker_vids_total > 0 else 0
+    student_jenkins_quiz = StudentJenkinsQuizExercise.objects.filter(student=student)
+
     return render(request, 'StudentPages/student_progress.html', {
         'git_progress': git_progress,
         'jenkins_progress': jenkins_progress,
         'days_remaining': days_remaining,
         'abs_days_remaining': abs_days_remaining,
-        'target_date': target_date
+        'target_date': target_date,
+        'git_vids_total': git_vids_total,
+        'git_vids_completed': git_vids_completed,
+        'jenkins_vids_total': jenkins_vids_total,
+        'jenkins_vids_completed': jenkins_vids_completed,
+        'docker_vids_total': docker_vids_total,
+        'docker_vids_completed': docker_vids_completed,
+        'git_vids_left': git_vids_total - git_vids_completed if git_vids_total else 0,
+        'jenkins_vids_left': jenkins_vids_total - jenkins_vids_completed if jenkins_vids_total else 0,
+        'docker_vids_left': docker_vids_total - docker_vids_completed if docker_vids_total else 0,
+        'git_presentations_total': git_presentations_total,
+        'git_presentations_completed': git_presentations_completed,
+        'jenkins_presentations_total': jenkins_presentations_total,
+        'jenkins_presentations_completed': jenkins_presentations_completed,
+        'docker_presentations_total': docker_presentations_total,
+        'docker_presentations_completed': docker_presentations_completed,
+        'git_presentations_left': git_presentations_total - git_presentations_completed if git_presentations_total else 0,
+        'jenkins_presentations_left': jenkins_presentations_total - jenkins_presentations_completed if jenkins_presentations_total else 0,
+        'docker_presentations_left': docker_presentations_total - docker_presentations_completed if docker_presentations_total else 0,
+        'git_general_progress': git_general_progress,
+        'jenkins_general_progress': jenkins_general_progress,
+        'docker_general_progress': docker_general_progress,
+        'git_completed': git_completed,
+        'jenkins_completed': jenkins_completed,
+        'git_total': git_total,
+        'jenkins_total': jenkins_total,
+        'student_jenkins_quiz': student_jenkins_quiz
     })
 
 

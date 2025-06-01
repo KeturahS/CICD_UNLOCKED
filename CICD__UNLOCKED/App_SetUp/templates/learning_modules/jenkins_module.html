@@ -28,7 +28,7 @@
 
         <a href="?step=4q{% if request.GET.accessible %}&accessible=1{% endif %}"
            style="background-color: #7c3aed; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-            תרגולים
+           תרגולים וחידון
         </a>
 
         <a href="{% url 'jenkins_rating' %}"
@@ -89,7 +89,7 @@
       {% csrf_token %}
       <input type="hidden" name="module" value="Jenkins">
       <div class="mb-3">
-        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רישום לעצמך הערה:</label>
+        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רשום לעצמך הערה:</label>
         <textarea name="content" class="form-control" rows="3" placeholder="מה למדת? מה חשוב לזכור?"></textarea>
       </div>
       <button type="submit" class="btn" style="background-color: #22c55e; color: white; font-weight: bold; padding: 10px 25px; border-radius: 10px;">שמור הערה</button>
