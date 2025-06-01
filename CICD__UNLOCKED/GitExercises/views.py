@@ -6,6 +6,8 @@ from GitExercises.models import StudentGitCommandProgress
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import logging
+from .models import PipelineTemplate, StudentPipelineAttempt
+
 
 logger = logging.getLogger(__name__)
 
@@ -102,9 +104,90 @@ def update_jenkins_quiz_completion(request):
         context = {
             'student_jenkins_quiz_exercise': student_jenkins_quiz_exercise,
         }
-        return render(request, 'JenkinsExercises/section4_questions.html')
+        return render(request, 'JenkinsExercises/jenkins_questions.html')
     return render(request, 'JenkinsExercises/section4_questions.html')
 
 
 
+from App_SetUp.models import StudentProfile
+from django.shortcuts import render
 
+def jenkins_questions_view(request):
+    try:
+        student_profile = StudentProfile.objects.get(user=request.user)
+        first_name = student_profile.user.first_name
+    except StudentProfile.DoesNotExist:
+        first_name = request.user.first_name or request.user.username
+
+    pipeline = get_random_unsolved_pipeline(request.user)
+    has_more_pipelines = pipeline is not None
+
+    return render(request, 'JenkinsExercises/jenkins_questions.html', {
+        'student_name': first_name,
+        'pipeline': pipeline,
+        'has_more_pipelines': has_more_pipelines
+    })
+
+
+
+
+
+import re
+
+def validate_pipeline(code):
+    if not code:
+        return False
+
+    normalized = " ".join(code.lower().split())
+
+    patterns = [
+        r'pipeline\s*{',
+        r'stages\s*{',
+        r'stage\s*\(\s*[\'"]build[\'"]\s*\)\s*{[^}]*steps\s*{',
+        r'stage\s*\(\s*[\'"]test[\'"]\s*\)\s*{[^}]*steps\s*{',
+    ]
+    wrong_keywords = [r'\b(step|stjeps|stepp|speps|sreps)\s*{']
+
+    if not all(re.search(p, normalized) for p in patterns):
+        return False
+    if any(re.search(wk, normalized) for wk in wrong_keywords):
+        return False
+
+    if code.count("{") != code.count("}"):
+        return False
+
+    return True
+
+
+
+def get_random_unsolved_pipeline(user):
+    solved_ids = StudentPipelineAttempt.objects.filter(
+        student=user, is_solved=True
+    ).values_list('pipeline_id', flat=True)
+
+    available = PipelineTemplate.objects.exclude(id__in=solved_ids)
+
+    if available.exists():
+        return available.order_by('?').first()  # פייפ רנדומלי
+    return None
+
+
+def handle_pipeline_submission(request):
+    if request.method == 'POST':
+        pipeline_id = request.POST.get('pipeline_id')
+        code = request.POST.get('code')
+        is_valid = validate_pipeline(code)
+
+        attempt, created = StudentPipelineAttempt.objects.get_or_create(
+            student=request.user,
+            pipeline_id=pipeline_id,
+            defaults={'attempts': 0}
+        )
+        attempt.attempts += 1
+        attempt.last_submitted_code = code
+        if is_valid:
+            attempt.is_solved = True
+        attempt.save()
+
+        # 🔁 לאחר ההגשה – מפנה חזרה לעמוד התרגול
+        return redirect('jenkins_questions')
