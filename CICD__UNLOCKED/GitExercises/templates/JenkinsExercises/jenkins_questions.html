@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenkins Pipeline Console</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      direction: rtl;
+      color: #333;
+    }
+
+    /* Header */
+    .jenkins-header {
+      background: linear-gradient(to bottom, #4a90e2, #357abd);
+      color: white;
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .jenkins-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .jenkins-logo::before {
+      content: "🤖";
+      font-size: 28px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      font-size: 14px;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      background: #e9ecef;
+      padding: 10px 20px;
+      border-bottom: 1px solid #dee2e6;
+      font-size: 14px;
+    }
+
+    .breadcrumb a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      min-height: calc(100vh - 120px);
+    }
+
+    .sidebar {
+      width: 300px;
+      background: white;
+      border-left: 1px solid #dee2e6;
+      padding: 20px;
+    }
+
+    .content-area {
+      flex: 1;
+      padding: 20px;
+    }
+
+    /* Build Header */
+    .build-header {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .build-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .status-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+
+    .status-success {
+      background: #28a745;
+    }
+
+    .status-failed {
+      background: #dc3545;
+    }
+
+    .status-pending {
+      background: #6c757d;
+    }
+
+    .build-info {
+      display: flex;
+      gap: 30px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Pipeline Graph */
+    .pipeline-graph {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: none; /* Hidden by default */
+    }
+
+    .pipeline-graph.show {
+      display: block;
+    }
+
+    .pipeline-stages {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 2;
+      margin: 0 60px;
+    }
+
+    .stage:first-child {
+      margin-right: 0;
+    }
+
+    .stage:last-child {
+      margin-left: 0;
+    }
+
+    .stage-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+      border: 3px solid transparent;
+      background: #28a745;
+      position: relative;
+    }
+
+    .stage-pending .stage-circle {
+      background: #6c757d;
+    }
+
+    /* Pipeline connecting lines */
+    .pipeline-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #28a745;
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .stage-name {
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      min-width: 80px;
+    }
+
+    /* Jenkinsfile Editor */
+    .jenkinsfile-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .jenkinsfile-editor {
+      width: 100%;
+      height: 300px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      padding: 15px;
+      background: #f8f9fa;
+      resize: vertical;
+    }
+
+    /* Console Output */
+    .console-output {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-top: 20px;
+    }
+
+    /* Sidebar Stages */
+    .stages-list {
+      list-style: none;
+    }
+
+    .stage-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .stage-item:hover {
+      background: #f8f9fa;
+    }
+
+    .stage-item.active {
+      background: #e3f2fd;
+      border-right: 3px solid #2196f3;
+    }
+
+    .stage-status {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+    }
+
+    /* Buttons */
+    .btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background: #0056b3;
+    }
+
+    .btn-success {
+      background: #28a745;
+    }
+
+    .btn-success:hover {
+      background: #1e7e34;
+    }
+
+    /* Error styling */
+    .error-line {
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+
+    .success-line {
+      color: #51cf66;
+    }
+
+    .info-line {
+      color: #74c0fc;
+    }
+
+    /* Initial state message */
+    .initial-message {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-align: center;
+      color: #666;
+    }
+
+    .initial-message h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+{% extends 'base.html' %}
+{% block content %}
+<!-- Jenkins Header -->
+<div class="jenkins-header">
+  <div class="jenkins-logo">Jenkins</div>
+  <div class="user-info">
+    <span>🔍</span>
+    <span>👤 {{ student_name }}</span>
+    <span>התנתק</span>
+  </div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">#<span id="buildNumber">1</span></a> >
+  Pipeline Console
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="content-area">
+    <!-- Build Header -->
+    <div class="build-header">
+      <div class="build-title">
+        <div class="status-icon status-pending" id="buildStatus">⏳</div>
+        <h2>#<span id="buildNumberTitle">1</span></h2>
+      </div>
+      <div class="build-info">
+        <span>👤 Manually run by {{ student_name }}</span>
+        <span>🕐 התחיל לפני <span id="startedAgo">--</span></span>
+        <span>⏱️ Queued <span id="queuedTime">--</span></span>
+        <span>⏰ Took <span id="buildDuration">--</span></span>
+        <span>📊 Test results</span>
+      </div>
+    </div>
+
+    <!-- Initial Message -->
+    <div class="initial-message" id="initialMessage">
+      <h3>🚀 Pipeline מחכה להרצה</h3>
+      <p>תקן את השגיאה ב-Jenkinsfile למטה והרץ את ה-Pipeline כדי לראות את התוצאות</p>
+    </div>
+
+    <!-- Pipeline Graph (Hidden initially) -->
+    <div class="pipeline-graph" id="pipelineGraph">
+      <h3 style="margin-bottom: 20px;">Pipeline Stages</h3>
+      <div class="pipeline-stages" dir="ltr">
+        <div class="pipeline-line"></div>
+        <div class="stage">
+          <div class="stage-circle">▶</div>
+          <div class="stage-name">Start</div>
+        </div>
+        <div class="stage">
+          <div class="stage-circle">✓</div>
+          <div class="stage-name">Checkout SCM</div>
+        </div>
+        <div class="stage">
+          <div class="stage-circle">✓</div>
+          <div class="stage-name">Install Dependencies</div>
+        </div>
+        <div class="stage">
+          <div class="stage-circle">✓</div>
+          <div class="stage-name">Build</div>
+        </div>
+        <div class="stage">
+          <div class="stage-circle" id="testStageIcon">✓</div>
+          <div class="stage-name">Test</div>
+        </div>
+        <div class="stage">
+          <div class="stage-circle">🏁</div>
+          <div class="stage-name">End</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jenkinsfile Editor -->
+    <div class="jenkinsfile-section">
+      <h3 style="margin-bottom: 15px;">🚀 תרגול Jenkinsfile - תיקון Pipeline שגוי</h3>
+      <p style="margin-bottom: 15px; color: #666;">הPipeline הבא לא ירוץ בהצלחה. מצא את השגיאה, תקן אותה, ולחץ על "הרץ Pipeline".</p>
+      {% if pipeline %}
+        <textarea class="jenkinsfile-editor" id="jenkinsfile" dir="ltr">{{ pipeline.initial_code }}</textarea>
+      {% else %}
+        <div class="initial-message">
+          <h3>🎉 סיימת את כל תרגולי Jenkins!</h3>
+          <p>כל הכבוד! עברת את כל התרגולים הקיימים. תוכל לחזור לעמוד הראשי.</p>
+        </div>
+      {% endif %}
+
+
+
+      {% if pipeline %}
+      <form method="post" action="{% url 'handle_pipeline_submission' %}" id="pipelineForm">
+        {% csrf_token %}
+        <input type="hidden" name="pipeline_id" value="{{ pipeline.id }}">
+        <button class="btn" onclick="runPipeline(event)" type="button">▶ הרץ Pipeline</button>
+      </form>
+      {% endif %}
+
+
+    </div>
+
+    <!-- Console Output -->
+    <div class="console-output" id="output"></div>
+          <!-- כפתורים להמשך או חזרה -->
+      <div style="text-align: center; margin-top: 30px;">
+        <input type="hidden" id="hasMorePipelines" value="{{ has_more_pipelines|yesno:'true,false' }}">
+
+       <button id="nextPipelineBtn" style="display: none;" class="btn btn-success" onclick="submitNextPipeline()">
+      🚀 עבור לתרגול הבא
+    </button>
+
+
+       {% if not pipeline %}
+        <button class="btn btn-success" onclick="window.location.href='{% url 'jenkins_module' %}'">
+          סיים תרגול
+        </button>
+      {% endif %}
+
+      </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h4 style="margin-bottom: 15px;">Build Stages</h4>
+    <ul class="stages-list" id="stagesList">
+      <li class="stage-item">
+        <div class="stage-status status-success">✓</div>
+        <div>
+          <div>Checkout SCM</div>
+          <small style="color: #666;">1.4 sec</small>
+        </div>
+      </li>
+      <li class="stage-item">
+        <div class="stage-status status-pending">⏳</div>
+        <div>
+          <div>Install Dependencies</div>
+          <small style="color: #666;">--</small>
+        </div>
+      </li>
+      <li class="stage-item">
+        <div class="stage-status status-pending">⏳</div>
+        <div>
+          <div>Build</div>
+          <small style="color: #666;">--</small>
+        </div>
+      </li>
+      <li class="stage-item active" id="testStageItem">
+        <div class="stage-status status-pending" id="testSidebarIcon">⏳</div>
+        <div>
+          <div>Test</div>
+          <small style="color: #666;" id="testDuration">--</small>
+        </div>
+      </li>
+    </ul>
+
+    <div style="margin-top: 30px;" id="testResults">
+      <h4 style="margin-bottom: 15px;">Test Results</h4>
+      <div style="font-size: 14px; color: #666;">
+        <div>⏳ מחכה להרצת Pipeline...</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+let buildCounter = 1;
+
+function formatDuration(ms) {
+  const seconds = Math.floor(ms / 1000);
+  return seconds < 60 ? `${seconds} sec` : `${Math.floor(seconds / 60)} min ${seconds % 60} sec`;
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function printToConsole(lines, delayMs = 300) {
+  const output = document.getElementById("output");
+  output.innerHTML = "";
+  for (const line of lines) {
+    output.innerHTML += line + "<br>";
+    output.scrollTop = output.scrollHeight;
+    await delay(delayMs);
+  }
+}
+
+function isValidJenkinsfile(code) {
+  if (!code || typeof code !== 'string') return false;
+
+  const normalized = code.toLowerCase().replace(/\n/g, ' ').replace(/\s+/g, ' ');
+
+  const hasPipeline = /pipeline\s*{/.test(normalized);
+  const hasStages = /stages\s*{/.test(normalized);
+  const hasBuildStage = /stage\s*\(\s*['"]build['"]\s*\)\s*{[^}]*steps\s*{/.test(normalized);
+  const hasTestStage = /stage\s*\(\s*['"]test['"]\s*\)\s*{[^}]*steps\s*{/.test(normalized);
+  const hasWrongKeyword = /\b(step|stjeps|stepp|speps|sreps)\s*{/.test(normalized);
+  const openBraces = (code.match(/{/g) || []).length;
+  const closeBraces = (code.match(/}/g) || []).length;
+
+  return hasPipeline && hasStages && hasBuildStage && hasTestStage && openBraces === closeBraces && !hasWrongKeyword;
+}
+
+function updateSidebarStages(success) {
+  const status = success ? "✓" : "✗";
+  const className = success ? "status-success" : "status-failed";
+  const time = success ? "1.4 sec" : "--";
+
+  document.getElementById("stagesList").innerHTML = `
+    <li class="stage-item"><div class="stage-status ${className}">${status}</div><div><div>Checkout SCM</div><small>${time}</small></div></li>
+    <li class="stage-item"><div class="stage-status ${className}">${status}</div><div><div>Install Dependencies</div><small>${time}</small></div></li>
+    <li class="stage-item"><div class="stage-status ${className}">${status}</div><div><div>Build</div><small>${time}</small></div></li>
+    <li class="stage-item active"><div class="stage-status ${className}">${status}</div><div><div>Test</div><small>${time}</small></div></li>
+  `;
+}
+
+async function runPipeline(event) {
+  console.log("🔥 runPipeline התחיל לרוץ");
+  if (event) event.preventDefault();
+
+  const code = document.getElementById("jenkinsfile")?.value;
+  const buildStatus = document.getElementById("buildStatus");
+  const buildDurationEl = document.getElementById("buildDuration");
+  const startedAgoEl = document.getElementById("startedAgo");
+  const queuedTimeEl = document.getElementById("queuedTime");
+  const testStageIcon = document.getElementById("testStageIcon");
+  const testSidebarIcon = document.getElementById("testSidebarIcon");
+  const testDuration = document.getElementById("testDuration");
+  const pipelineGraph = document.getElementById("pipelineGraph");
+  const initialMessage = document.getElementById("initialMessage");
+  const testResults = document.getElementById("testResults");
+  const output = document.getElementById("output");
+  const nextPipelineBtn = document.getElementById("nextPipelineBtn");
+  const homeRedirectBtn = document.getElementById("homeRedirectBtn");
+  const form = document.getElementById("pipelineForm");
+
+  if (!code || !form || !buildStatus || !buildDurationEl || !startedAgoEl || !queuedTimeEl ||
+      !testStageIcon || !testSidebarIcon || !testDuration || !testResults || !output) {
+    console.error("⛔ Missing required DOM elements. Cannot run pipeline.");
+    return;
+  }
+
+  // Reset UI
+  output.innerHTML = "";
+  buildStatus.textContent = "⏳";
+  buildStatus.className = "status-icon status-pending";
+  buildDurationEl.textContent = "--";
+  startedAgoEl.textContent = "--";
+  queuedTimeEl.textContent = "--";
+  testDuration.textContent = "--";
+  testStageIcon.textContent = "⏳";
+  testStageIcon.className = "stage-circle stage-pending";
+  testSidebarIcon.textContent = "⏳";
+  testSidebarIcon.className = "stage-status status-pending";
+  pipelineGraph?.classList.remove("show");
+  if (initialMessage) initialMessage.style.display = "block";
+  testResults.innerHTML = "<h4 style='margin-bottom: 15px;'>Test Results</h4><div style='font-size: 14px; color: #666;'>⏳ מחכה להרצת Pipeline...</div>";
+  nextPipelineBtn?.style && (nextPipelineBtn.style.display = "none");
+  homeRedirectBtn?.style && (homeRedirectBtn.style.display = "none");
+  updateSidebarStages(false);
+
+  if (!isValidJenkinsfile(code)) {
+    output.innerHTML = `
+      <span class='error-line'>[ERROR] Pipeline syntax is invalid</span><br>
+      <span class='error-line'>Make sure to use 'pipeline { stages { ... } }' with 'steps { ... }'</span><br>
+      <span class='error-line'>Finished: FAILURE</span>`;
+    buildStatus.textContent = "✗";
+    buildStatus.className = "status-icon status-failed";
+    testResults.innerHTML = `
+      <h4 style='margin-bottom: 15px;'>Test Results</h4>
+      <div style='font-size: 14px; color: #dc3545;'>
+        ❌ Pipeline נכשל: קובץ לא תקין<br>
+        📄 ודא שאתה כותב pipeline תקני (pipeline → stages → stage → steps)
+      </div>`;
+    testStageIcon.textContent = "✗";
+    testStageIcon.className = "stage-circle status-failed";
+    testSidebarIcon.textContent = "✗";
+    testSidebarIcon.className = "stage-status status-failed";
+    updateSidebarStages(false);
+    return;
+  }
+
+  // Simulated pipeline output
+  const lines = [
+    "Started by user {{ student_name }}",
+    "Running in Durability level: MAX_SURVIVABILITY",
+    "Start of Pipeline [Pipeline]",
+    "node [Pipeline]",
+    "Running on Jenkins in /var/jenkins_home/workspace/BS-PM-2025-TEAM10",
+    "stage [Pipeline]",
+    "(Declarative: Checkout SCM) [Pipeline]",
+    "checkout [Pipeline]",
+    "Checkout completed successfully ✅",
+    "stage [Pipeline]",
+    "(Install Dependencies) [Pipeline]",
+    "sh [Pipeline]",
+    "+ npm install",
+    "Dependencies installed successfully ✅",
+    "stage [Pipeline]",
+    "(Build) [Pipeline]",
+    "+ echo 'Building...'",
+    "Build completed successfully ✅",
+    "stage [Pipeline]",
+    "(Test) [Pipeline]",
+    "+ echo 'Running tests...'",
+    "Running tests...",
+    "pytest run... ✅",
+    "All tests passed ✅",
+    "Finished: SUCCESS"
+  ];
+
+  const queueDelay = Math.floor(Math.random() * 300) + 100;
+  queuedTimeEl.textContent = `${queueDelay} ms`;
+  startedAgoEl.textContent = "0 sec";
+  pipelineGraph?.classList.add("show");
+  if (initialMessage) initialMessage.style.display = "none";
+
+  buildCounter++;
+  document.getElementById("buildNumber").textContent = buildCounter;
+  document.getElementById("buildNumberTitle").textContent = buildCounter;
+
+  const start = new Date();
+  await printToConsole(lines, 100);
+  const end = new Date();
+  const duration = end - start;
+
+  buildDurationEl.textContent = formatDuration(duration);
+  startedAgoEl.textContent = `${Math.floor(duration / 1000)} sec`;
+  buildStatus.textContent = "✓";
+  buildStatus.className = "status-icon status-success";
+  testStageIcon.textContent = "✓";
+  testStageIcon.className = "stage-circle stage-success";
+  testSidebarIcon.textContent = "✓";
+  testSidebarIcon.className = "stage-status status-success";
+  testDuration.textContent = formatDuration(duration);
+  updateSidebarStages(true);
+
+  testResults.innerHTML = `
+    <h4 style='margin-bottom: 15px;'>Test Results</h4>
+    <div style='font-size: 14px; color: #666;'>
+      ✅ Running pytest tests...<br>
+      ✅ Archive JUnit-formatted test results<br>
+      📊 Recording test results
+    </div>`;
+
+  // הצגת כפתורים
+  const hasMore = document.getElementById("hasMorePipelines")?.value === "true";
+  if (hasMore) {
+    nextPipelineBtn?.style && (nextPipelineBtn.style.display = "inline-block");
+  } else {
+    homeRedirectBtn?.style && (homeRedirectBtn.style.display = "inline-block");
+  }
+
+  // הוספת הקוד ל־form ושליחה
+  const hiddenCodeInput = document.createElement("input");
+  hiddenCodeInput.type = "hidden";
+  hiddenCodeInput.name = "code";
+  hiddenCodeInput.value = code;
+  form.appendChild(hiddenCodeInput);
+}
+
+
+
+function submitNextPipeline() {
+  document.getElementById("pipelineForm").submit();
+}
+
+
+
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.stage-item')) {
+    document.querySelectorAll('.stage-item').forEach(i => i.classList.remove('active'));
+    e.target.closest('.stage-item').classList.add('active');
+  }
+});
+
+
+
+
+</script>
+
+
+</body>
+</html>
+{% endblock %}

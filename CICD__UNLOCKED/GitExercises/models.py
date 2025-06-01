@@ -3,6 +3,8 @@ from django.db import models
 from django.db import models
 from django.utils import timezone
 from App_SetUp.models import StudentProfile
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 # Create your models here.
@@ -81,4 +83,29 @@ class StudentJenkinsQuizExercise(models.Model):
     def __str__(self):
         return f"{self.student.user.username} - {self.quiz.question}"
 
+
+
+
+# ✅ דגם לתבניות Pipeline שסטודנטים צריכים לתקן
+class PipelineTemplate(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    initial_code = models.TextField()  # הקוד הלא תקין
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+# ✅ מעקב אחרי כל ניסיון של סטודנט לתקן Pipeline מסוים
+class StudentPipelineAttempt(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    pipeline = models.ForeignKey(PipelineTemplate, on_delete=models.CASCADE)
+    attempts = models.IntegerField(default=0)
+    last_submitted_code = models.TextField(blank=True, null=True)
+    is_solved = models.BooleanField(default=False)
+    last_attempt_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.student.username} - {self.pipeline.title} (\u05e0\u05d9\u05e1\u05d9\u05d5\u05df: {self.attempts})"
 
