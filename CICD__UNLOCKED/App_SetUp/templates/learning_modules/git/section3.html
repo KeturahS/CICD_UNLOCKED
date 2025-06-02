@@ -1,8 +1,77 @@
 <section id="section3"
          style="padding: 40px 25px; max-width: 900px; margin: auto; background-color: #ffffff; color: #333; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;">
 
-  <h2 style="font-size: 2em; margin-bottom: 10px;">{{ video.title }}</h2>
-  <p style="font-size: 1.1em; color: #555;">{{ video.description }}</p>
+   <div style="display: flex; flex-direction: row-reverse; align-items: center; gap: 130px;">
+   <style>
+  .completed-checkbox-label {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    color: #2d3748;
+    cursor: pointer;
+    user-select: none;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 2px solid #718096;
+    transition: all 0.3s ease;
+    background-color: #edf2f7;
+  }
+
+  .completed-checkbox-label:hover {
+    background-color: #e2e8f0;
+  }
+
+  .completed-checkbox-label input[type="checkbox"] {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #718096;
+    border-radius: 4px;
+    background-color: white;
+    position: relative;
+    transition: background-color 0.3s;
+  }
+
+  .completed-checkbox-label input[type="checkbox"]:checked {
+    background-color: #48bb78;
+    border-color: #48bb78;
+  }
+
+  .completed-checkbox-label input[type="checkbox"]::after {
+    content: '✔';
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 5px;
+    font-size: 18px;
+    display: none;
+  }
+
+  .completed-checkbox-label input[type="checkbox"]:checked::after {
+    display: block;
+  }
+</style>
+
+<label class="completed-checkbox-label">
+  <input type="checkbox" id="completed-checkbox"
+         {% if completed %}checked{% endif %}
+         onchange="toggleCompleted({{ video.id }})">
+  השלמתי את הסרטון
+</label>
+
+
+
+      <div>
+        <h2 style="font-size: 2em; margin-bottom: 10px;">{{ video.title }}</h2>
+        <p style="font-size: 1.1em; color: #555;">{{ video.description }}</p>
+      </div>
+
+
+
+
+ </div>
+
 
   {% if podcasts %}
   <div id="podcast-block" style="margin: 30px 0;">
@@ -207,4 +276,39 @@
       onYouTubeIframeAPIReady();
     }
   });
+</script>
+
+
+<script>
+  function toggleCompleted(videoId) {
+    const checkbox = document.getElementById('completed-checkbox');
+    const isChecked = checkbox.checked;
+
+    fetch(`/toggle-completion/${videoId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCSRFToken(),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ completed: isChecked })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Request failed");
+      return response.json();
+    })
+    .then(data => {
+      console.log('Updated:', data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // במקרה של שגיאה – להחזיר את המצב לקודם
+      checkbox.checked = !isChecked;
+    });
+  }
+
+  function getCSRFToken() {
+    return document.cookie.split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+  }
 </script>

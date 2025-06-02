@@ -51,9 +51,9 @@
 
     {% elif request.GET.step == '1' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/git/accessible/section1.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/accessible/section1.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/git/section1.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/section1.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '1q' %}
@@ -61,9 +61,9 @@
 
     {% elif request.GET.step == '2' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/git/accessible/section2.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/accessible/section2.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/git/section2.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/section2.html' with video=video podcasts=podcasts completed=completed%}
       {% endif %}
 
     {% elif request.GET.step == '2q' %}
@@ -71,9 +71,9 @@
 
     {% elif request.GET.step == '3' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/git/accessible/section3.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/accessible/section3.html' with video=video podcasts=podcasts completed=completed %}
       {% else %}
-        {% include 'learning_modules/git/section3.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/section3.html' with video=video podcasts=podcasts completed=completed %}
       {% endif %}
 
     {% elif request.GET.step == '3q' %}
@@ -81,14 +81,14 @@
 
     {% elif request.GET.step == '4' %}
       {% if request.GET.accessible %}
-        {% include 'learning_modules/git/accessible/section4.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/accessible/section4.html' with video=video podcasts=podcasts completed=completed %}
         {% if presentations %}
-          {% include 'learning_modules/git/accessible/section4_presentation.html' with presentation=presentations.0 %}
+          {% include 'learning_modules/git/accessible/section4_presentation.html' with presentation=presentations.0 PresentationCompleted=PresentationCompleted %}
         {% endif %}
       {% else %}
-        {% include 'learning_modules/git/section4.html' with video=video podcasts=podcasts %}
+        {% include 'learning_modules/git/section4.html' with video=video podcasts=podcasts completed=completed %}
         {% if presentations %}
-          {% include 'learning_modules/git/section4_presentation.html' with presentation=presentations.0 %}
+          {% include 'learning_modules/git/section4_presentation.html' with presentation=presentations.0 PresentationCompleted=PresentationCompleted %}
         {% endif %}
       {% endif %}
 
@@ -100,7 +100,7 @@
       {% csrf_token %}
       <input type="hidden" name="module" value="Git">
       <div class="mb-3">
-        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רישום לעצמך הערה:</label>
+        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רשום לעצמך הערה:</label>
         <textarea name="content" class="form-control" rows="3" placeholder="מה למדת? מה חשוב לזכור?"></textarea>
       </div>
       <button type="submit" class="btn" style="background-color: #22c55e; color: white; font-weight: bold; padding: 10px 25px; border-radius: 10px;">שמור הערה</button>

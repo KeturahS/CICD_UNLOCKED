@@ -63,6 +63,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #24384A;
         }
 
         .nav-container {
@@ -154,6 +155,7 @@
             border-radius: 10px;
             margin-top: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            color: var(--jenkins-dark);
         }
 
         .content-section.active {
@@ -359,6 +361,7 @@
             border-radius: 10px;
             margin-top: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+               color: var(--jenkins-dark);
         }
 
         .exercise-section.active {
@@ -931,24 +934,21 @@
                     <h3>בנייה (Build)</h3>
                     <p>Jenkins מושך את הקוד העדכני ומבצע תהליך בנייה. זה יכול לכלול קומפילציה, יצירת חבילות וכו'.</p>
                     <p>דוגמה לפקודות בשלב זה:</p>
-                    <div class="code-example">npm install
-npm run build</div>
+                    <div class="code-example">npm install npm run build</div>
                 </div>
 
                 <div id="test-info" class="stage-info">
                     <h3>בדיקות (Test)</h3>
                     <p>Jenkins מריץ בדיקות אוטומטיות על הקוד כדי לוודא שהוא עובד כמצופה ושלא נוצרו באגים חדשים.</p>
                     <p>דוגמה לפקודות בשלב זה:</p>
-                    <div class="code-example">npm test
-npm run lint</div>
+                    <div class="code-example">npm test npm run lint</div>
                 </div>
 
                 <div id="deploy-info" class="stage-info">
                     <h3>פריסה (Deploy)</h3>
                     <p>אם כל הבדיקות עברו בהצלחה, Jenkins מפרס את הקוד לסביבה הרלוונטית (פיתוח, בדיקות, ייצור).</p>
                     <p>דוגמה לפקודות בשלב זה:</p>
-                    <div class="code-example">ssh user@server 'cd /app && git pull'
-docker-compose up -d</div>
+                    <div class="code-example">ssh user@server 'cd /app && git pull' docker-compose up -d</div>
                 </div>
             </div>
         </section>
@@ -996,27 +996,27 @@ docker-compose up -d</div>
                 <p>קובץ טקסט (בדרך כלל בשפת Groovy) שמכיל את הגדרת הפייפליין. הקובץ נשמר במאגר הקוד ומגדיר את כל השלבים והפעולות שיש לבצע.</p>
                 <p><strong>דוגמה בסיסית:</strong></p>
                 <div class="code-example">pipeline {
-    agent any
+                                                    agent any
 
-    stages {
-        stage('Build') {
-            steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'npm run deploy'
-            }
-        }
-    }
-}</div>
+                                                    stages {
+                                                        stage('Build') {
+                                                            steps {
+                                                                sh 'npm install'
+                                                                sh 'npm run build'
+                                                            }
+                                                        }
+                                                        stage('Test') {
+                                                            steps {
+                                                                sh 'npm test'
+                                                            }
+                                                        }
+                                                        stage('Deploy') {
+                                                            steps {
+                                                                sh 'npm run deploy'
+                                                            }
+                                                        }
+                                                    }
+                    }</div>
             </div>
 
             <div class="concept-card">
@@ -1153,41 +1153,42 @@ docker-compose up -d</div>
 
             <h3>מבנה בסיסי של פייפליין</h3>
             <div class="code-example">pipeline {
-    agent any                 // איפה להריץ את הפייפליין
+                                                agent any                 // איפה להריץ את הפייפליין
 
-    stages {                  // הגדרת השלבים
-        stage('Build') {      // שלב הבנייה
-            steps {           // הצעדים בשלב
-                echo 'בונה את הפרויקט...'
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
+                                                stages {                  // הגדרת השלבים
+                                                    stage('Build') {      // שלב הבנייה
+                                                        steps {           // הצעדים בשלב
+                                                            echo 'בונה את הפרויקט...'
+                                                            sh 'npm install'
+                                                            sh 'npm run build'
+                                                        }
+                                                    }
 
-        stage('Test') {       // שלב הבדיקות
-            steps {
-                echo 'בודק את הפרויקט...'
-                sh 'npm test'
-            }
-        }
+                                                    stage('Test') {       // שלב הבדיקות
+                                                        steps {
+                                                            echo 'בודק את הפרויקט...'
+                                                            sh 'npm test'
+                                                        }
+                                                    }
 
-        stage('Deploy') {     // שלב הפריסה
-            steps {
-                echo 'מפרס את הפרויקט...'
-                sh 'npm run deploy'
-            }
-        }
-    }
+                                                    stage('Deploy') {     // שלב הפריסה
+                                                        steps {
+                                                            echo 'מפרס את הפרויקט...'
+                                                            sh 'npm run deploy'
+                                                        }
+                                                    }
+                                                }
 
-    post {                    // פעולות לאחר סיום הפייפליין
-        success {
-            echo 'הפייפליין הושלם בהצלחה!'
-        }
-        failure {
-            echo 'הפייפליין נכשל!'
-        }
-    }
-}</div>
+                                                post {                    // פעולות לאחר סיום הפייפליין
+                                                    success {
+                                                        echo 'הפייפליין הושלם בהצלחה!'
+                                                    }
+                                                    failure {
+                                                        echo 'הפייפליין נכשל!'
+                                                    }
+                                                }
+                                            }
+            </div>
 
             <h3>רכיבים מרכזיים בפייפליין</h3>
             <ul>
@@ -1201,80 +1202,81 @@ docker-compose up -d</div>
 
             <h3>פייפליין מתקדם יותר</h3>
             <div class="code-example">pipeline {
-    agent {
-        docker {
-            image 'node:14'
-        }
-    }
+                                                agent {
+                                                    docker {
+                                                        image 'node:14'
+                                                    }
+                                                }
 
-    environment {
-        HOME = '.'
-        NPM_CONFIG_CACHE = "${env.WORKSPACE}/.npm"
-    }
+                                                environment {
+                                                    HOME = '.'
+                                                    NPM_CONFIG_CACHE = "${env.WORKSPACE}/.npm"
+                                                }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+                                                stages {
+                                                    stage('Checkout') {
+                                                        steps {
+                                                            checkout scm
+                                                        }
+                                                    }
 
-        stage('Install') {
-            steps {
-                sh 'npm ci'
-            }
-        }
+                                                    stage('Install') {
+                                                        steps {
+                                                            sh 'npm ci'
+                                                        }
+                                                    }
 
-        stage('Lint') {
-            steps {
-                sh 'npm run lint'
-            }
-        }
+                                                    stage('Lint') {
+                                                        steps {
+                                                            sh 'npm run lint'
+                                                        }
+                                                    }
 
-        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-            post {
-                always {
-                    junit 'test-results/*.xml'
-                }
-            }
-        }
+                                                    stage('Test') {
+                                                        steps {
+                                                            sh 'npm test'
+                                                        }
+                                                        post {
+                                                            always {
+                                                                junit 'test-results/*.xml'
+                                                            }
+                                                        }
+                                                    }
 
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
+                                                    stage('Build') {
+                                                        steps {
+                                                            sh 'npm run build'
+                                                        }
+                                                    }
 
-        stage('Deploy') {
-            when {
-                branch 'main'
-            }
-            steps {
-                sh 'npm run deploy'
-            }
-        }
-    }
+                                                    stage('Deploy') {
+                                                        when {
+                                                            branch 'main'
+                                                        }
+                                                        steps {
+                                                            sh 'npm run deploy'
+                                                        }
+                                                    }
+                                                }
 
-    post {
-        success {
-            slackSend channel: '#builds',
-                      color: 'good',
-                      message: "הבנייה הצליחה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        }
-        failure {
-            slackSend channel: '#builds',
-                      color: 'danger',
-                      message: "הבנייה נכשלה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        }
-        always {
-            archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
-            cleanWs()
-        }
-    }
-}</div>
+                                                post {
+                                                    success {
+                                                        slackSend channel: '#builds',
+                                                                  color: 'good',
+                                                                  message: "הבנייה הצליחה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+                                                    }
+                                                    failure {
+                                                        slackSend channel: '#builds',
+                                                                  color: 'danger',
+                                                                  message: "הבנייה נכשלה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+                                                    }
+                                                    always {
+                                                        archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+                                                        cleanWs()
+                                                    }
+                                                }
+                                            }
+            </div>
 
             <h3>תכונות מתקדמות בפייפליינים</h3>
             <ul>
@@ -1287,42 +1289,42 @@ docker-compose up -d</div>
 
             <h3>דוגמה לפייפליין עם הרצה במקביל</h3>
             <div class="code-example">pipeline {
-    agent any
+        agent any
 
-    stages {
-        stage('Build') {
-            steps {
-                echo 'בונה את הפרויקט...'
-            }
-        }
-
-        stage('Test') {
-            parallel {
-                stage('Unit Tests') {
-                    steps {
-                        echo 'מריץ בדיקות יחידה...'
-                    }
-                }
-                stage('Integration Tests') {
-                    steps {
-                        echo 'מריץ בדיקות אינטגרציה...'
-                    }
-                }
-                stage('Performance Tests') {
-                    steps {
-                        echo 'מריץ בדיקות ביצועים...'
-                    }
+        stages {
+            stage('Build') {
+                steps {
+                    echo 'בונה את הפרויקט...'
                 }
             }
-        }
 
-        stage('Deploy') {
-            steps {
-                echo 'מפרס את הפרויקט...'
+            stage('Test') {
+                parallel {
+                    stage('Unit Tests') {
+                        steps {
+                            echo 'מריץ בדיקות יחידה...'
+                        }
+                    }
+                    stage('Integration Tests') {
+                        steps {
+                            echo 'מריץ בדיקות אינטגרציה...'
+                        }
+                    }
+                    stage('Performance Tests') {
+                        steps {
+                            echo 'מריץ בדיקות ביצועים...'
+                        }
+                    }
+                }
+            }
+
+            stage('Deploy') {
+                steps {
+                    echo 'מפרס את הפרויקט...'
+                }
             }
         }
-    }
-}</div>
+    }</div>
 
             <h3>שימוש ב-Jenkinsfile</h3>
             <p>הדרך המומלצת לעבוד עם פייפליינים היא באמצעות קובץ Jenkinsfile שנשמר במאגר הקוד. יתרונות הגישה:</p>

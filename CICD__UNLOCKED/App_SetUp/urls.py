@@ -104,4 +104,6 @@ urlpatterns = [
     path('captcha/', views.captcha_challenge, name='captcha_challenge'),
     path('server-load-report/', views.server_load_report, name='server_load_report'),
 
+    path('toggle-completion/<int:video_id>/', views.toggle_completion, name='toggle_completion'),
+    path('toggle-presentation-completion/<int:presentation_id>/', views.toggle_presentation_completion, name='toggle_presentation_completion'),
 ]

@@ -3,39 +3,450 @@
 {% block title %}התקדמות הסטודנט{% endblock %}
 
 {% block content %}
-<div class="container mt-4" style="direction: rtl; font-family: 'Assistant', sans-serif; color: #2c3e50;">
 
-  <h1 class="text-center mb-4">התקדמות הסטודנט</h1>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-  <div style="background-color: #f0f4f8; padding: 20px; border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: white;
+        min-height: 100vh;
+        direction: rtl;
+    }
+
+
+    /* Header */
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: rgba(26, 26, 46, 0.9);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+
+    .welcome-section {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .welcome-text {
+        font-size: 12rem;
+        color: #94a3b8;
+        margin-bottom: 0.5rem;
+    }
+
+    .main-title {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #00d4ff, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        font-size: 2rem;
+        color: #94a3b8;
+    }
+
+    /* Module Cards */
+ .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* תמיד 3 בעמודה */
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.module-card {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 1.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+    .module-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #00d4ff, #8b5cf6);
+    }
+
+    .module-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .module-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-left: 1rem;
+    }
+
+    .git-icon {
+        background: linear-gradient(135deg, #f14e32, #FFFFFF);
+    }
+
+    .jenkins-icon {
+        background: linear-gradient(135deg, #335061, #1e3a8a);
+    }
+
+    .docker-icon {
+        background: linear-gradient(135deg, #0db7ed, #2496ed);
+    }
+
+    .module-title {
+        font-size:1.7rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .module-subtitle {
+        color: #94a3b8;
+        font-size: 1.2rem;
+    }
+
+    /* Progress Circle */
+    .progress-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .progress-circle {
+        width: 100px;
+        height: 100px;
+        margin-left: 2rem;
+        position: relative;
+    }
+
+    .progress-circle svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .progress-circle .bg-circle {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.1);
+        stroke-width: 14;
+    }
+
+    .progress-circle .git-progress-bar {
+        fill: none;
+        stroke-width: 14;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1s ease;
+    }
+        .progress-circle .jenkins-progress-bar {
+        fill: none;
+        stroke-width: 14;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1s ease;
+    }
+        .progress-circle .docker-progress-bar {
+        fill: none;
+        stroke-width: 14;
+        stroke-linecap: round;
+        transition: stroke-dasharray 1s ease;
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.6rem;
+        font-weight: bold;
+    }
+
+    .progress-details {
+        flex: 1;
+    }
+
+    .progress-label {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-description {
+        color: #94a3b8;
+        font-size: 1.3rem;
+        line-height: 1.5;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #94a3b8;
+        font-size: 1rem;
+    }
+
+    .remaining {
+        color: #fbbf24;
+    }
+
+    .completed {
+        color: #10b981;
+    }
+
+    /* Exercise Progress */
+    .exercise-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .exercise-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #00d4ff;
+    }
+
+    .exercise-bar {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+
+    .exercise-progress {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease;
+        position: relative;
+    }
+
+    .git-progress {
+        background: linear-gradient(135deg, #f14e32, #ff6b35);
+    }
+
+    .jenkins-progress {
+        background: linear-gradient(135deg, #335061, #1e3a8a);
+    }
+
+    .exercise-text {
+        font-size: 1rem;
+        color: #94a3b8;
+        text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .modules-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .main-content {
+            margin-right: 0;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar {
+            display: none;
+        }
+
+        .progress-section {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .progress-circle {
+            margin: 0 0 1rem 0;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+
+<div style="
+    position: fixed;
+    top: 70px;
+    left: 12px;
+    background-color: #f0f4f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-width: 300px;
+">
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
     <h3 style="color: #0d3b66; margin-bottom: 15px;">
-      תאריך היעד שלך להשלמת הלומדה: {{ target_date }}
+        תאריך היעד שלך להשלמת הלומדה: {{ target_date }}
     </h3>
     {% if days_remaining >= 0 %}
-      <p style="color: #0d3b66; font-weight: bold; font-size: 18px;">
+    <p style="color: #0d3b66; font-weight: bold; font-size: 18px;">
         נותרו לך עוד {{ days_remaining }} ימים לסיום הלומדה.
-      </p>
+    </p>
     {% else %}
-      <p style="color: red; font-weight: bold; font-size: 18px;">
+    <p style="color: red; font-weight: bold; font-size: 18px;">
         תאריך היעד חלף לפני {{ abs_days_remaining }} ימים.
-      </p>
+    </p>
     {% endif %}
-    <div style="margin-top: 20px;">
-      <a href="{% url 'student' %}" style="
-          display: inline-block; background-color: #0d3b66; color: white;
-          padding: 10px 20px; border-radius: 5px; text-decoration: none;
-          font-weight: bold; transition: background-color 0.3s ease;">
-        חזרה לדף הבית
-      </a>
-    </div>
-  </div>
 
-  <div class="progress-container" style="max-width: 600px; margin: auto;">
-    <div class="label" style="font-size: 20px; margin-bottom: 10px;">התקדמות בתרגולי Git</div>
-    <div class="progress mb-4" style="height: 30px; background-color: #e0e0e0; border-radius: 20px;">
-      <div class="progress-bar" style="
-          background-color: #0d6efd;
+
+</div>
+
+
+<div class="welcome-section">
+    <h1 class="main-title">התקדמות הלמידה שלך</h1>
+    <p class="subtitle">עקוב אחר ההתקדמות שלך בכל המודולים</p>
+</div>
+
+<div class="modules-grid">
+    <!-- Git Module -->
+    <div class="module-card">
+        <div class="module-header">
+            <div class="module-icon git-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 97.96 96.18">
+                    <path fill="#f14e32"
+                          d="M92.71,44.41,53.59,5.29a5.45,5.45,0,0,0-7.71,0l-8.49,8.49,10.22,10.22a7.04,7.04,0,0,1,9,9l9.88,9.88a7.04,7.04,0,1,1-5,5l-9.41-9.41V63.86a7.04,7.04,0,1,1-5.31-.25V42.13a7.04,7.04,0,0,1-3.19-9.3L33.01,22.6,5.29,50.33a5.45,5.45,0,0,0,0,7.71l39.12,39.12a5.45,5.45,0,0,0,7.71,0L92.71,52.12a5.45,5.45,0,0,0,0-7.71Z"/>
+                </svg>
+            </div>
+            <div>
+                <h2 class="module-title">Git</h2>
+                <p class="module-subtitle">ניהול גרסאות וקוד</p>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-details">
+                <div class="progress-label">התקדמות בחומר הלימודי</div>
+                {%if git_general_progress == 100 %}
+                <p class="progress-description">השלמת את כל החומר הלימודי התיאורטי Git!</p>
+                {%endif %}
+                {%if git_general_progress == 0 %}
+                <p class="progress-description"> טרם התחלת את המודול - כדאי להתחיל בקרוב </p>
+                {%endif %}
+                {%if git_general_progress < 100 and not git_general_progress == 0 %}
+                <p class="progress-description">השלמת {{ git_general_progress }}% מהחומר הלימודי במודול Git</p>
+                {%endif %}
+
+            </div>
+            <div class="progress-circle">
+                <svg>
+                    <defs>
+                        <linearGradient id="gitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f14e32"/>
+                            <stop offset="100%" style="stop-color:#ff6b35"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="40" class="bg-circle"/>
+                    <circle cx="50" cy="50" r="40" class="git-progress-bar" stroke="url(#gitGradient)"
+                            stroke-width="8"/>
+
+                </svg>
+                <div class="progress-text">{{git_general_progress}}%</div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const git_progress = parseFloat('{{ git_general_progress|default:0 }}');
+                const jenkins_progress = parseFloat('{{ jenkins_general_progress|default:0 }}');
+                const docker_progress = parseFloat('{{ docker_general_progress|default:0 }}');
+                const radius = 40; // Radius of the circle
+                const circumference = 2 * Math.PI * radius;
+
+                const gitProgressBar = document.querySelector('.git-progress-bar');
+                const jenkinsProgressBar = document.querySelector('.jenkins-progress-bar');
+                const dockerProgressBar = document.querySelector('.docker-progress-bar');
+
+                if (gitProgressBar) {
+                    gitProgressBar.style.strokeDasharray = `${(git_progress / 100) * circumference} ${circumference}`;
+                }
+                if (jenkinsProgressBar) {
+                    jenkinsProgressBar.style.strokeDasharray = `${(jenkins_progress / 100) * circumference} ${circumference}`;
+                }
+                if (dockerProgressBar) {
+                    dockerProgressBar.style.strokeDasharray = `${(docker_progress / 100) * circumference} ${circumference}`;
+                }
+            });
+        </script>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number completed">{{git_vids_completed}}</div>
+                <div class="stat-label">סרטונים הושלמו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number remaining">{{git_vids_left}}</div>
+                <div class="stat-label">סרטונים נותרו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number completed">{{git_presentations_completed}}</div>
+                <div class="stat-label">מצגות הושלמו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number remaining">{{git_presentations_left}}</div>
+                <div class="stat-label">מצגות נותרו</div>
+            </div>
+        </div>
+
+        <div class="exercise-section">
+
+             {% if git_progress == 0 %}
+            <div class="exercise-title">טרם השלמת תרגילים</div>
+
+            {% else %}
+             <div class="exercise-title">התקדמות בתרגילים</div>
+            <div class="progress mb-4" style="height: 30px; background-color: #e0e0e0; border-radius: 20px;">
+                <div class="progress-bar" style="
+          background-color: #f14e40;
           width: {{ git_progress }}%;
           height: 100%;
           text-align: center;
@@ -43,14 +454,87 @@
           color: white;
           font-weight: bold;
         ">
-        {{ git_progress }}%
-      </div>
+                    {{ git_progress }}%
+                </div>
+            </div>
+
+            <div class="exercise-text">הושלמו {{git_completed}} תרגילים מתוך {{git_total}}</div>
+            {% endif %}
+                  <a href="{% url 'git_module' %}" class="btn btn-secondary btn-custom">מעבר למודול Git</a>
+
+        </div>
     </div>
 
-    <div class="label" style="font-size: 20px; margin-bottom: 10px;">התקדמות בתרגולי Jenkins</div>
-    <div class="progress" style="height: 30px; background-color: #e0e0e0; border-radius: 20px;">
-      <div class="progress-bar" style="
-          background-color: #20c997;
+    <!-- Jenkins Module -->
+    <div class="module-card">
+        <div class="module-header">
+            <div class="module-icon jenkins-icon"><img src="https://www.jenkins.io/images/logos/jenkins/jenkins.png"
+                                                       alt="Jenkins Icon" width="40" height="40">
+            </div>
+            <div>
+                <h2 class="module-title">Jenkins</h2>
+                <p class="module-subtitle">אוטומציה ו-CI/CD</p>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-details">
+                <div class="progress-label">התקדמות בחומר הלימודי</div>
+                {%if jenkins_general_progress == 100 %}
+                <p class="progress-description">השלמת את כל החומר הלימודי התיאורטי Git!</p>
+                {%endif %}
+                {%if jenkins_general_progress == 0 %}
+                <p class="progress-description"> טרם התחלת את המודול - כדאי להתחיל בקרוב </p>
+                {%endif %}
+                {%if jenkins_general_progress < 100 and not jenkins_general_progress == 0 %}
+                <p class="progress-description">השלמת {{ jenkins_general_progress }}% מהחומר הלימודי במודול Git</p>
+                {%endif %}
+            </div>
+            <div class="progress-circle">
+                <svg>
+                    <defs>
+                        <linearGradient id="jenkinsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:rgb(30, 58, 138)"/>
+                            <stop offset="100%" style="stop-color:rgb(30, 58, 138)"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="40" class="bg-circle"/>
+                    <circle cx="50" cy="50" r="40" class="jenkins-progress-bar" stroke="url(#jenkinsGradient)"/>
+                </svg>
+                <div class="progress-text">{{jenkins_general_progress}}%</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number completed">{{jenkins_vids_completed}}</div>
+                <div class="stat-label">סרטונים הושלמו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number remaining">{{jenkins_vids_left}}</div>
+                <div class="stat-label">סרטונים נותרו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number completed">{{jenkins_presentations_completed}}</div>
+                <div class="stat-label">מצגות הושלמו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number remaining">{{jenkins_presentations_left}}</div>
+                <div class="stat-label">מצגות נותרו</div>
+            </div>
+        </div>
+
+        <div class="exercise-section">
+
+            {% if jenkins_progress == 0 %}
+            <div class="exercise-title">טרם התחלת את הבוחן</div>
+
+            {% else %}
+            <div class="exercise-title">ציון בבוחן</div>
+
+            <div class="progress" style="height: 30px; background-color: #e0e0e0; border-radius: 20px;">
+                <div class="progress-bar" style="
+          background-color: #1e3a8a;
           width: {{ jenkins_progress }}%;
           height: 100%;
           text-align: center;
@@ -58,10 +542,126 @@
           color: white;
           font-weight: bold;
         ">
-        {{ jenkins_progress }}%
-      </div>
-    </div>
-  </div>
+                    {{ jenkins_progress }}%
+                </div>
+            </div>
 
-</div>
-{% endblock %}
+            <div class="exercise-text"> {{jenkins_completed}} שאלות מתוך {{jenkins_total}} נענו בהצלחה</div>
+            {% endif %}
+            <a href="{% url 'jenkins_module' %}" class="btn btn-secondary btn-custom">מעבר למודול Jenkins</a>
+
+        </div>
+    </div>
+
+
+    <!-- Docker Module -->
+    <div class="module-card">
+        <div class="module-header">
+            <div class="module-icon docker-icon"><img
+                    src="https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png" alt="Docker Icon" width="40"
+                    height="40">
+            </div>
+            <div>
+                <h2 class="module-title">Docker</h2>
+                <p class="module-subtitle">קונטיינרים ופריסה</p>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-details">
+                <div class="progress-label">התקדמות בחומר הלימודי</div>
+                {%if docker_general_progress == 100 %}
+                <p class="progress-description">השלמת את כל החומר הלימודי התיאורטי Git!</p>
+                {%endif %}
+                {%if docker_general_progress == 0 %}
+                <p class="progress-description"> טרם התחלת את המודול - כדאי להתחיל בקרוב </p>
+                {%endif %}
+                {%if docker_general_progress < 100 and not docker_general_progress == 0 %}
+                <p class="progress-description">השלמת {{ docker_general_progress }}% מהחומר הלימודי במודול Git</p>
+                {%endif %}
+            </div>
+            <div class="progress-circle">
+                <svg>
+                    <defs>
+                        <linearGradient id="dockerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0db7ed"/>
+                            <stop offset="100%" style="stop-color:#2496ed"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="40" class="bg-circle"/>
+                    <circle cx="50" cy="50" r="40" class="docker-progress-bar" stroke="url(#dockerGradient)"/>
+                </svg>
+                <div class="progress-text">{{docker_general_progress}}%</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number completed">{{docker_vids_completed}}</div>
+                <div class="stat-label">סרטונים הושלמו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number remaining">{{docker_vids_left}}</div>
+                <div class="stat-label">סרטונים נותרו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number completed">{{docker_presentations_completed}}</div>
+                <div class="stat-label">מצגות הושלמו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number remaining">{{docker_presentations_left}}</div>
+                <div class="stat-label">מצגות נותרו</div>
+            </div>
+        </div>
+
+        <div class="exercise-section">
+            {% if docker_general_progress == 0 %}
+            <div class="exercise-title">טרם התחלת את המודול</div>
+
+            {% endif %}
+             <a href="{% url 'docker_module' %}" class="btn btn-secondary btn-custom">מעבר למודול Docker</a>
+        </div>
+    </div>
+
+
+    <script>
+        // Animate progress circles on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-bar');
+
+            progressBars.forEach(bar => {
+                const strokeDasharray = bar.getAttribute('stroke-dasharray');
+                bar.style.strokeDasharray = '0 251';
+
+                setTimeout(() => {
+                    bar.style.strokeDasharray = strokeDasharray;
+                }, 500);
+            });
+
+            // Animate exercise progress bars
+            const exerciseProgressBars = document.querySelectorAll('.exercise-progress');
+            exerciseProgressBars.forEach(bar => {
+                const targetWidth = bar.style.width;
+                bar.style.width = '0%';
+
+                setTimeout(() => {
+                    bar.style.width = targetWidth;
+                }, 800);
+            });
+        });
+
+
+
+        // Add click animations to module cards
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px)';
+                }, 150);
+            });
+        });
+    </script>
+
+
+    {%endblock%}

@@ -9,8 +9,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+
+from .models import User, StudentPresentationCompletion
+
 from .models import User
 import requests
+
 from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm, JenkinsConceptsQuizForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -30,6 +34,7 @@ from django.contrib.auth.decorators import login_required
 from .models import LearningModuleRating
 from App_SetUp.models import CourseContent
 from App_SetUp.models import CourseContent
+
 
 from .forms import LecturerToAdminMessageForm
 from .models import LecturerToAdminMessage
@@ -52,20 +57,14 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 import subprocess
 
-
-
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 
-
-import pandas as pd
-import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
-
 
 from django.shortcuts import render, redirect
 from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress, \
@@ -84,13 +83,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import login_required
 from .models import StudentNote
 
-
-
 import subprocess
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .models import LearningVideo, StudentProfile, StudentVideoCompletion
 
 
 def index(request):
@@ -562,8 +564,6 @@ def student_messages_view(request):
     return render(request, 'StudentPages/student_contact_messages.html', {'messages': messages})
 
 
-
-
 @login_required
 def learning_home(request):
     if not request.user.is_student:
@@ -573,10 +573,8 @@ def learning_home(request):
     visible_modules = [
         content.module
         for content in CourseContent.objects.all()
-            if content.visibility_mode == 'immediate'
+        if content.visibility_mode == 'immediate'
     ]
-
-
 
     return render(request, 'learning_modules/learning_modules_homePage.html', {
         'visible_modules': visible_modules
@@ -603,13 +601,106 @@ def student_progress(request):
     days_remaining = (target_date - today).days if target_date else None
     abs_days_remaining = abs(days_remaining) if days_remaining is not None else None
 
+    git_vids_total = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Git'
+    ).count()
+    git_vids_completed = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Git',
+        completed=True
+    ).count()
+    jenkins_vids_total = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Jenkins'
+    ).count()
+    jenkins_vids_completed = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Jenkins',
+        completed=True
+    ).count()
+    docker_vids_total = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Docker'
+    ).count()
+    docker_vids_completed = StudentVideoCompletion.objects.filter(
+        student=student,
+        video__module='Docker',
+        completed=True
+    ).count()
+
+    git_presentations_total = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Git'
+    ).count()
+    git_presentations_completed = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Git',
+        completed=True
+    ).count()
+    jenkins_presentations_total = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Jenkins'
+    ).count()
+    jenkins_presentations_completed = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Jenkins',
+        completed=True
+    ).count()
+    docker_presentations_total = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Docker'
+    ).count()
+    docker_presentations_completed = StudentPresentationCompletion.objects.filter(
+        student=student,
+        presentation__module='Docker',
+        completed=True
+    ).count()
+
+    git_general_progress = int(((git_vids_completed + git_presentations_completed) /
+                                (git_vids_total + git_presentations_total)) * 100) if git_vids_total > 0 else 0
+    jenkins_general_progress = int(((jenkins_vids_completed + jenkins_presentations_completed) /
+                                    (
+                                                jenkins_vids_total + jenkins_presentations_total)) * 100) if jenkins_vids_total > 0 else 0
+    docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) /
+                                   (
+                                               docker_vids_total + docker_presentations_total)) * 100) if docker_vids_total > 0 else 0
+
+
     return render(request, 'StudentPages/student_progress.html', {
         'git_progress': git_progress,
         'jenkins_progress': jenkins_progress,
         'days_remaining': days_remaining,
         'abs_days_remaining': abs_days_remaining,
-        'target_date': target_date
+        'target_date': target_date,
+        'git_vids_total': git_vids_total,
+        'git_vids_completed': git_vids_completed,
+        'jenkins_vids_total': jenkins_vids_total,
+        'jenkins_vids_completed': jenkins_vids_completed,
+        'docker_vids_total': docker_vids_total,
+        'docker_vids_completed': docker_vids_completed,
+        'git_vids_left': git_vids_total - git_vids_completed if git_vids_total else 0,
+        'jenkins_vids_left': jenkins_vids_total - jenkins_vids_completed if jenkins_vids_total else 0,
+        'docker_vids_left': docker_vids_total - docker_vids_completed if docker_vids_total else 0,
+        'git_presentations_total': git_presentations_total,
+        'git_presentations_completed': git_presentations_completed,
+        'jenkins_presentations_total': jenkins_presentations_total,
+        'jenkins_presentations_completed': jenkins_presentations_completed,
+        'docker_presentations_total': docker_presentations_total,
+        'docker_presentations_completed': docker_presentations_completed,
+        'git_presentations_left': git_presentations_total - git_presentations_completed if git_presentations_total else 0,
+        'jenkins_presentations_left': jenkins_presentations_total - jenkins_presentations_completed if jenkins_presentations_total else 0,
+        'docker_presentations_left': docker_presentations_total - docker_presentations_completed if docker_presentations_total else 0,
+        'git_general_progress': git_general_progress,
+        'jenkins_general_progress': jenkins_general_progress,
+        'docker_general_progress': docker_general_progress,
+        'git_completed': git_completed,
+        'jenkins_completed': jenkins_completed,
+        'git_total': git_total,
+        'jenkins_total': jenkins_total,
+
     })
+
 
 @login_required
 def git_module_view(request):
@@ -648,10 +739,30 @@ def git_module_view(request):
     # שליפת הסרטון לפי השלב, גם במצב נגיש
     step = request.GET.get('step')
     video = None
+    VideoCompleted = False  # ברירת מחדל, לא הושלם
+    svc = None  # ברירת מחדל, לא קיים
+    PresentationCompleted = False  # ברירת מחדל, לא הושלם
+    spc = None  # ברירת מחדל, לא קיים
     if step in ['1', '2', '3', '4']:
         video = LearningVideo.objects.filter(module='Git', order=int(step)).first()
         podcasts = Podcast.objects.filter(module='Git', order=int(step))  # 🟢
         presentations = Presentation.objects.filter(module='Git', order=int(step))
+
+        svc = StudentVideoCompletion.objects.get(
+            student=request.user.student_profile,
+            video=video
+        )
+        VideoCompleted = svc.completed
+
+        try:
+            spc = StudentPresentationCompletion.objects.get(
+                student=request.user.student_profile,
+                presentation=presentations.first() if presentations else None
+            )
+            PresentationCompleted = spc.completed
+        except StudentPresentationCompletion.DoesNotExist:
+            spc = None
+            PresentationCompleted = False
 
     context = {
         'all_sentences': all_sentences,
@@ -663,6 +774,8 @@ def git_module_view(request):
         'podcasts': podcasts,
         'presentations': presentations,
         'visible_modules': ['git', 'jenkins', 'docker'],
+        'completed': VideoCompleted,
+        'PresentationCompleted': PresentationCompleted
     }
 
     return render(request, 'learning_modules/git_module.html', context)
@@ -677,10 +790,30 @@ def jenkins_module_view(request):
     # שליפת סרטון ופודקאסט לפי שלב (step)
     step = request.GET.get('step')
     video = None
+    VideoCompleted = False  # ברירת מחדל, לא הושלם
+    svc = None  # ברירת מחדל, לא קיים
+    PresentationCompleted = False  # ברירת מחדל, לא הושלם
+    spc = None  # ברירת מחדל, לא קיים
     if step in ['1', '2', '3', '4']:
         video = LearningVideo.objects.filter(module='Jenkins', order=int(step)).first()
         podcasts = Podcast.objects.filter(module='Jenkins', order=int(step))
         presentations = Presentation.objects.filter(module='Jenkins', order=int(step))
+        if video:
+            svc = StudentVideoCompletion.objects.get(
+                student=request.user.student_profile,
+                video=video
+            )
+            VideoCompleted = svc.completed
+
+        try:
+            spc = StudentPresentationCompletion.objects.get(
+                student=request.user.student_profile,
+                presentation=presentations.first() if presentations else None
+            )
+            PresentationCompleted = spc.completed
+        except StudentPresentationCompletion.DoesNotExist:
+            spc = None
+            PresentationCompleted = False
 
     context = {
         'video': video,
@@ -688,6 +821,8 @@ def jenkins_module_view(request):
         'presentations': presentations,
         'visible_modules': ['git', 'jenkins', 'docker'],
         'student_jenkins_quiz_exercise': student_jenkins_quiz_exercise,
+        'completed': VideoCompleted,
+        'PresentationCompleted': PresentationCompleted,
     }
 
     return render(request, 'learning_modules/jenkins_module.html', context)
@@ -701,16 +836,38 @@ def docker_module_view(request):
     # שליפת סרטון ופודקאסט לפי שלב (step)
     step = request.GET.get('step')
     video = None
+    VideoCompleted = False  # ברירת מחדל, לא הושלם
+    svc = None  # ברירת מחדל, לא קיים
+    PresentationCompleted = False  # ברירת מחדל, לא הושלם
+    spc = None  # ברירת מחדל, לא קיים
     if step in ['1', '2', '3']:
         video = LearningVideo.objects.filter(module='Docker', order=int(step)).first()
         podcasts = Podcast.objects.filter(module='Docker', order=int(step))
         presentations = Presentation.objects.filter(module='Docker', order=int(step))
+        if video:
+            svc = StudentVideoCompletion.objects.get(
+                student=request.user.student_profile,
+                video=video
+            )
+            VideoCompleted = svc.completed
+
+        try:
+            spc = StudentPresentationCompletion.objects.get(
+                student=request.user.student_profile,
+                presentation=presentations.first() if presentations else None
+            )
+            PresentationCompleted = spc.completed
+        except StudentPresentationCompletion.DoesNotExist:
+            spc = None
+            PresentationCompleted = False
 
     context = {
         'video': video,
         'podcasts': podcasts,
         'presentations': presentations,
         'visible_modules': ['git', 'jenkins', 'docker'],
+        'completed': VideoCompleted,
+        'PresentationCompleted': PresentationCompleted,
     }
 
     return render(request, 'learning_modules/docker_module.html', context)
@@ -887,7 +1044,9 @@ def DockerSection(request):
 @login_required
 def git_section1(request):
     video = LearningVideo.objects.filter(module='Git', order=1).first()
-    return render(request, 'learning_modules/git/section1.html', {'video': video})
+
+    return render(request, 'learning_modules/git/section1.html',
+                  {'video': video})
 
 
 @login_required
@@ -1151,7 +1310,8 @@ def monitor_student_git_progress(request):
             total = len(student_df)
             not_completed = total - completed
             plt.figure()
-            plt.pie([completed, not_completed], labels=['completed', 'not completed'], autopct='%1.1f%%', colors=['green', 'red'])
+            plt.pie([completed, not_completed], labels=['completed', 'not completed'], autopct='%1.1f%%',
+                    colors=['green', 'red'])
             plt.title(f'complete commands of {selected_student}')
             buffer = BytesIO()
             plt.savefig(buffer, format='png')
@@ -1196,9 +1356,6 @@ def download_student_report(request):
     response['Content-Disposition'] = 'attachment; filename="student_git_progress_report.csv"'
     df_grouped.to_csv(path_or_buf=response, index=False)
     return response
-
-
-
 
 
 @login_required
@@ -1252,7 +1409,6 @@ def docker_rating(request):
     return render(request, 'learning_modules/docker/docker_rating.html')
 
 
-
 @login_required
 def add_student_note(request):
     if request.method == 'POST':
@@ -1268,13 +1424,10 @@ def add_student_note(request):
     return render(request, 'notes/add_note.html', {'form': form})
 
 
-
 @login_required
 def view_student_notes(request):
     notes = StudentNote.objects.filter(student=request.user).order_by('-created_at')
     return render(request, 'notes/view_notes.html', {'notes': notes})
-
-
 
 
 @staff_member_required
@@ -1294,6 +1447,48 @@ def run_tests(request):
     except Exception as e:
         messages.error(request, f"שגיאה בהרצת בדיקות: {e}")
         return redirect('admin')
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+
+
+@csrf_exempt
+@login_required
+def toggle_completion(request, video_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        completed = data.get('completed', False)
+
+        video = get_object_or_404(LearningVideo, id=video_id)
+        svc, created = StudentVideoCompletion.objects.get_or_create(
+            student=request.user.student_profile,
+            video=video
+        )
+        svc.completed = completed
+        svc.save()
+        return JsonResponse({'status': 'success', 'completed': svc.completed})
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+@csrf_exempt
+@login_required
+def toggle_presentation_completion(request, presentation_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        completed = data.get('presentation_completed', False)
+
+        presentation = get_object_or_404(Presentation, id=presentation_id)
+        spc, created = StudentPresentationCompletion.objects.get_or_create(
+            student=request.user.student_profile,
+            presentation=presentation
+        )
+        spc.completed = completed
+        spc.save()
+        return JsonResponse({'status': 'success', 'completed': spc.completed})
+    return JsonResponse({'error': 'Invalid method'}, status=405)
 
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -1377,3 +1572,4 @@ def server_load_report(request):
     df.to_csv(path_or_buf=response, index=False)
 
     return response
+

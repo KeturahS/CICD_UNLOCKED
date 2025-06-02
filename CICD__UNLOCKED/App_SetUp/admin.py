@@ -2,7 +2,8 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import User, StudentProfile, LecturerProfile, AdminProfile, LearningVideo
+from .models import User, StudentProfile, LecturerProfile, AdminProfile, LearningVideo, StudentModuleProgress, \
+    StudentVideoCompletion, StudentPresentationCompletion
 from .models import ContactMessage, Podcast, Presentation, CourseContent
 
 # Register your models here.
@@ -16,6 +17,9 @@ admin.site.register(LearningVideo)
 admin.site.register(Podcast)
 admin.site.register(Presentation)
 admin.site.register(CourseContent)
+admin.site.register(StudentModuleProgress)
+admin.site.register(StudentVideoCompletion)
+admin.site.register(StudentPresentationCompletion)
 
 
 #@admin.register(CourseContent)
