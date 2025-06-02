@@ -642,7 +642,7 @@ def student_progress(request):
     docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) /
                                    (
                                                docker_vids_total + docker_presentations_total)) * 100) if docker_vids_total > 0 else 0
-    student_jenkins_quiz = StudentJenkinsQuizExercise.objects.filter(student=student)
+
 
     return render(request, 'StudentPages/student_progress.html', {
         'git_progress': git_progress,
@@ -675,7 +675,7 @@ def student_progress(request):
         'jenkins_completed': jenkins_completed,
         'git_total': git_total,
         'jenkins_total': jenkins_total,
-        'student_jenkins_quiz': student_jenkins_quiz
+
     })
 
 
