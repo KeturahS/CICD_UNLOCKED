@@ -26,6 +26,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
+RECAPTCHA_SITE_KEY = '6LciUk4rAAAAAGMicjZ-yjjM2nSiO4auqWFhA9Gt'
+RECAPTCHA_SECRET_KEY = '6LciUk4rAAAAAFTAkQT1-TljsHGT1_zjtZAZioHU'
+
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail's SMTP server

@@ -10,4 +10,7 @@ urlpatterns = [
     path('update_jenkins_quiz_completion/', views.update_jenkins_quiz_completion,
          name='update_jenkins_quiz_completion'),
 
+    path('jenkins/questions/', views.jenkins_questions_view, name='jenkins_questions'),
+    path('jenkins/submit/', views.handle_pipeline_submission, name='handle_pipeline_submission'),
+
 ]

@@ -6,6 +6,7 @@ from .models import User, LecturerProfile, StudentProfile, AdminProfile
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from App_SetUp.models import StudentProfile
+
 # app/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -20,6 +21,10 @@ from .models import (
     StudentPresentationCompletion
 )
 from django.db import transaction
+
+from GitExercises.models import Terminal_Exercises_Git_Commands
+
+
 
 @receiver(pre_save, sender=User)
 def store_previous_status(sender, instance, **kwargs):

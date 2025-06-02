@@ -25,8 +25,9 @@ class MonitorStudentGitProgressTest(TestCase):
         self.lecturer_user.save()
 
         # יצירת סטודנט
-        self.student_user = User.objects.create_user(username=self.student_username, password='test123')
-        self.student_profile = StudentProfile.objects.create(user=self.student_user)
+        self.student_user, _ = User.objects.get_or_create(username=self.student_username,
+                                                          defaults={'password': 'test123'})
+        self.student_profile, _ = StudentProfile.objects.get_or_create(user=self.student_user)
 
         self.cmd1 = Terminal_Exercises_Git_Commands.objects.create(command=self.cmd1_text)
         self.cmd2 = Terminal_Exercises_Git_Commands.objects.create(command=self.cmd2_text)
@@ -85,8 +86,9 @@ class DownloadStudentReportTest(TestCase):
         self.lecturer_user.is_lecturer = True  # ✅ כנ"ל
         self.lecturer_user.save()
 
-        self.student_user = User.objects.create_user(username=self.student_username, password='test123')
-        self.student_profile = StudentProfile.objects.create(user=self.student_user)
+        self.student_user, _ = User.objects.get_or_create(username=self.student_username,
+                                                          defaults={'password': 'test123'})
+        self.student_profile, _ = StudentProfile.objects.get_or_create(user=self.student_user)
 
         self.cmd1 = Terminal_Exercises_Git_Commands.objects.create(command=self.cmd1_text)
         self.cmd2 = Terminal_Exercises_Git_Commands.objects.create(command=self.cmd2_text)

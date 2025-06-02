@@ -9,19 +9,30 @@ User = get_user_model()
 class StudentPasswordUpdateFormTests(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(
+        self.user, _ = User.objects.get_or_create(
             username='student1',
-            email='student@example.com',
-            password='OldPassword123',
-            first_name='Test',
-            last_name='User',
-            is_student=True
+            defaults={
+                'email': 'student@example.com',
+                'first_name': 'Test',
+                'last_name': 'User',
+                'is_student': True
+            }
         )
-        self.profile = StudentProfile.objects.create(
+        # הגדרת סיסמה רק אם צריך
+        if not self.user.check_password('OldPassword123'):
+            self.user.set_password('OldPassword123')
+            self.user.save()
+
+        self.profile, _ = StudentProfile.objects.get_or_create(
             user=self.user,
-            institution='SCE',
-            target_completion_date=date.today() + timedelta(days=30)
+            defaults={
+                'institution': 'SCE',
+                'target_completion_date': date.today() + timedelta(days=30)
+            }
         )
+        if not self.profile.target_completion_date:
+            self.profile.target_completion_date = date.today() + timedelta(days=30)
+            self.profile.save()
 
     def test_valid_password_update(self):
         form_data = {

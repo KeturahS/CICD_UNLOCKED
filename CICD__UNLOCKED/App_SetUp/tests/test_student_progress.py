@@ -19,15 +19,21 @@ class GitAndJenkinsModelTests(TestCase):
         self.client = Client()
         self.student_username = f"student_{uuid.uuid4().hex[:6]}"
         self.command_text = f"git test-{uuid.uuid4().hex[:6]}"
-        self.student_user = User.objects.create_user(
+        self.student_user, _ = User.objects.get_or_create(
             username=self.student_username,
-            password='pass123',
-            is_student=True
+            defaults={'password': 'pass123', 'is_student': True}
         )
-        self.student_profile = StudentProfile.objects.create(
+        if not self.student_user.check_password('pass123'):
+            self.student_user.set_password('pass123')
+            self.student_user.save()
+
+        self.student_profile, _ = StudentProfile.objects.get_or_create(
             user=self.student_user,
-            target_completion_date=date.today() + timedelta(days=10)
+            defaults={'target_completion_date': date.today() + timedelta(days=10)}
         )
+        if self.student_profile.target_completion_date is None:
+            self.student_profile.target_completion_date = date.today() + timedelta(days=10)
+            self.student_profile.save()
 
         self.command = Terminal_Exercises_Git_Commands.objects.create(
             command=self.command_text,

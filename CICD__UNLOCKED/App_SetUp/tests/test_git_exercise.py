@@ -9,18 +9,25 @@ class UpdateCommandStatusTest(TestCase):
         self.client = Client()
 
         # Create test user
-        self.user = User.objects.create_user(
-            username="studentuser1",
-            email="student@example.com",
-            password="testpassword",
-            is_student=True
+        self.user, _ = User.objects.get_or_create(
+            username='studentuser1',
+            defaults={
+                'email': 'student@example.com',
+                'password': 'testpassword',
+                'is_student': True
+            }
         )
+        if not self.user.check_password('testpassword'):
+            self.user.set_password('testpassword')
+            self.user.save()
 
         # Create student profile
-        self.student_profile = StudentProfile.objects.create(
+        self.student_profile, _ = StudentProfile.objects.get_or_create(
             user=self.user,
-            institution="SCE",
-            target_completion_date=date(2026, 6, 30)
+            defaults={
+                'institution': 'SCE',
+                'target_completion_date': date(2026, 6, 30)
+            }
         )
 
         # Create command
@@ -67,16 +74,24 @@ from datetime import date
 
 class UpdateCommandAttemptsStatusTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(
+        self.user, _ = User.objects.get_or_create(
             username='studentuser1',
-            email='student@example.com',
-            password='testpassword',
-            is_student=True
+            defaults={
+                'email': 'student@example.com',
+                'password': 'testpassword',
+                'is_student': True
+            }
         )
-        self.student_profile = StudentProfile.objects.create(
+        if not self.user.check_password('testpassword'):
+            self.user.set_password('testpassword')
+            self.user.save()
+
+        self.student_profile, _ = StudentProfile.objects.get_or_create(
             user=self.user,
-            institution='SCE',
-            target_completion_date=date(2026, 6, 30)
+            defaults={
+                'institution': 'SCE',
+                'target_completion_date': date(2026, 6, 30)
+            }
         )
 
         self.command = Terminal_Exercises_Git_Commands.objects.create(

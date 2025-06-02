@@ -6,7 +6,7 @@ from datetime import date
 
 from .models import User, StudentProfile, ContactMessage, PrivateMessage, StudentNote
 from GitExercises.models import GitHubSentence, GitSentence, Terminal_Exercises_Git_Commands, JenkinsConceptsQuiz
-
+from .models import LecturerToAdminMessage
 User = get_user_model()
 
 class LoginForm(forms.Form):
@@ -173,4 +173,19 @@ class StudentNoteForm(forms.ModelForm):
         }
         labels = {
             'content': 'הערה'
+        }
+
+class LecturerToAdminMessageForm(forms.ModelForm):
+    class Meta:
+        model = LecturerToAdminMessage
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'כתוב את ההודעה שלך כאן:.....'
+            }),
+        }
+        labels = {
+            'content': 'תוכן ההודעה',
         }

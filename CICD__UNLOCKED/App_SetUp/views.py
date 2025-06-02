@@ -3,19 +3,25 @@ from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
-
+from App_SetUp.utils.server_monitor import is_high_load
 from django.contrib.auth import authenticate, login, get_user_model
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+
 from .models import User, StudentPresentationCompletion
+
+from .models import User
+import requests
+
 from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm, JenkinsConceptsQuizForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import LecturerProfile, StudentProfile, AdminProfile, Presentation
 from .forms import StudentProfileUpdateForm
-
+from App_SetUp.models import ServerLoadRecord
+from django.conf import settings
 from .forms import ContactMessageForm
 from .models import ContactMessage, Podcast
 from .models import LearningVideo
@@ -28,6 +34,15 @@ from django.contrib.auth.decorators import login_required
 from .models import LearningModuleRating
 from App_SetUp.models import CourseContent
 from App_SetUp.models import CourseContent
+
+
+from .forms import LecturerToAdminMessageForm
+from .models import LecturerToAdminMessage
+from .models import LecturerToAdminMessage
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import PrivateMessageForm
@@ -174,42 +189,49 @@ def register(request):
 
 @csrf_protect
 def login_view(request):
+
     form = LoginForm(request.POST or None)
     msg = None
+
     if request.method == 'POST':
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             print(user)
+
+
             if user is not None:
+                if is_high_load():
+                    # שומרים את המשתמש בפרמטרים זמניים כדי לחזור אליו אחרי ה-CAPTCHA
+                    request.session['pending_username'] = username
+                    request.session['pending_password'] = password
+                    return redirect('captcha_challenge')
+
                 if user.is_active:
+                    login(request, user)
                     if user.is_lecturer:
-                        login(request, user)
                         return redirect('lecturer')
-
-                    if user.is_admin:
-                        login(request, user)
+                    elif user.is_admin:
                         return redirect('admin')
-
-                    if user.is_student:
-                        login(request, user)
+                    elif user.is_student:
                         return redirect('student')
 
                 if not user.is_active:
                     if user.is_lecturer:
                         msg = 'בקשתך להירשם כמרצה טרם אושרה, אנא המתן בסבלנות לתשובה מצוות האתר'
-
                     if user.is_admin:
                         msg = 'בקשתך להירשם כמנהל טרם אושרה, אנא המתן בסבלנות לתשובת המנהל הבכיר'
-
                     return render(request, 'RegisterAndLogin/login.html')
+
             else:
-                msg = 'פרטים לא נכונים '
+                msg = 'פרטים לא נכונים'
 
         else:
             msg = 'טופס לא תקין'
+
     return render(request, 'RegisterAndLogin/login.html', {'form': form, 'msg': msg})
+
 
 
 def lecturer(request):
@@ -237,11 +259,12 @@ def admin(request):
         contact_messages = ContactMessage.objects.filter(category__in=['support', 'admin']).order_by('-created_at')
     lecturers_requests = User.objects.filter(is_lecturer=True, is_active=False)
     admins_requests = User.objects.filter(is_admin=True, is_active=False) if request.user.is_superuser else None
-
+    latest_load = ServerLoadRecord.objects.order_by('-timestamp').first()
     context = {
         "lecturers_requests": lecturers_requests,
         "admins_requests": admins_requests,
         'contact_messages': contact_messages,
+        'latest_load': latest_load,
 
     }
     return render(request, "AdminPages/admin_page.html", context)
@@ -1426,6 +1449,7 @@ def run_tests(request):
         return redirect('admin')
 
 
+
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
@@ -1465,3 +1489,87 @@ def toggle_presentation_completion(request, presentation_id):
         spc.save()
         return JsonResponse({'status': 'success', 'completed': spc.completed})
     return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.csrf import csrf_protect
+from django.http import HttpResponse
+import pandas as pd
+import requests
+
+
+@login_required
+def send_message_to_admin(request):
+    if not request.user.is_lecturer:
+        return redirect('login_view')  # רק מרצה יכול לשלוח
+
+    if request.method == 'POST':
+        form = LecturerToAdminMessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return render(request, 'messages/success.html', {'message': 'הודעתך נשלחה בהצלחה!'})
+    else:
+        form = LecturerToAdminMessageForm()
+
+    return render(request, 'messages/send_message_to_admin.html', {'form': form})
+
+
+@staff_member_required
+def view_lecturer_messages(request):
+    messages = LecturerToAdminMessage.objects.all().order_by('-timestamp')
+    return render(request, 'messages/view_lecturer_messages.html', {'messages': messages})
+
+
+@csrf_protect
+def captcha_challenge(request):
+    if request.method == 'POST':
+        token = request.POST.get('g-recaptcha-response')
+        payload = {
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': token
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+        result = r.json()
+
+        if result.get('success'):
+            # התחברות המשתמש מחדש
+            username = request.session.get('pending_username')
+            password = request.session.get('pending_password')
+            user = authenticate(username=username, password=password)
+
+            if user and user.is_active:
+                login(request, user)
+                del request.session['pending_username']
+                del request.session['pending_password']
+
+                if user.is_lecturer:
+                    return redirect('lecturer')
+                elif user.is_student:
+                    return redirect('student')
+                elif user.is_admin:
+                    return redirect('admin')
+
+        return render(request, 'RegisterAndLogin/captcha_challenge.html', {'error': 'האימות נכשל. נסה שוב.'})
+
+    return render(request, 'RegisterAndLogin/captcha_challenge.html')
+
+
+@staff_member_required
+def server_load_report(request):
+    # שליפת נתוני עומס
+    data = ServerLoadRecord.objects.all().values(
+        'timestamp', 'cpu_percent', 'memory_percent', 'disk_percent'
+    )
+
+    # המרה ל־DataFrame
+    df = pd.DataFrame(data)
+
+    # יצירת קובץ CSV
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="server_load_report.csv"'
+    df.to_csv(path_or_buf=response, index=False)
+
+    return response
+
