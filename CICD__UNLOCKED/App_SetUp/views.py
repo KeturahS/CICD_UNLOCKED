@@ -1653,10 +1653,10 @@ def monitor_updated_student_progress(request):
                                     (git_vids_total + git_presentations_total)) * 100) if git_vids_total > 0 else 0
         jenkins_general_progress = int(((jenkins_vids_completed + jenkins_presentations_completed) /
                                         (
-                                                jenkins_vids_total + jenkins_presentations_total)) * 100) if jenkins_vids_total > 0 else 0
+                                                jenkins_vids_total + jenkins_presentations_total)) * 100) if  jenkins_vids_total + jenkins_presentations_total > 0 else 0
         docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) /
                                        (
-                                               docker_vids_total + docker_presentations_total)) * 100) if docker_vids_total > 0 else 0
+                                               docker_vids_total + docker_presentations_total)) * 100) if docker_vids_total + docker_presentations_total > 0 else 0
 
         student_prog.git_progress = git_progress
         student_prog.jenkins_progress = jenkins_progress
