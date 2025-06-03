@@ -106,4 +106,5 @@ urlpatterns = [
 
     path('toggle-completion/<int:video_id>/', views.toggle_completion, name='toggle_completion'),
     path('toggle-presentation-completion/<int:presentation_id>/', views.toggle_presentation_completion, name='toggle_presentation_completion'),
-]
+
+    path('lecturer/monitor-updated-progress/', views.monitor_updated_student_progress, name='monitor_updated_student_progress'),]

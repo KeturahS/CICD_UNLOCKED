@@ -10,7 +10,7 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
-from .models import User, StudentPresentationCompletion
+from .models import User, StudentPresentationCompletion, StudentGeneralProgress
 
 from .models import User
 import requests
@@ -1573,3 +1573,125 @@ def server_load_report(request):
 
     return response
 
+@login_required
+def monitor_updated_student_progress(request):
+
+    students = StudentProfile.objects.all()
+
+    for st in students:
+
+        student_prog, _ = StudentGeneralProgress.objects.get_or_create(student=st)
+        # Git progress
+        git_total = StudentGitCommandProgress.objects.filter(student=st).count()
+        git_completed = StudentGitCommandProgress.objects.filter(student=st, completed=True).count()
+        git_progress = int((git_completed / git_total) * 100) if git_total > 0 else 0
+
+        # Jenkins progress
+        jenkins_total = StudentJenkinsQuizExercise.objects.filter(student=st).count()
+        jenkins_completed = StudentJenkinsQuizExercise.objects.filter(student=st, completed=True).count()
+        jenkins_progress = int((jenkins_completed / jenkins_total) * 100) if jenkins_total > 0 else 0
+
+
+
+        git_vids_total = StudentVideoCompletion.objects.filter(
+            student=st,
+            video__module='Git'
+        ).count()
+        git_vids_completed = StudentVideoCompletion.objects.filter(
+            student=st,
+            video__module='Git',
+            completed=True
+        ).count()
+        jenkins_vids_total = StudentVideoCompletion.objects.filter(
+            student=st,
+            video__module='Jenkins'
+        ).count()
+        jenkins_vids_completed = StudentVideoCompletion.objects.filter(
+            student=st,
+            video__module='Jenkins',
+            completed=True
+        ).count()
+        docker_vids_total = StudentVideoCompletion.objects.filter(
+            student=st,
+            video__module='Docker'
+        ).count()
+        docker_vids_completed = StudentVideoCompletion.objects.filter(
+            student=st,
+            video__module='Docker',
+            completed=True
+        ).count()
+
+        git_presentations_total = StudentPresentationCompletion.objects.filter(
+            student=st,
+            presentation__module='Git'
+        ).count()
+        git_presentations_completed = StudentPresentationCompletion.objects.filter(
+            student=st,
+            presentation__module='Git',
+            completed=True
+        ).count()
+        jenkins_presentations_total = StudentPresentationCompletion.objects.filter(
+            student=st,
+            presentation__module='Jenkins'
+        ).count()
+        jenkins_presentations_completed = StudentPresentationCompletion.objects.filter(
+            student=st,
+            presentation__module='Jenkins',
+            completed=True
+        ).count()
+        docker_presentations_total = StudentPresentationCompletion.objects.filter(
+            student=st,
+            presentation__module='Docker'
+        ).count()
+        docker_presentations_completed = StudentPresentationCompletion.objects.filter(
+            student=st,
+            presentation__module='Docker',
+            completed=True
+        ).count()
+
+        git_general_progress = int(((git_vids_completed + git_presentations_completed) /
+                                    (git_vids_total + git_presentations_total)) * 100) if git_vids_total > 0 else 0
+        jenkins_general_progress = int(((jenkins_vids_completed + jenkins_presentations_completed) /
+                                        (
+                                                jenkins_vids_total + jenkins_presentations_total)) * 100) if  jenkins_vids_total + jenkins_presentations_total > 0 else 0
+        docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) /
+                                       (
+                                               docker_vids_total + docker_presentations_total)) * 100) if docker_vids_total + docker_presentations_total > 0 else 0
+
+        student_prog.git_progress = git_progress
+        student_prog.jenkins_progress = jenkins_progress
+        student_prog.git_vids_total = git_vids_total
+        student_prog.git_vids_completed = git_vids_completed
+        student_prog.jenkins_vids_total = jenkins_vids_total
+        student_prog.jenkins_vids_completed = jenkins_vids_completed
+        student_prog.docker_vids_total = docker_vids_total
+        student_prog.docker_vids_completed = docker_vids_completed
+        student_prog.git_vids_left = git_vids_total - git_vids_completed if git_vids_total else 0
+        student_prog.jenkins_vids_left = jenkins_vids_total - jenkins_vids_completed if jenkins_vids_total else 0
+        student_prog.docker_vids_left = docker_vids_total - docker_vids_completed if docker_vids_total else 0
+        student_prog.git_presentations_total = git_presentations_total
+        student_prog.git_presentations_completed = git_presentations_completed
+        student_prog.jenkins_presentations_total = jenkins_presentations_total
+        student_prog.jenkins_presentations_completed = jenkins_presentations_completed
+        student_prog.docker_presentations_total = docker_presentations_total
+        student_prog.docker_presentations_completed = docker_presentations_completed
+        student_prog.git_presentations_left = git_presentations_total - git_presentations_completed if git_presentations_total else 0
+        student_prog.jenkins_presentations_left = jenkins_presentations_total - jenkins_presentations_completed if jenkins_presentations_total else 0
+        student_prog.docker_presentations_left = docker_presentations_total - docker_presentations_completed if docker_presentations_total else 0
+        student_prog.git_general_progress = git_general_progress
+        student_prog.jenkins_general_progress = jenkins_general_progress
+        student_prog.docker_general_progress = docker_general_progress
+        student_prog.git_completed = git_completed
+        student_prog.jenkins_completed = jenkins_completed
+        student_prog.git_total = git_total
+        student_prog.jenkins_total = jenkins_total
+        student_prog.name = st.user.get_full_name()
+        student_prog.email = st.user.email
+        student_prog.username = st.user.username
+
+        student_prog.save()
+
+    context = {
+        'students': StudentGeneralProgress.objects.all()
+    }
+    return render(request,'LecturerPages/updated_monitor_student_progress.html', context)
