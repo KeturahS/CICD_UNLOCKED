@@ -17,7 +17,6 @@ from .models import (
     Presentation,
     StudentModuleProgress,
     StudentVideoCompletion,
-    StudentPodcastCompletion,
     StudentPresentationCompletion
 )
 from django.db import transaction
@@ -63,31 +62,22 @@ def create_admin_profile(sender, instance, created, **kwargs):
         AdminProfile.objects.get_or_create(user=instance)
 
 
-
-
 @receiver(post_save, sender=StudentProfile)
 def create_student_completions(sender, instance, created, **kwargs):
     if created:
         student = instance
+        # Modules
 
-        # הפעל רק לאחר שכל האובייקטים נטענו
-        @transaction.on_commit
-        def create_related_records():
-            # מודולים
-            modules = ['Git', 'Jenkins', 'Docker']
-            for module in modules:
-                StudentModuleProgress.objects.get_or_create(student=student, module=module)
+        modules = ['Git', 'Jenkins', 'Docker']
+        for module in modules:
+            StudentModuleProgress.objects.get_or_create(student=student, module=module)
 
-            # סרטונים
-            for video in LearningVideo.objects.all():
-                StudentVideoCompletion.objects.get_or_create(student=student, video=video)
+        # Videos
+        for video in LearningVideo.objects.all():
+            StudentVideoCompletion.objects.get_or_create(student=student, video=video)
 
-            # פודקאסטים
-            for podcast in Podcast.objects.all():
-                StudentPodcastCompletion.objects.get_or_create(student=student, podcast=podcast)
+        # Presentations
+        for presentation in Presentation.objects.all():
+            StudentPresentationCompletion.objects.get_or_create(student=student, presentation=presentation)
 
-            # מצגות
-            for presentation in Presentation.objects.all():
-                StudentPresentationCompletion.objects.get_or_create(student=student, presentation=presentation)
 
-        create_related_records()

@@ -234,3 +234,44 @@ class ServerLoadRecord(models.Model):
     def __str__(self):
         return f"{self.timestamp} | CPU: {self.cpu_percent}%"
 
+
+
+from datetime import datetime, timedelta
+class StudentGeneralProgress(models.Model):
+    student = models.OneToOneField(StudentProfile, on_delete=models.CASCADE, related_name='general_progress')
+    username= models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    git_progress = models.IntegerField(default=0)
+    jenkins_progress = models.IntegerField(default=0)
+
+    git_vids_total = models.IntegerField(default=0)
+    git_vids_completed = models.IntegerField(default=0)
+    jenkins_vids_total = models.IntegerField(default=0)
+    jenkins_vids_completed = models.IntegerField(default=0)
+    docker_vids_total = models.IntegerField(default=0)
+    docker_vids_completed = models.IntegerField(default=0)
+    git_vids_left = models.IntegerField(default=0)
+    jenkins_vids_left = models.IntegerField(default=0)
+    docker_vids_left = models.IntegerField(default=0)
+    git_presentations_total = models.IntegerField(default=0)
+    git_presentations_completed = models.IntegerField(default=0)
+    jenkins_presentations_total = models.IntegerField(default=0)
+    jenkins_presentations_completed = models.IntegerField(default=0)
+    docker_presentations_total = models.IntegerField(default=0)
+    docker_presentations_completed = models.IntegerField(default=0)
+    git_presentations_left = models.IntegerField(default=0)
+    jenkins_presentations_left = models.IntegerField(default=0)
+    docker_presentations_left = models.IntegerField(default=0)
+    git_general_progress = models.IntegerField(default=0)
+    jenkins_general_progress = models.IntegerField(default=0)
+    docker_general_progress = models.IntegerField(default=0)
+    git_completed = models.IntegerField(default=0)
+    jenkins_completed = models.IntegerField(default=0)
+    git_total = models.IntegerField(default=0)
+    jenkins_total = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.student.user.username} - General Progress)"
+
+
