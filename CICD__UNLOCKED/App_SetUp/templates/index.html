@@ -54,16 +54,17 @@
             transform: scale(1.05);
         }
 
-        .gitacademy {
-			position: absolute;
-			top: 20px;
-			left: 20px;
-			font-size: 20px;
-			font-family: 'Space Mono';
-			background: linear-gradient(90deg, #30f2f2 7.79%, #6812aa);
-			-webkit-background-clip: text;
-			-webkit-text-fill-color: transparent;
-		}
+		.gitacademy {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: {{ logo_settings.font_size }}px;
+            font-family: '{{ logo_settings.font_family }}';
+            background: linear-gradient(90deg, {{ logo_settings.gradient_from }}, 7.79%, {{ logo_settings.gradient_to }});
+            font-weight: bold;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
         header {
             text-align: center;
@@ -156,7 +157,7 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand justify-content-between">
-    <b class="gitacademy" href="#">CiCd Unlocked</b>
+    <b class="gitacademy">{{ logo_settings.text }}</b>
     <div class="d-flex align-items-center">
         <a class="nav-link" href="{% url 'login_view' %}">התחברות</a>
         <a href="{% url 'register' %}" class="btn btn-signup">הרשמה</a>

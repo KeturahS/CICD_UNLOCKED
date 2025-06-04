@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib import admin
 from .models import User, StudentProfile, LecturerProfile, AdminProfile, LearningVideo, StudentModuleProgress, \
     StudentVideoCompletion, StudentPresentationCompletion, StudentGeneralProgress
-from .models import ContactMessage, Podcast, Presentation, CourseContent
+from .models import ContactMessage, Podcast, Presentation, CourseContent, LogoSettings
 
 # Register your models here.
 admin.site.register(User)
@@ -21,12 +21,7 @@ admin.site.register(StudentModuleProgress)
 admin.site.register(StudentVideoCompletion)
 admin.site.register(StudentPresentationCompletion)
 admin.site.register(StudentGeneralProgress)
+admin.site.register(LogoSettings)
 
 
-#@admin.register(CourseContent)
-#class CourseContentAdmin(admin.ModelAdmin):
-#    list_display = ('module_name', 'title', 'visibility_mode', 'scheduled_publish_time', 'owner')
-#    list_filter = ('visibility_mode', 'module')
-#    search_fields = ('title', 'description')
-#    ordering = ('module_name',)
 

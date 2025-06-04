@@ -1,102 +1,71 @@
 import random
 from django.contrib.auth import update_session_auth_hash
-from django.urls import reverse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from App_SetUp.utils.server_monitor import is_high_load
 from django.contrib.auth import authenticate, login, get_user_model
 from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-
 from .models import User, StudentPresentationCompletion, StudentGeneralProgress
-
-from .models import User
 import requests
-
-from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm, JenkinsConceptsQuizForm
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import LecturerProfile, StudentProfile, AdminProfile, Presentation
+from .forms import SignUpForm, LoginForm, JenkinsConceptsQuizForm
+from .models import LecturerProfile, Presentation
 from .forms import StudentProfileUpdateForm
 from App_SetUp.models import ServerLoadRecord
 from django.conf import settings
 from .forms import ContactMessageForm
 from .models import ContactMessage, Podcast
-from .models import LearningVideo
 from .models import LearningModuleRating
-from .models import LearningModuleRating
-from django.utils import timezone
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import LearningModuleRating
-from django.contrib.auth.decorators import login_required
-from .models import LearningModuleRating
-from App_SetUp.models import CourseContent
-from App_SetUp.models import CourseContent
-
-
 from .forms import LecturerToAdminMessageForm
 from .models import LecturerToAdminMessage
-from .models import LecturerToAdminMessage
-from django.contrib.admin.views.decorators import staff_member_required
-
-
-
-
-from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import PrivateMessageForm
-
 from .models import PrivateMessage, CourseContent
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import date
-
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import messages
-from django.shortcuts import render, redirect
-import subprocess
-
-from datetime import datetime
-
-from django.contrib.auth.decorators import login_required
-
-import base64
-from io import BytesIO
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required, user_passes_test
-
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import user_passes_test
 from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress, \
     StudentJenkinsQuizExercise, JenkinsConceptsQuiz
 from .forms import GitSentenceForm, GitHubSentenceForm, TerminalExercisesGitCommandsForm
-
 from io import BytesIO
 import base64
-import pandas as pd
 import matplotlib.pyplot as plt
-# Create your views here.
-
 from .forms import StudentNoteForm
 from .models import StudentNote
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import login_required
-from .models import StudentNote
-
 import subprocess
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from .models import LearningVideo, StudentProfile, StudentVideoCompletion
+from django.shortcuts import render, redirect
+from .models import LogoSettings
+from .forms import LogoSettingsForm
+# Create your views here.
 
 
 def index(request):
-    return render(request, 'index.html')
+    logo = LogoSettings.objects.first()
+    return render(request, 'index.html', {'logo_settings': logo})
+
+
+@staff_member_required
+def logo_settings(request):
+    settings = LogoSettings.objects.first()
+    if not settings:
+        settings = LogoSettings.objects.create()
+
+    if request.method == 'POST':
+        form = LogoSettingsForm(request.POST, instance=settings)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "הגדרות הלוגו נשמרו בהצלחה")
+            return redirect('logo_settings')
+    else:
+        form = LogoSettingsForm(instance=settings)
+
+    return render(request, 'AdminPages/logo_settings.html', {'form': form})
+
 
 
 def terms_view(request):

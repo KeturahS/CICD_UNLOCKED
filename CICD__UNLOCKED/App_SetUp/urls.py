@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin_page_students_section/', views.manage_students, name='manage_students'),
     path('admin_page_lecturers_section/', views.manage_lecturers, name='manage_lecturers'),
     path('admin_page_admins_section/', views.manage_admins, name='manage_admins'),
+    path('admin_page/logo-appearance/', views.logo_settings, name='logo_settings'),
+
     path('handle_lecturer_request/', views.handle_lecturer_request, name='handle_lecturer_request'),
     path('handle_admin_request/', views.handle_admin_request, name='handle_admin_request'),
     path('delete_student/', views.delete_student, name='delete_student'),
