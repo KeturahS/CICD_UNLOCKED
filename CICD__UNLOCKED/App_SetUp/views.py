@@ -2,12 +2,9 @@ import random
 from django.contrib.auth import update_session_auth_hash
 from django.views.decorators.csrf import csrf_protect
 from App_SetUp.utils.server_monitor import is_high_load
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
 from .models import User, StudentPresentationCompletion, StudentGeneralProgress
-import requests
 from .forms import SignUpForm, LoginForm, JenkinsConceptsQuizForm
 from .models import LecturerProfile, Presentation
 from .forms import StudentProfileUpdateForm
@@ -21,14 +18,10 @@ from .models import LecturerToAdminMessage
 from .forms import PrivateMessageForm
 from .models import PrivateMessage, CourseContent
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from datetime import date
-from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test
 from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress, \
     StudentJenkinsQuizExercise, JenkinsConceptsQuiz
 from .forms import GitSentenceForm, GitHubSentenceForm, TerminalExercisesGitCommandsForm
-from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
 from .forms import StudentNoteForm
@@ -36,11 +29,24 @@ from .models import StudentNote
 import subprocess
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
 from .models import LearningVideo, StudentProfile, StudentVideoCompletion
 from django.shortcuts import render, redirect
-from .models import LogoSettings
 from .forms import LogoSettingsForm
+from django.contrib.auth.decorators import login_required
+from datetime import date
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.colors import HexColor, Color
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from django.http import FileResponse
+from io import BytesIO
+from django.utils import timezone
+import os
+import arabic_reshaper
+from bidi.algorithm import get_display
+from .models import LogoSettings
+
 # Create your views here.
 
 
@@ -669,6 +675,142 @@ def student_progress(request):
         'jenkins_total': jenkins_total,
 
     })
+
+
+
+
+
+def fix_hebrew(text):
+    reshaped_text = arabic_reshaper.reshape(text)
+    return get_display(reshaped_text)
+
+def hex_to_rgb(hex_color):
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i + 2], 16)/255.0 for i in (0, 2, 4))
+
+def draw_gradient_text_background(c, x, y, width, height, from_hex, to_hex, steps=100):
+    r1, g1, b1 = hex_to_rgb(from_hex)
+    r2, g2, b2 = hex_to_rgb(to_hex)
+
+    step_width = width / steps
+    for i in range(steps):
+        r = r1 + (r2 - r1) * (i / steps)
+        g = g1 + (g2 - g1) * (i / steps)
+        b = b1 + (b2 - b1) * (i / steps)
+        c.setFillColor(Color(r, g, b))
+        c.rect(x + i * step_width, y, step_width, height, stroke=0, fill=1)
+
+def draw_gradient_text(canvas, text, x, y, font_name, font_size, from_color, to_color):
+    canvas.setFont(font_name, font_size)
+    steps = len(text)
+    r1, g1, b1 = hex_to_rgb(from_color)
+    r2, g2, b2 = hex_to_rgb(to_color)
+
+    total_width = sum(canvas.stringWidth(char, font_name, font_size) for char in text)
+    start_x = x - total_width / 2
+
+    for i, char in enumerate(text):
+        r = r1 + (r2 - r1) * (i / max(1, steps - 1))
+        g = g1 + (g2 - g1) * (i / max(1, steps - 1))
+        b = b1 + (b2 - b1) * (i / max(1, steps - 1))
+        canvas.setFillColor(Color(r, g, b))
+        char_width = canvas.stringWidth(char, font_name, font_size)
+        canvas.drawString(start_x, y, char)
+        start_x += char_width
+
+def download_certificate(request):
+    student = request.user.student_profile
+    progress = student.general_progress
+    student_name = progress.name or student.user.get_full_name()
+
+    logo_settings = LogoSettings.objects.first()
+    logo_text = logo_settings.text
+    font_family = logo_settings.font_family
+    font_size = logo_settings.font_size
+    gradient_from = logo_settings.gradient_from
+    gradient_to = logo_settings.gradient_to
+
+    completion_date = timezone.now().date()
+
+    grades_data = {
+        "Git": progress.git_general_progress,
+        "Git Exercises": progress.git_progress,
+        "Jenkins": progress.jenkins_general_progress,
+        "Jenkins Test": progress.jenkins_progress,
+        "Docker": progress.docker_general_progress,
+    }
+
+    font_path = os.path.join('App_SetUp', 'utils', 'NotoSansHebrew-Regular.ttf')
+    pdfmetrics.registerFont(TTFont('HebrewFont', font_path))
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+
+    # רקע גרדיאנט
+    #logo_y = height - 120
+    #logo_height = 50
+    #draw_gradient_text_background(p, 100, logo_y, width - 200, logo_height, gradient_from, gradient_to)
+
+    # טקסט הלוגו
+    draw_gradient_text(
+        p,
+        logo_text,
+        width / 2,
+        height - 120,
+        "Helvetica-Bold",
+        font_size,
+        gradient_from,
+        gradient_to
+    )
+
+    # שאר תעודת סיום
+    p.setFont("HebrewFont", 30)
+    p.setFillColor(HexColor("#000000"))
+    p.drawCentredString(width / 2, height - 180, fix_hebrew("תעודת סיום"))
+
+    p.setFont("HebrewFont", 22)
+    p.drawCentredString(width / 2, height - 230, fix_hebrew("מוענקת בזאת ל"))
+
+    p.setFont("Helvetica-Bold", 24)
+    p.drawCentredString(width / 2, height - 270, student_name)
+
+    p.setFont("HebrewFont", 20)
+    p.drawCentredString(width / 2, height - 310, fix_hebrew("על השלמת הקורס בהצלחה"))
+
+    p.setFont("Helvetica", 18)
+    p.setFillColor(HexColor("#004aad"))
+    p.drawCentredString(width / 2, height - 360, completion_date.strftime('%Y-%m-%d'))
+
+    p.setFont("Helvetica", 16)
+    p.setFillColor(HexColor("#888888"))
+    p.drawCentredString(width / 2, height - 363, "___________")
+
+    p.setFont("HebrewFont", 12)
+    p.setFillColor(HexColor("#000000"))
+    p.drawCentredString(width / 2, height - 380, fix_hebrew("תאריך"))
+
+    p.showPage()
+
+    # דף שני - גיליון ציונים
+    p.setFont("HebrewFont", 24)
+    p.setFillColor(HexColor("#004aad"))
+    p.drawCentredString(width / 2, height - 100, fix_hebrew("התקדמות"))
+
+    y_position = height - 160
+    p.setFont("Helvetica", 18)
+    for course, grade in grades_data.items():
+        label = course
+        p.setFillColor(HexColor("#333333"))
+        p.drawRightString(width - 100, y_position, f"{label}: {grade}%")
+        y_position -= 40
+
+    p.save()
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename=f'certificate_{student.user.username}.pdf')
+
+
 
 
 @login_required
