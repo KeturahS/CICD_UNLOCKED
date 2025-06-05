@@ -49,6 +49,8 @@ urlpatterns = [
     path('lecturer/resolve_request/<int:message_id>/', views.resolve_lecturer_request, name='resolve_lecturer_request'),
 
     path('progress/', views.student_progress, name='student_progress'),
+    path('download_certificate/', views.download_certificate, name='download_certificate'),
+
     path('learning/', views.learning_home, name='learning_home'),
     path('modules/git/', views.git_module_view, name='git_module'),
     path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),

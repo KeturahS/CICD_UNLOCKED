@@ -65,23 +65,23 @@
     }
 
     /* Module Cards */
- .modules-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* תמיד 3 בעמודה */
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
+    .modules-grid {
+       display: grid;
+       grid-template-columns: repeat(3, 1fr); /* תמיד 3 בעמודה */
+       gap: 2rem;
+       margin-bottom: 3rem;
+    }
 
-.module-card {
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 1.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
+    .module-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 1.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
 
 
 
@@ -310,6 +310,22 @@
             grid-template-columns: repeat(2, 1fr);
         }
     }
+
+    .download-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #00d4ff, #8b5cf6);
+            color: white;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+    }
+
+    .download-button:hover {
+        background: linear-gradient(135deg, #8b5cf6, #00d4ff);
+    }
 </style>
 
 
@@ -324,7 +340,7 @@
     z-index: 1000;
     max-width: 300px;
 ">
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+    <!--box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">-->
     <h3 style="color: #0d3b66; margin-bottom: 15px;">
         תאריך היעד שלך להשלמת הלומדה: {{ target_date }}
     </h3>
@@ -336,6 +352,14 @@
     <p style="color: red; font-weight: bold; font-size: 18px;">
         תאריך היעד חלף לפני {{ abs_days_remaining }} ימים.
     </p>
+    {% endif %}
+
+    {% if git_general_progress == 100 or jenkins_general_progress == 100 or docker_general_progress == 100 %}
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'download_certificate' %}" class="download-button">
+            📄 הורד תעודת סיום
+        </a>
+    </div>
     {% endif %}
 
 
