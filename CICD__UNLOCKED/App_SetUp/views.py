@@ -1544,20 +1544,39 @@ def view_student_notes(request):
 @staff_member_required
 def run_tests(request):
     try:
-        messages.info(request, "מריץ בדיקות... אנא המתן.")
-        result = subprocess.run(['pytest'], capture_output=True, text=True)
+        # הרצת הבדיקות עם Django test runner – עבור אפליקציית App_SetUp
+        result = subprocess.run(
+            ['python', 'manage.py', 'test', 'App_SetUp.tests', '--verbosity=2'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
 
         output = result.stdout + "\n" + result.stderr
 
+        # קביעת הודעה מתאימה בהתאם לתוצאה
         if "FAILED" in output or "ERROR" in output:
-            messages.warning(request, "הבדיקות הסתיימו, חלקן נכשלו או נזרקה שגיאה.")
+            status_message = "הבדיקות הסתיימו – חלקן נכשלו או נזרקה שגיאה."
+            status_type = "warning"
+            background_color = "#fff3cd"
         else:
-            messages.success(request, "הבדיקות הסתיימו בהצלחה. הכל תקין.")
+            status_message = "✅ הבדיקות הסתיימו בהצלחה. הכל תקין."
+            status_type = "success"
+            background_color = "#d1e7dd"
 
-        return render(request, 'AdminPages/test_results.html', {'output': output})
     except Exception as e:
-        messages.error(request, f"שגיאה בהרצת בדיקות: {e}")
-        return redirect('admin')
+        output = f"שגיאה בהרצת הבדיקות:\n{str(e)}"
+        status_message = "❌ שגיאה כללית בהרצת הבדיקות."
+        status_type = "danger"
+        background_color = "#f8d7da"
+
+    # מציגים את הפלט + הודעת סטטוס בדף התוצאות
+    return render(request, 'AdminPages/test_results.html', {
+        'output': output,
+        'background_color': background_color,
+        'status_message': status_message,
+        'status_type': status_type
+    })
 
 
 

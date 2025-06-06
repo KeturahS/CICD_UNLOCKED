@@ -1,23 +1,128 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>הודעות ממרצים</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <style>
+        body {
+            background-color: #0a0e1a;
+            color: white;
+            font-family: 'Assistant', sans-serif;
+        }
 
-{% block title %}הודעות ממרצים{% endblock %}
+        /* סרגל עליון */
+        .navbar-custom {
+            background: linear-gradient(to right, #004b93, #6c1cb1);
+            padding: 12px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
 
-{% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4 text-center">📨 הודעות ממרצים</h2>
+        .navbar-custom a {
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-custom a:hover {
+            color: #00f6ff;
+        }
+
+        /* תוכן העמוד */
+        .message-container {
+            direction: rtl;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .message-title {
+            color: #00f6ff;
+            font-weight: 800;
+            font-size: 2.3rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 0 8px rgba(0, 246, 255, 0.2);
+        }
+
+        .card.custom-message-card {
+            background-color: #1c2333;
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            color: #ffffff;
+            position: relative;
+            border: 1px solid #2f3a55;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .card.custom-message-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-title {
+            color: #00f6ff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: #bbbbbb;
+            font-size: 0.9rem;
+        }
+
+        .card-text {
+            margin-top: 1rem;
+            font-size: 1.05rem;
+            color: #e2e6f3;
+            line-height: 1.7;
+        }
+
+        .empty-message {
+            background-color: #2d3348;
+            color: #ccc;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- סרגל עליון עם כפתור חזרה -->
+<div class="navbar-custom">
+    <a href="{% url 'admin' %}">🔙 חזרה לדף ניהול</a>
+</div>
+
+<!-- תוכן ההודעות -->
+<div class="message-container">
+    <h2 class="message-title">📨 הודעות ממרצים</h2>
 
     {% if messages %}
-        <ul class="list-group">
+        <div class="d-flex flex-column gap-4">
             {% for msg in messages %}
-                <li class="list-group-item">
-                    <strong>משתמש:</strong> {{ msg.sender.username }}<br>
-                    <strong>תאריך:</strong> {{ msg.timestamp|date:"d/m/Y H:i" }}<br>
-                    <strong>תוכן:</strong> {{ msg.content }}
-                </li>
+                <div class="card custom-message-card">
+                    <h5 class="card-title">👤 {{ msg.sender.username }}</h5>
+                    <h6 class="card-subtitle">🕒 {{ msg.timestamp|date:"d/m/Y H:i" }}</h6>
+                    <p class="card-text">📝 {{ msg.content }}</p>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <div class="alert alert-info text-center">אין הודעות להצגה.</div>
+        <div class="empty-message mt-4">
+            אין הודעות להצגה.
+        </div>
     {% endif %}
 </div>
-{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
