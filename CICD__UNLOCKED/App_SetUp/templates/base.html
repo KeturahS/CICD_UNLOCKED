@@ -51,13 +51,14 @@
 <body>
 <div class="navbar">
     <div>
-        <a href="{% url 'student' %}">דף הבית</a>
+
         {% if request.user.is_authenticated and request.user.is_lecturer %}
+            <a href="{% url 'lecturer' %}">חזרה לדף המרצה</a>
             <a href="{% url 'lecturer_profile' %}">פרופיל מרצה</a>
             <a href="{% url 'view_module_ratings' %}">דירוגי לומדות</a>
             <a href="{% url 'send_private_message' %}">שליחת הודעה</a>
         {% elif request.user.is_authenticated and request.user.is_student %}
-
+            <a href="{% url 'student' %}">דף הבית</a>
             <a href="{% url 'contact_us' %}">צור קשר עם צוות האתר</a>
 
             <a href="{% url 'student_progress' %}">התקדמות בלמידה</a>
