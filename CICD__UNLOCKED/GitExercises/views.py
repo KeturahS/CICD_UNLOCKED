@@ -9,6 +9,7 @@ import logging
 from .models import PipelineTemplate, StudentPipelineAttempt
 
 logger = logging.getLogger(__name__)
+from App_SetUp.models import User
 
 
 @login_required
@@ -106,12 +107,18 @@ def update_jenkins_quiz_completion(request):
             completed=False)
 
         for qid in id_list:
-            quiz_status = StudentJenkinsQuizExercise.objects.get(student=request.user.student_profile, quiz_id=qid)
-            print(f"DEBUG: Question ID: {qid}, Question Text: {quiz_status.quiz.question}")
+            quiz_status = StudentJenkinsQuizExercise.objects.filter(
+                student=request.user.student_profile,
+                quiz_id=qid
+            ).first()
 
-            quiz_status.completed = True
-            quiz_status.save()
-
+            if quiz_status:
+                print(f"✅ FOUND: Question ID {qid}, marking completed")
+                quiz_status.completed = True
+                quiz_status.save()
+            else:
+                print(
+                    f"❌ NOT FOUND: No StudentJenkinsQuizExercise for student={request.user.student_profile} and quiz_id={qid}")
         # חזרה לדף ממנו הגיע המשתמש
         return redirect(request.META.get('HTTP_REFERER', 'home'))
 
