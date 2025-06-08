@@ -119,10 +119,13 @@ def update_jenkins_quiz_completion(request):
             else:
                 print(
                     f"❌ NOT FOUND: No StudentJenkinsQuizExercise for student={request.user.student_profile} and quiz_id={qid}")
-        # חזרה לדף ממנו הגיע המשתמש
-        return redirect(request.META.get('HTTP_REFERER', 'home'))
+    student_jenkins_quiz_exercise = StudentJenkinsQuizExercise.objects.filter(student=request.user.student_profile)
 
-    return redirect('home')
+    context = {
+            'student_jenkins_quiz_exercise': student_jenkins_quiz_exercise,
+        }
+
+    return render(request, 'JenkinsExercises/section4_questions.html', context)
 
 
 from App_SetUp.models import StudentProfile
