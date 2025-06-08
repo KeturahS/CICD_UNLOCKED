@@ -720,9 +720,7 @@ def draw_gradient_text(canvas, text, x, y, font_name, font_size, from_color, to_
 
 def download_certificate(request):
     student = request.user.student_profile
-    progress = student.general_progress
-    student_name = progress.name or student.user.get_full_name()
-
+    student_name = student.user.get_full_name()
     logo_settings = LogoSettings.objects.first()
     logo_text = logo_settings.text
     font_family = logo_settings.font_family
@@ -732,12 +730,61 @@ def download_certificate(request):
 
     completion_date = timezone.now().date()
 
+    # חישוב Git progress
+    git_total = StudentGitCommandProgress.objects.filter(student=student).count()
+    git_completed = StudentGitCommandProgress.objects.filter(student=student, completed=True).count()
+    git_progress = int((git_completed / git_total) * 100) if git_total > 0 else 0
+
+    # חישוב Jenkins progress
+    jenkins_total = StudentJenkinsQuizExercise.objects.filter(student=student).count()
+    jenkins_completed = StudentJenkinsQuizExercise.objects.filter(student=student, completed=True).count()
+    jenkins_progress = int((jenkins_completed / jenkins_total) * 100) if jenkins_total > 0 else 0
+
+    # חישוב וידאו ומצגות Git
+    git_vids_total = StudentVideoCompletion.objects.filter(student=student, video__module='Git').count()
+    git_vids_completed = StudentVideoCompletion.objects.filter(student=student, video__module='Git',
+                                                               completed=True).count()
+    git_presentations_total = StudentPresentationCompletion.objects.filter(student=student,
+                                                                           presentation__module='Git').count()
+    git_presentations_completed = StudentPresentationCompletion.objects.filter(student=student,
+                                                                               presentation__module='Git',
+                                                                               completed=True).count()
+    git_general_progress = int(
+        ((git_vids_completed + git_presentations_completed) / (git_vids_total + git_presentations_total)) * 100) if (
+                                                                                                                                git_vids_total + git_presentations_total) > 0 else 0
+
+    # חישוב וידאו ומצגות Jenkins
+    jenkins_vids_total = StudentVideoCompletion.objects.filter(student=student, video__module='Jenkins').count()
+    jenkins_vids_completed = StudentVideoCompletion.objects.filter(student=student, video__module='Jenkins',
+                                                                   completed=True).count()
+    jenkins_presentations_total = StudentPresentationCompletion.objects.filter(student=student,
+                                                                               presentation__module='Jenkins').count()
+    jenkins_presentations_completed = StudentPresentationCompletion.objects.filter(student=student,
+                                                                                   presentation__module='Jenkins',
+                                                                                   completed=True).count()
+    jenkins_general_progress = int(((jenkins_vids_completed + jenkins_presentations_completed) / (
+                jenkins_vids_total + jenkins_presentations_total)) * 100) if (
+                                                                                         jenkins_vids_total + jenkins_presentations_total) > 0 else 0
+
+    # חישוב וידאו ומצגות Docker
+    docker_vids_total = StudentVideoCompletion.objects.filter(student=student, video__module='Docker').count()
+    docker_vids_completed = StudentVideoCompletion.objects.filter(student=student, video__module='Docker',
+                                                                  completed=True).count()
+    docker_presentations_total = StudentPresentationCompletion.objects.filter(student=student,
+                                                                              presentation__module='Docker').count()
+    docker_presentations_completed = StudentPresentationCompletion.objects.filter(student=student,
+                                                                                  presentation__module='Docker',
+                                                                                  completed=True).count()
+    docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) / (
+                docker_vids_total + docker_presentations_total)) * 100) if (
+                                                                                       docker_vids_total + docker_presentations_total) > 0 else 0
+
     grades_data = {
-        "Git": progress.git_general_progress,
-        "Git Exercises": progress.git_progress,
-        "Jenkins": progress.jenkins_general_progress,
-        "Jenkins Test": progress.jenkins_progress,
-        "Docker": progress.docker_general_progress,
+        "Git": git_general_progress,
+        "Git Exercises": git_progress,
+        "Jenkins": jenkins_general_progress,
+        "Jenkins Test": jenkins_progress,
+        "Docker": docker_general_progress,
     }
 
     font_path = os.path.join('App_SetUp', 'utils', 'NotoSansHebrew-Regular.ttf')
