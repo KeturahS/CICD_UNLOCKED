@@ -1664,7 +1664,7 @@
         // שאלות לחידון
        const quizQuestions = [
 {% for question in student_jenkins_quiz_exercise %}
-{    id: "{{ question.id }}",
+{    id: "{{ question.quiz.id }}",
     question: "{{ question.quiz.question|escapejs }}",
     options: [
         "{{ question.quiz.option1|escapejs }}",
