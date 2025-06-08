@@ -275,3 +275,13 @@ class StudentGeneralProgress(models.Model):
         return f"{self.student.user.username} - General Progress)"
 
 
+
+class LogoSettings(models.Model):
+    text = models.CharField(max_length=100, default='CiCd Unlocked')
+    font_family = models.CharField(max_length=100, default='Space Mono')
+    font_size = models.IntegerField(default=20)
+    gradient_from = models.CharField(max_length=20, default='#30f2f2')
+    gradient_to = models.CharField(max_length=20, default='#6812aa')
+
+    def __str__(self):
+        return f"Logo Settings: {self.text}"

@@ -7,6 +7,7 @@ from datetime import date
 from .models import User, StudentProfile, ContactMessage, PrivateMessage, StudentNote
 from GitExercises.models import GitHubSentence, GitSentence, Terminal_Exercises_Git_Commands, JenkinsConceptsQuiz
 from .models import LecturerToAdminMessage
+from .models import LogoSettings
 User = get_user_model()
 
 class LoginForm(forms.Form):
@@ -188,4 +189,18 @@ class LecturerToAdminMessageForm(forms.ModelForm):
         }
         labels = {
             'content': 'תוכן ההודעה',
+        }
+
+
+
+class LogoSettingsForm(forms.ModelForm):
+    class Meta:
+        model = LogoSettings
+        fields = ['text', 'font_family', 'font_size', 'gradient_from', 'gradient_to']
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
+            'font_family': forms.TextInput(attrs={'class': 'form-control'}),
+            'font_size': forms.NumberInput(attrs={'class': 'form-control'}),
+            'gradient_from': forms.TextInput(attrs={'type': 'color', 'class': 'form-control'}),
+            'gradient_to': forms.TextInput(attrs={'type': 'color', 'class': 'form-control'}),
         }

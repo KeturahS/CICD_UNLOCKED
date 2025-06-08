@@ -1,102 +1,77 @@
 import random
 from django.contrib.auth import update_session_auth_hash
-from django.urls import reverse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect
 from App_SetUp.utils.server_monitor import is_high_load
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
-from django.conf import settings
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-
 from .models import User, StudentPresentationCompletion, StudentGeneralProgress
-
-from .models import User
-import requests
-
-from .forms import SignUpForm, LoginForm, TerminalExercisesGitCommandsForm, JenkinsConceptsQuizForm
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import LecturerProfile, StudentProfile, AdminProfile, Presentation
+from .forms import SignUpForm, LoginForm, JenkinsConceptsQuizForm
+from .models import LecturerProfile, Presentation
 from .forms import StudentProfileUpdateForm
 from App_SetUp.models import ServerLoadRecord
 from django.conf import settings
 from .forms import ContactMessageForm
 from .models import ContactMessage, Podcast
-from .models import LearningVideo
 from .models import LearningModuleRating
-from .models import LearningModuleRating
-from django.utils import timezone
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import LearningModuleRating
-from django.contrib.auth.decorators import login_required
-from .models import LearningModuleRating
-from App_SetUp.models import CourseContent
-from App_SetUp.models import CourseContent
-
-
 from .forms import LecturerToAdminMessageForm
 from .models import LecturerToAdminMessage
-from .models import LecturerToAdminMessage
-from django.contrib.admin.views.decorators import staff_member_required
-
-
-
-
-from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import PrivateMessageForm
-
 from .models import PrivateMessage, CourseContent
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from datetime import date
-
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import messages
-from django.shortcuts import render, redirect
-import subprocess
-
-from datetime import datetime
-
-from django.contrib.auth.decorators import login_required
-
-import base64
-from io import BytesIO
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required, user_passes_test
-
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import user_passes_test
 from GitExercises.models import GitSentence, GitHubSentence, Terminal_Exercises_Git_Commands, StudentGitCommandProgress, \
     StudentJenkinsQuizExercise, JenkinsConceptsQuiz
 from .forms import GitSentenceForm, GitHubSentenceForm, TerminalExercisesGitCommandsForm
-
-from io import BytesIO
 import base64
-import pandas as pd
 import matplotlib.pyplot as plt
-# Create your views here.
-
 from .forms import StudentNoteForm
 from .models import StudentNote
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.decorators import login_required
-from .models import StudentNote
-
 import subprocess
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from .models import LearningVideo, StudentProfile, StudentVideoCompletion
+from django.shortcuts import render, redirect
+from .forms import LogoSettingsForm
+from django.contrib.auth.decorators import login_required
+from datetime import date
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.colors import HexColor, Color
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from django.http import FileResponse
+from io import BytesIO
+from django.utils import timezone
+import os
+import arabic_reshaper
+from bidi.algorithm import get_display
+from .models import LogoSettings
+
+# Create your views here.
 
 
 def index(request):
-    return render(request, 'index.html')
+    logo = LogoSettings.objects.first()
+    return render(request, 'index.html', {'logo_settings': logo})
+
+
+@staff_member_required
+def logo_settings(request):
+    settings = LogoSettings.objects.first()
+    if not settings:
+        settings = LogoSettings.objects.create()
+
+    if request.method == 'POST':
+        form = LogoSettingsForm(request.POST, instance=settings)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "הגדרות הלוגו נשמרו בהצלחה")
+            return redirect('logo_settings')
+    else:
+        form = LogoSettingsForm(instance=settings)
+
+    return render(request, 'AdminPages/logo_settings.html', {'form': form})
+
 
 
 def terms_view(request):
@@ -700,6 +675,142 @@ def student_progress(request):
         'jenkins_total': jenkins_total,
 
     })
+
+
+
+
+
+def fix_hebrew(text):
+    reshaped_text = arabic_reshaper.reshape(text)
+    return get_display(reshaped_text)
+
+def hex_to_rgb(hex_color):
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i + 2], 16)/255.0 for i in (0, 2, 4))
+
+def draw_gradient_text_background(c, x, y, width, height, from_hex, to_hex, steps=100):
+    r1, g1, b1 = hex_to_rgb(from_hex)
+    r2, g2, b2 = hex_to_rgb(to_hex)
+
+    step_width = width / steps
+    for i in range(steps):
+        r = r1 + (r2 - r1) * (i / steps)
+        g = g1 + (g2 - g1) * (i / steps)
+        b = b1 + (b2 - b1) * (i / steps)
+        c.setFillColor(Color(r, g, b))
+        c.rect(x + i * step_width, y, step_width, height, stroke=0, fill=1)
+
+def draw_gradient_text(canvas, text, x, y, font_name, font_size, from_color, to_color):
+    canvas.setFont(font_name, font_size)
+    steps = len(text)
+    r1, g1, b1 = hex_to_rgb(from_color)
+    r2, g2, b2 = hex_to_rgb(to_color)
+
+    total_width = sum(canvas.stringWidth(char, font_name, font_size) for char in text)
+    start_x = x - total_width / 2
+
+    for i, char in enumerate(text):
+        r = r1 + (r2 - r1) * (i / max(1, steps - 1))
+        g = g1 + (g2 - g1) * (i / max(1, steps - 1))
+        b = b1 + (b2 - b1) * (i / max(1, steps - 1))
+        canvas.setFillColor(Color(r, g, b))
+        char_width = canvas.stringWidth(char, font_name, font_size)
+        canvas.drawString(start_x, y, char)
+        start_x += char_width
+
+def download_certificate(request):
+    student = request.user.student_profile
+    progress = student.general_progress
+    student_name = progress.name or student.user.get_full_name()
+
+    logo_settings = LogoSettings.objects.first()
+    logo_text = logo_settings.text
+    font_family = logo_settings.font_family
+    font_size = logo_settings.font_size
+    gradient_from = logo_settings.gradient_from
+    gradient_to = logo_settings.gradient_to
+
+    completion_date = timezone.now().date()
+
+    grades_data = {
+        "Git": progress.git_general_progress,
+        "Git Exercises": progress.git_progress,
+        "Jenkins": progress.jenkins_general_progress,
+        "Jenkins Test": progress.jenkins_progress,
+        "Docker": progress.docker_general_progress,
+    }
+
+    font_path = os.path.join('App_SetUp', 'utils', 'NotoSansHebrew-Regular.ttf')
+    pdfmetrics.registerFont(TTFont('HebrewFont', font_path))
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+
+    # רקע גרדיאנט
+    #logo_y = height - 120
+    #logo_height = 50
+    #draw_gradient_text_background(p, 100, logo_y, width - 200, logo_height, gradient_from, gradient_to)
+
+    # טקסט הלוגו
+    draw_gradient_text(
+        p,
+        logo_text,
+        width / 2,
+        height - 120,
+        "Helvetica-Bold",
+        font_size,
+        gradient_from,
+        gradient_to
+    )
+
+    # שאר תעודת סיום
+    p.setFont("HebrewFont", 30)
+    p.setFillColor(HexColor("#000000"))
+    p.drawCentredString(width / 2, height - 180, fix_hebrew("תעודת סיום"))
+
+    p.setFont("HebrewFont", 22)
+    p.drawCentredString(width / 2, height - 230, fix_hebrew("מוענקת בזאת ל"))
+
+    p.setFont("Helvetica-Bold", 24)
+    p.drawCentredString(width / 2, height - 270, student_name)
+
+    p.setFont("HebrewFont", 20)
+    p.drawCentredString(width / 2, height - 310, fix_hebrew("על השלמת הקורס בהצלחה"))
+
+    p.setFont("Helvetica", 18)
+    p.setFillColor(HexColor("#004aad"))
+    p.drawCentredString(width / 2, height - 360, completion_date.strftime('%Y-%m-%d'))
+
+    p.setFont("Helvetica", 16)
+    p.setFillColor(HexColor("#888888"))
+    p.drawCentredString(width / 2, height - 363, "___________")
+
+    p.setFont("HebrewFont", 12)
+    p.setFillColor(HexColor("#000000"))
+    p.drawCentredString(width / 2, height - 380, fix_hebrew("תאריך"))
+
+    p.showPage()
+
+    # דף שני - גיליון ציונים
+    p.setFont("HebrewFont", 24)
+    p.setFillColor(HexColor("#004aad"))
+    p.drawCentredString(width / 2, height - 100, fix_hebrew("התקדמות"))
+
+    y_position = height - 160
+    p.setFont("Helvetica", 18)
+    for course, grade in grades_data.items():
+        label = course
+        p.setFillColor(HexColor("#333333"))
+        p.drawRightString(width - 100, y_position, f"{label}: {grade}%")
+        y_position -= 40
+
+    p.save()
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename=f'certificate_{student.user.username}.pdf')
+
+
 
 
 @login_required
@@ -1433,20 +1544,39 @@ def view_student_notes(request):
 @staff_member_required
 def run_tests(request):
     try:
-        messages.info(request, "מריץ בדיקות... אנא המתן.")
-        result = subprocess.run(['pytest'], capture_output=True, text=True)
+        # הרצת הבדיקות עם Django test runner – עבור אפליקציית App_SetUp
+        result = subprocess.run(
+            ['python', 'manage.py', 'test', 'App_SetUp.tests', '--verbosity=2'],
+            capture_output=True,
+            text=True,
+            cwd=os.getcwd()
+        )
 
         output = result.stdout + "\n" + result.stderr
 
+        # קביעת הודעה מתאימה בהתאם לתוצאה
         if "FAILED" in output or "ERROR" in output:
-            messages.warning(request, "הבדיקות הסתיימו, חלקן נכשלו או נזרקה שגיאה.")
+            status_message = "הבדיקות הסתיימו – חלקן נכשלו או נזרקה שגיאה."
+            status_type = "warning"
+            background_color = "#fff3cd"
         else:
-            messages.success(request, "הבדיקות הסתיימו בהצלחה. הכל תקין.")
+            status_message = "✅ הבדיקות הסתיימו בהצלחה. הכל תקין."
+            status_type = "success"
+            background_color = "#d1e7dd"
 
-        return render(request, 'AdminPages/test_results.html', {'output': output})
     except Exception as e:
-        messages.error(request, f"שגיאה בהרצת בדיקות: {e}")
-        return redirect('admin')
+        output = f"שגיאה בהרצת הבדיקות:\n{str(e)}"
+        status_message = "❌ שגיאה כללית בהרצת הבדיקות."
+        status_type = "danger"
+        background_color = "#f8d7da"
+
+    # מציגים את הפלט + הודעת סטטוס בדף התוצאות
+    return render(request, 'AdminPages/test_results.html', {
+        'output': output,
+        'background_color': background_color,
+        'status_message': status_message,
+        'status_type': status_type
+    })
 
 
 

@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin_page_students_section/', views.manage_students, name='manage_students'),
     path('admin_page_lecturers_section/', views.manage_lecturers, name='manage_lecturers'),
     path('admin_page_admins_section/', views.manage_admins, name='manage_admins'),
+    path('admin_page/logo-appearance/', views.logo_settings, name='logo_settings'),
+
     path('handle_lecturer_request/', views.handle_lecturer_request, name='handle_lecturer_request'),
     path('handle_admin_request/', views.handle_admin_request, name='handle_admin_request'),
     path('delete_student/', views.delete_student, name='delete_student'),
@@ -47,6 +49,8 @@ urlpatterns = [
     path('lecturer/resolve_request/<int:message_id>/', views.resolve_lecturer_request, name='resolve_lecturer_request'),
 
     path('progress/', views.student_progress, name='student_progress'),
+    path('download_certificate/', views.download_certificate, name='download_certificate'),
+
     path('learning/', views.learning_home, name='learning_home'),
     path('modules/git/', views.git_module_view, name='git_module'),
     path('modules/jenkins/', views.jenkins_module_view, name='jenkins_module'),
