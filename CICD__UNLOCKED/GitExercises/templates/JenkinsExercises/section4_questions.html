@@ -848,959 +848,995 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-YCRtFUCNegzHXooskmtRLq4gRQAncf.png" alt="Jenkins Logo" class="jenkins-logo">
-        <h1>לומדה אינטראקטיבית - Jenkins</h1>
-        <p>למד את המושגים והכלים המרכזיים בעולם של Jenkins</p>
-    </div>
+<div class="header">
+    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-YCRtFUCNegzHXooskmtRLq4gRQAncf.png"
+         alt="Jenkins Logo" class="jenkins-logo">
+    <h1>לומדה אינטראקטיבית - Jenkins</h1>
+    <p>למד את המושגים והכלים המרכזיים בעולם של Jenkins</p>
+</div>
 
-    <div class="nav-container">
-        <div class="main-nav">
-            <div class="nav-tabs">
-                <button class="nav-tab active" data-section="intro">מבוא</button>
-                <button class="nav-tab" data-section="concepts">מושגים מרכזיים</button>
-                <button class="nav-tab" data-section="pipelines">פייפליינים</button>
-                <button class="nav-tab" data-section="plugins">תוספים</button>
-                <button class="nav-tab" data-section="exercises">תרגילים</button>
-                <button class="nav-tab" onclick="location.href='{% url 'jenkins_questions' %}'">תרגולים נוספים</button>
+<div class="nav-container">
+    <div class="main-nav">
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-section="intro">מבוא</button>
+            <button class="nav-tab" data-section="concepts">מושגים מרכזיים</button>
+            <button class="nav-tab" data-section="pipelines">פייפליינים</button>
+            <button class="nav-tab" data-section="plugins">תוספים</button>
+            <button class="nav-tab" data-section="exercises">תרגילים</button>
+            <button class="nav-tab" onclick="location.href='{% url 'jenkins_questions' %}'">תרגולים נוספים</button>
 
-            </div>
-            <div class="mode-switch">
-                <button id="learn-mode" class="active">מצב לימוד</button>
-                <button id="practice-mode">מצב תרגול</button>
-            </div>
         </div>
-    </div>
-
-    <div class="container">
-        <!-- מבוא -->
-        <section id="intro" class="content-section active">
-            <h2>מבוא ל-Jenkins</h2>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">J</div>
-                    מהו Jenkins?
-                </h3>
-                <p>Jenkins הוא שרת אוטומציה בקוד פתוח (Open Source) שמאפשר למפתחים לאוטומט את תהליכי הפיתוח, הבדיקות והפריסה של תוכנה. הוא מהווה כלי מרכזי בעולם ה-CI/CD (אינטגרציה מתמשכת / פריסה מתמשכת).</p>
-                <p>Jenkins נוצר במקור ב-2004 תחת השם "Hudson" על ידי קוהסוקה קאוואגוצ'י בחברת Sun Microsystems. לאחר שאורקל רכשה את Sun, הפרויקט פוצל ושונה שמו ל-Jenkins ב-2011.</p>
-            </div>
-
-            <h3>למה משתמשים ב-Jenkins?</h3>
-            <ul>
-                <li><strong>אוטומציה:</strong> מאפשר להפוך תהליכים ידניים לאוטומטיים</li>
-                <li><strong>אינטגרציה מתמשכת (CI):</strong> בדיקה אוטומטית של שינויים בקוד</li>
-                <li><strong>פריסה מתמשכת (CD):</strong> העברה אוטומטית של קוד לסביבות שונות</li>
-                <li><strong>גמישות:</strong> תומך במגוון רחב של כלים ושפות תכנות</li>
-                <li><strong>הרחבה:</strong> אלפי תוספים (plugins) זמינים להרחבת הפונקציונליות</li>
-                <li><strong>קהילה גדולה:</strong> תמיכה נרחבת וידע רב זמין ברשת</li>
-            </ul>
-
-            <h3>איך Jenkins עובד?</h3>
-            <p>Jenkins פועל כשרת שמריץ תהליכים מוגדרים (ג'ובים) על פי טריגרים שונים. הוא יכול לפעול כך:</p>
-            <ol>
-                <li>מפתח דוחף שינויים למאגר קוד (כמו Git)</li>
-                <li>Jenkins מזהה את השינוי (באמצעות webhook או סריקה תקופתית)</li>
-                <li>Jenkins מריץ ג'וב שמוגדר מראש (למשל: בניית הקוד, הרצת בדיקות)</li>
-                <li>Jenkins מדווח על תוצאות התהליך (הצלחה/כישלון)</li>
-                <li>במקרה של הצלחה, Jenkins יכול להמשיך לשלבים הבאים (למשל: פריסה לסביבת בדיקות)</li>
-            </ol>
-
-            <div class="interactive-demo">
-                <h3>הדגמה: תהליך בסיסי ב-Jenkins</h3>
-                <p>לחצו על השלבים השונים כדי לראות מה קורה בכל שלב:</p>
-
-                <div class="pipeline-visual">
-                    <div class="pipeline-stage" data-stage="commit" style="left: 5%; top: 60px;">דחיפת קוד</div>
-                    <div class="pipeline-arrow" style="left: 15%; width: 15%;"></div>
-
-                    <div class="pipeline-stage" data-stage="build" style="left: 30%; top: 60px;">בנייה</div>
-                    <div class="pipeline-arrow" style="left: 40%; width: 15%;"></div>
-
-                    <div class="pipeline-stage" data-stage="test" style="left: 55%; top: 60px;">בדיקות</div>
-                    <div class="pipeline-arrow" style="left: 65%; width: 15%;"></div>
-
-                    <div class="pipeline-stage" data-stage="deploy" style="left: 80%; top: 60px;">פריסה</div>
-                </div>
-
-                <div id="commit-info" class="stage-info">
-                    <h3>דחיפת קוד</h3>
-                    <p>מפתח מסיים לכתוב קוד ודוחף אותו למאגר הקוד (Git, SVN וכו'). פעולה זו מפעילה טריגר ב-Jenkins.</p>
-                    <p>דוגמה לפקודה:</p>
-                    <div class="code-example">git push origin main</div>
-                </div>
-
-                <div id="build-info" class="stage-info">
-                    <h3>בנייה (Build)</h3>
-                    <p>Jenkins מושך את הקוד העדכני ומבצע תהליך בנייה. זה יכול לכלול קומפילציה, יצירת חבילות וכו'.</p>
-                    <p>דוגמה לפקודות בשלב זה:</p>
-                    <div class="code-example">npm install npm run build</div>
-                </div>
-
-                <div id="test-info" class="stage-info">
-                    <h3>בדיקות (Test)</h3>
-                    <p>Jenkins מריץ בדיקות אוטומטיות על הקוד כדי לוודא שהוא עובד כמצופה ושלא נוצרו באגים חדשים.</p>
-                    <p>דוגמה לפקודות בשלב זה:</p>
-                    <div class="code-example">npm test npm run lint</div>
-                </div>
-
-                <div id="deploy-info" class="stage-info">
-                    <h3>פריסה (Deploy)</h3>
-                    <p>אם כל הבדיקות עברו בהצלחה, Jenkins מפרס את הקוד לסביבה הרלוונטית (פיתוח, בדיקות, ייצור).</p>
-                    <p>דוגמה לפקודות בשלב זה:</p>
-                    <div class="code-example">ssh user@server 'cd /app && git pull' docker-compose up -d</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- מושגים מרכזיים -->
-        <section id="concepts" class="content-section">
-            <h2>מושגים מרכזיים ב-Jenkins</h2>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">J</div>
-                    Job (ג'וב)
-                </h3>
-                <p>ג'וב הוא תהליך מוגדר שמריצים ב-Jenkins. זהו הבסיס לכל פעולה אוטומטית במערכת.</p>
-                <p><strong>סוגי ג'ובים:</strong></p>
-                <ul>
-                    <li><strong>Freestyle:</strong> ג'וב פשוט שמוגדר דרך ממשק המשתמש</li>
-                    <li><strong>Pipeline:</strong> ג'וב מורכב שמוגדר באמצעות קוד</li>
-                    <li><strong>Multi-configuration:</strong> ג'וב שרץ במספר קונפיגורציות שונות</li>
-                    <li><strong>Folder:</strong> מאפשר ארגון של ג'ובים בתיקיות</li>
-                    <li><strong>Multi-branch Pipeline:</strong> פייפליין שרץ על מספר ענפים (branches) במאגר הקוד</li>
-                </ul>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">P</div>
-                    Pipeline
-                </h3>
-                <p>פייפליין הוא סדרה של שלבים (Stages) שמגדירים תהליך CI/CD שלם. הוא מאפשר להגדיר את כל התהליך כקוד (Pipeline as Code) בקובץ Jenkinsfile.</p>
-                <p><strong>יתרונות:</strong></p>
-                <ul>
-                    <li>הגדרת התהליך כקוד שניתן לשמור במאגר</li>
-                    <li>חלוקה לוגית לשלבים (Stages)</li>
-                    <li>תמיכה בתהליכים מקבילים</li>
-                    <li>ויזואליזציה טובה של התהליך</li>
-                </ul>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">F</div>
-                    Jenkinsfile
-                </h3>
-                <p>קובץ טקסט (בדרך כלל בשפת Groovy) שמכיל את הגדרת הפייפליין. הקובץ נשמר במאגר הקוד ומגדיר את כל השלבים והפעולות שיש לבצע.</p>
-                <p><strong>דוגמה בסיסית:</strong></p>
-                <div class="code-example">pipeline {
-                                                    agent any
-
-                                                    stages {
-                                                        stage('Build') {
-                                                            steps {
-                                                                sh 'npm install'
-                                                                sh 'npm run build'
-                                                            }
-                                                        }
-                                                        stage('Test') {
-                                                            steps {
-                                                                sh 'npm test'
-                                                            }
-                                                        }
-                                                        stage('Deploy') {
-                                                            steps {
-                                                                sh 'npm run deploy'
-                                                            }
-                                                        }
-                                                    }
-                    }</div>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">S</div>
-                    Stage / Step
-                </h3>
-                <p><strong>Stage (שלב):</strong> חלק לוגי בפייפליין שמכיל צעדים קשורים (למשל: בנייה, בדיקות, פריסה).</p>
-                <p><strong>Step (צעד):</strong> פעולה בודדת בתוך שלב (למשל: הרצת פקודה, הורדת קוד ממאגר).</p>
-                <p>הפרדה זו מאפשרת ארגון ברור של התהליך וויזואליזציה טובה יותר.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">A</div>
-                    Agent
-                </h3>
-                <p>Agent הוא מחשב (שרת או מכונה וירטואלית) ש-Jenkins משתמש בו כדי להריץ ג'ובים. ניתן להגדיר סוגים שונים של agents:</p>
-                <ul>
-                    <li><strong>any:</strong> כל agent זמין</li>
-                    <li><strong>none:</strong> לא משתמש ב-agent (למשל בפייפליין שמגדיר רק את המבנה)</li>
-                    <li><strong>label:</strong> agent עם תווית מסוימת</li>
-                    <li><strong>docker:</strong> מיכל דוקר</li>
-                    <li><strong>kubernetes:</strong> פוד ב-Kubernetes</li>
-                </ul>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">N</div>
-                    Node
-                </h3>
-                <p>Node הוא מחשב שמחובר לשרת Jenkins ויכול להריץ ג'ובים. יכול להיות ה-master (כיום נקרא controller) או slave (כיום נקרא agent).</p>
-                <p><strong>סוגי Nodes:</strong></p>
-                <ul>
-                    <li><strong>Controller (Master):</strong> השרת המרכזי שמנהל את התהליכים</li>
-                    <li><strong>Agent (Slave):</strong> שרת משני שמריץ ג'ובים</li>
-                </ul>
-                <p>שימוש במספר nodes מאפשר הרצת ג'ובים במקביל ושיפור הביצועים.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">P</div>
-                    Plugin (תוסף)
-                </h3>
-                <p>Jenkins תומך באלפי תוספים שמרחיבים את הפונקציונליות שלו. תוספים מאפשרים אינטגרציה עם כלים וטכנולוגיות שונות.</p>
-                <p><strong>תוספים נפוצים:</strong></p>
-                <ul>
-                    <li><strong>Git:</strong> אינטגרציה עם מאגרי Git</li>
-                    <li><strong>Docker:</strong> תמיכה בבניית ופריסת מיכלי Docker</li>
-                    <li><strong>Pipeline:</strong> תמיכה בפייפליינים</li>
-                    <li><strong>Blue Ocean:</strong> ממשק משתמש מודרני</li>
-                    <li><strong>JUnit:</strong> תמיכה בדוחות בדיקות</li>
-                    <li><strong>Slack:</strong> שליחת התראות ל-Slack</li>
-                </ul>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">B</div>
-                    Build
-                </h3>
-                <p>Build הוא הרצה בודדת של ג'וב או פייפליין. לכל build יש מספר ייחודי והוא שומר את התוצאות, הלוגים והארטיפקטים שנוצרו במהלך ההרצה.</p>
-                <p>ניתן לראות את היסטוריית ה-builds של כל ג'וב ולנתח את התוצאות והמגמות לאורך זמן.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">W</div>
-                    Workspace
-                </h3>
-                <p>Workspace הוא תיקייה זמנית על ה-agent שבה נשמרים הקבצים במהלך ההרצה של ג'וב. זהו המקום שבו Jenkins מוריד את הקוד ממאגר הקוד ומבצע את הפעולות השונות.</p>
-                <p>כל ג'וב מקבל workspace משלו, וניתן לנקות אותו בין הרצות כדי לחסוך מקום.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">S</div>
-                    SCM (Source Control Management)
-                </h3>
-                <p>Jenkins משתלב עם מערכות ניהול קוד כמו Git, SVN ואחרות. אינטגרציה זו מאפשרת ל-Jenkins למשוך את הקוד העדכני ולהגיב לשינויים במאגר.</p>
-                <p>ניתן להגדיר טריגרים שיפעילו ג'ובים כאשר יש שינויים במאגר הקוד.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">T</div>
-                    Trigger
-                </h3>
-                <p>Trigger הוא אירוע שגורם להרצה אוטומטית של ג'וב. קיימים מספר סוגי טריגרים:</p>
-                <ul>
-                    <li><strong>Poll SCM:</strong> בדיקה תקופתית של שינויים במאגר הקוד</li>
-                    <li><strong>Webhook:</strong> הפעלה על ידי שירות חיצוני (למשל GitHub)</li>
-                    <li><strong>Cron:</strong> הפעלה על פי לוח זמנים מוגדר</li>
-                    <li><strong>Upstream/Downstream:</strong> הפעלה לאחר סיום של ג'וב אחר</li>
-                    <li><strong>Manual:</strong> הפעלה ידנית על ידי משתמש</li>
-                </ul>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">B</div>
-                    Blue Ocean
-                </h3>
-                <p>Blue Ocean הוא ממשק משתמש מודרני ל-Jenkins שמציג את הפייפליינים בצורה גרפית ברורה. הוא מאפשר ניווט קל יותר ומספק חוויית משתמש משופרת.</p>
-                <p>Blue Ocean מתמקד בפייפליינים ומציג את השלבים השונים, הזמנים והתוצאות בצורה ויזואלית.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">A</div>
-                    Artifact
-                </h3>
-                <p>Artifact הוא תוצר של הרצת ג'וב (למשל: קובץ JAR, חבילת NPM, דוח בדיקות) שנשמר להורדה או הפצה. Jenkins מאפשר לשמור ארטיפקטים ולהשתמש בהם בג'ובים אחרים.</p>
-                <p>ארטיפקטים מאפשרים העברת תוצרים בין שלבים שונים בתהליך ושמירה על היסטוריה של הבניות.</p>
-            </div>
-        </section>
-
-        <!-- פייפליינים -->
-        <section id="pipelines" class="content-section">
-            <h2>פייפליינים ב-Jenkins</h2>
-
-            <h3>מהם פייפליינים?</h3>
-            <p>פייפליינים (Pipelines) הם למעשה "צינורות" או "קווי ייצור" דיגיטליים שמגדירים סדרה של שלבים אוטומטיים בתהליך פיתוח התוכנה.</p>
-            <p>דמיינו מפעל שבו המוצר עובר בין תחנות שונות בפס הייצור - כל תחנה מבצעת פעולה מסוימת על המוצר עד שהוא מוכן. באופן דומה, פייפליין בג'נקינס מעביר את קוד התוכנה דרך שלבים שונים.</p>
-
-            <h3>סוגי פייפליינים</h3>
-            <p>ב-Jenkins קיימים שני סוגים עיקריים של פייפליינים:</p>
-            <ul>
-                <li><strong>Declarative Pipeline:</strong> תחביר פשוט יותר שמבוסס על מבנה מוגדר מראש</li>
-                <li><strong>Scripted Pipeline:</strong> תחביר גמיש יותר שמבוסס על שפת Groovy</li>
-            </ul>
-
-            <h3>מבנה בסיסי של פייפליין</h3>
-            <div class="code-example">pipeline {
-                                                agent any                 // איפה להריץ את הפייפליין
-
-                                                stages {                  // הגדרת השלבים
-                                                    stage('Build') {      // שלב הבנייה
-                                                        steps {           // הצעדים בשלב
-                                                            echo 'בונה את הפרויקט...'
-                                                            sh 'npm install'
-                                                            sh 'npm run build'
-                                                        }
-                                                    }
-
-                                                    stage('Test') {       // שלב הבדיקות
-                                                        steps {
-                                                            echo 'בודק את הפרויקט...'
-                                                            sh 'npm test'
-                                                        }
-                                                    }
-
-                                                    stage('Deploy') {     // שלב הפריסה
-                                                        steps {
-                                                            echo 'מפרס את הפרויקט...'
-                                                            sh 'npm run deploy'
-                                                        }
-                                                    }
-                                                }
-
-                                                post {                    // פעולות לאחר סיום הפייפליין
-                                                    success {
-                                                        echo 'הפייפליין הושלם בהצלחה!'
-                                                    }
-                                                    failure {
-                                                        echo 'הפייפליין נכשל!'
-                                                    }
-                                                }
-                                            }
-            </div>
-
-            <h3>רכיבים מרכזיים בפייפליין</h3>
-            <ul>
-                <li><strong>pipeline:</strong> הבלוק העליון שמכיל את כל הגדרות הפייפליין</li>
-                <li><strong>agent:</strong> מגדיר איפה הפייפליין ירוץ</li>
-                <li><strong>stages:</strong> מכיל את כל השלבים של הפייפליין</li>
-                <li><strong>stage:</strong> מגדיר שלב בודד בפייפליין</li>
-                <li><strong>steps:</strong> מגדיר את הפעולות שיש לבצע בשלב</li>
-                <li><strong>post:</strong> מגדיר פעולות שיש לבצע לאחר סיום הפייפליין</li>
-            </ul>
-
-            <h3>פייפליין מתקדם יותר</h3>
-            <div class="code-example">pipeline {
-                                                agent {
-                                                    docker {
-                                                        image 'node:14'
-                                                    }
-                                                }
-
-                                                environment {
-                                                    HOME = '.'
-                                                    NPM_CONFIG_CACHE = "${env.WORKSPACE}/.npm"
-                                                }
-
-                                                stages {
-                                                    stage('Checkout') {
-                                                        steps {
-                                                            checkout scm
-                                                        }
-                                                    }
-
-                                                    stage('Install') {
-                                                        steps {
-                                                            sh 'npm ci'
-                                                        }
-                                                    }
-
-                                                    stage('Lint') {
-                                                        steps {
-                                                            sh 'npm run lint'
-                                                        }
-                                                    }
-
-                                                    stage('Test') {
-                                                        steps {
-                                                            sh 'npm test'
-                                                        }
-                                                        post {
-                                                            always {
-                                                                junit 'test-results/*.xml'
-                                                            }
-                                                        }
-                                                    }
-
-                                                    stage('Build') {
-                                                        steps {
-                                                            sh 'npm run build'
-                                                        }
-                                                    }
-
-                                                    stage('Deploy') {
-                                                        when {
-                                                            branch 'main'
-                                                        }
-                                                        steps {
-                                                            sh 'npm run deploy'
-                                                        }
-                                                    }
-                                                }
-
-                                                post {
-                                                    success {
-                                                        slackSend channel: '#builds',
-                                                                  color: 'good',
-                                                                  message: "הבנייה הצליחה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                                                    }
-                                                    failure {
-                                                        slackSend channel: '#builds',
-                                                                  color: 'danger',
-                                                                  message: "הבנייה נכשלה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                                                    }
-                                                    always {
-                                                        archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
-                                                        cleanWs()
-                                                    }
-                                                }
-                                            }
-            </div>
-
-            <h3>תכונות מתקדמות בפייפליינים</h3>
-            <ul>
-                <li><strong>Parallel:</strong> הרצת שלבים במקביל</li>
-                <li><strong>When:</strong> הרצת שלב רק בתנאים מסוימים</li>
-                <li><strong>Parameters:</strong> הגדרת פרמטרים לפייפליין</li>
-                <li><strong>Input:</strong> בקשת קלט מהמשתמש במהלך הפייפליין</li>
-                <li><strong>Shared Libraries:</strong> שימוש בספריות משותפות</li>
-            </ul>
-
-            <h3>דוגמה לפייפליין עם הרצה במקביל</h3>
-            <div class="code-example">pipeline {
-        agent any
-
-        stages {
-            stage('Build') {
-                steps {
-                    echo 'בונה את הפרויקט...'
-                }
-            }
-
-            stage('Test') {
-                parallel {
-                    stage('Unit Tests') {
-                        steps {
-                            echo 'מריץ בדיקות יחידה...'
-                        }
-                    }
-                    stage('Integration Tests') {
-                        steps {
-                            echo 'מריץ בדיקות אינטגרציה...'
-                        }
-                    }
-                    stage('Performance Tests') {
-                        steps {
-                            echo 'מריץ בדיקות ביצועים...'
-                        }
-                    }
-                }
-            }
-
-            stage('Deploy') {
-                steps {
-                    echo 'מפרס את הפרויקט...'
-                }
-            }
-        }
-    }</div>
-
-            <h3>שימוש ב-Jenkinsfile</h3>
-            <p>הדרך המומלצת לעבוד עם פייפליינים היא באמצעות קובץ Jenkinsfile שנשמר במאגר הקוד. יתרונות הגישה:</p>
-            <ul>
-                <li>הגדרת הפייפליין כקוד (Pipeline as Code)</li>
-                <li>גרסאות ומעקב אחר שינויים</li>
-                <li>סקירת קוד (Code Review) על הפייפליין</li>
-                <li>שימוש חוזר ושיתוף של פייפליינים</li>
-            </ul>
-        </section>
-
-        <!-- תוספים -->
-        <section id="plugins" class="content-section">
-            <h2>תוספים (Plugins) ב-Jenkins</h2>
-
-            <h3>מהם תוספים?</h3>
-            <p>תוספים (Plugins) הם הרחבות ל-Jenkins שמוסיפות פונקציונליות חדשה או משפרות את הפונקציונליות הקיימת. Jenkins מגיע עם מספר תוספים בסיסיים, אך ניתן להתקין אלפי תוספים נוספים.</p>
-
-            <h3>תוספים נפוצים</h3>
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">G</div>
-                    Git Plugin
-                </h3>
-                <p>מאפשר אינטגרציה עם מאגרי Git. זהו אחד התוספים הנפוצים ביותר והוא מאפשר ל-Jenkins למשוך קוד ממאגרי Git ולהגיב לשינויים בהם.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">P</div>
-                    Pipeline Plugin
-                </h3>
-                <p>מאפשר שימוש בפייפליינים ב-Jenkins. זהו תוסף מרכזי שמספק את התשתית לפייפליינים ואת התמיכה בקובצי Jenkinsfile.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">D</div>
-                    Docker Plugin
-                </h3>
-                <p>מאפשר שימוש במיכלי Docker כ-agents וכן בניית ופריסת מיכלי Docker. תוסף זה שימושי מאוד בסביבות מודרניות שמשתמשות ב-Docker.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">B</div>
-                    Blue Ocean Plugin
-                </h3>
-                <p>מספק ממשק משתמש מודרני וויזואלי ל-Jenkins, עם דגש על פייפליינים. הממשק מאפשר ניווט קל יותר וחוויית משתמש משופרת.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">J</div>
-                    JUnit Plugin
-                </h3>
-                <p>מאפשר הצגה וניתוח של תוצאות בדיקות JUnit. תוסף זה שימושי מאוד לפרויקטים שמשתמשים בבדיקות אוטומטיות.</p>
-            </div>
-
-            <div class="concept-card">
-                <h3>
-                    <div class="concept-icon">S</div>
-                    Slack Notification Plugin
-                </h3>
-                <p>מאפשר שליחת התראות ל-Slack על אירועים ב-Jenkins (למשל: בנייה הצליחה/נכשלה). תוסף זה מאפשר אינטגרציה טובה יותר עם צוותי פיתוח.</p>
-            </div>
-
-            <h3>התקנת תוספים</h3>
-            <p>ניתן להתקין תוספים ב-Jenkins בשתי דרכים עיקריות:</p>
-            <ol>
-                <li><strong>דרך ממשק המשתמש:</strong> Manage Jenkins > Manage Plugins > Available</li>
-                <li><strong>באמצעות Jenkins CLI:</strong> שימוש בפקודה <code>jenkins-cli.jar install-plugin</code></li>
-            </ol>
-
-            <h3>ניהול תוספים</h3>
-            <p>ניהול נכון של תוספים חשוב לשמירה על יציבות ואבטחה של שרת Jenkins:</p>
-            <ul>
-                <li>עדכון תוספים באופן קבוע</li>
-                <li>הסרת תוספים שאינם בשימוש</li>
-                <li>בדיקת תאימות בין תוספים</li>
-                <li>גיבוי הגדרות לפני התקנת תוספים חדשים</li>
-            </ul>
-        </section>
-
-        <!-- תרגילים -->
-        <section id="exercises" class="exercise-section">
-            <h2>תרגילים אינטראקטיביים</h2>
-
-            <div class="exercise-tabs">
-                <button class="exercise-tab active" data-exercise="quiz">חידון מושגים</button>
-                <button class="exercise-tab" data-exercise="pipeline">השלמת פייפליין</button>
-
-            </div>
-
-            <div id="quiz" class="exercise-content active">
-                <h3>חידון מושגים ב-Jenkins</h3>
-                <p>ענה על השאלות הבאות כדי לבדוק את הידע שלך:</p>
-
-                <div class="progress-container">
-                    <div class="progress-bar" id="quiz-progress"></div>
-                </div>
-
-                <div class="quiz-container" id="quiz-container">
-                    <!-- שאלות יתווספו כאן על ידי JavaScript -->
-                </div>
-
-                <div class="quiz-controls">
-                    <button id="quiz-prev" class="demo-button" disabled>הקודם</button>
-                    <button id="quiz-next" class="demo-button">הבא</button>
-                    <div id="quiz-error" class="quiz-error" style="display: none;"></div>
-
-                    <button id="quiz-submit" class="demo-button" style="display: none;">סיים</button>
-                </div>
-
-                <div class="completion-message" id="quiz-completion">
-                    <h3>כל הכבוד!</h3>
-                    <p>סיימת את החידון בהצלחה. הציון שלך: <span id="quiz-score">0</span>%</p>
-                   <button id="quiz-retry">נסה שוב</button>
-                </div>
-            </div>
-
-            <div id="pipeline" class="exercise-content">
-    <h3>השלמת פייפליין</h3>
-    <p>גרור את חלקי הקוד למקומות המתאימים בפייפליין:</p>
-
-    <div class="pipeline-exercise">
-        <div class="pipeline-instructions">
-            <p><strong>משימה:</strong> השלם את הפייפליין על ידי גרירת החלקים הנכונים למקומות המסומנים.</p>
-        </div>
-
-        <div class="pipeline-drag-container">
-            <h4>חלקי קוד זמינים:</h4>
-            <div class="pipeline-pieces" id="pipeline-pieces">
-                <!-- חלקי קוד יתווספו כאן על ידי JavaScript -->
-            </div>
-        </div>
-
-        <div class="pipeline-editor-container">
-            <h4>הפייפליין שלך:</h4>
-            <div class="pipeline-editor" id="pipeline-editor">
-                <pre class="code-line">pipeline {</pre>
-                <pre class="code-line">    agent any</pre>
-                <pre class="code-line">    </pre>
-                <pre class="code-line">    stages {</pre>
-                <div class="drop-zone" data-position="1">
-                    <div class="drop-placeholder">גרור לכאן את שלב ה-Checkout</div>
-                </div>
-                <div class="drop-zone" data-position="2">
-                    <div class="drop-placeholder">גרור לכאן את שלב ה-Build</div>
-                </div>
-                <div class="drop-zone" data-position="3">
-                    <div class="drop-placeholder">גרור לכאן את שלב ה-Test</div>
-                </div>
-                <div class="drop-zone" data-position="4">
-                    <div class="drop-placeholder">גרור לכאן את שלב ה-Deploy</div>
-                </div>
-                <pre class="code-line">    }</pre>
-                <pre class="code-line">}</pre>
-            </div>
-        </div>
-
-        <div class="demo-controls">
-            <button id="check-pipeline" class="demo-button">בדוק פייפליין</button>
-            <button id="reset-pipeline" class="demo-button">אפס</button>
-            <button id="show-hint" class="demo-button">הצג רמז</button>
-        </div>
-
-        <div class="pipeline-validation" id="pipeline-validation"></div>
-
-        <div class="pipeline-hint" id="pipeline-hint">
-            <h4>רמז:</h4>
-            <ul>
-                <li>שלב ה-Checkout צריך למשוך את הקוד ממאגר Git</li>
-                <li>שלב ה-Build צריך להתקין חבילות ולבנות את הפרויקט</li>
-                <li>שלב ה-Test צריך להריץ בדיקות</li>
-                <li>שלב ה-Deploy צריך לרוץ רק אם הענף הוא main</li>
-            </ul>
+        <div class="mode-switch">
+            <button id="learn-mode" class="active">מצב לימוד</button>
+            <button id="practice-mode">מצב תרגול</button>
         </div>
     </div>
 </div>
 
+<div class="container">
+    <!-- מבוא -->
+    <section id="intro" class="content-section active">
+        <h2>מבוא ל-Jenkins</h2>
 
-        </section>
-    </div>
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">J</div>
+                מהו Jenkins?
+            </h3>
+            <p>Jenkins הוא שרת אוטומציה בקוד פתוח (Open Source) שמאפשר למפתחים לאוטומט את תהליכי הפיתוח, הבדיקות והפריסה
+                של תוכנה. הוא מהווה כלי מרכזי בעולם ה-CI/CD (אינטגרציה מתמשכת / פריסה מתמשכת).</p>
+            <p>Jenkins נוצר במקור ב-2004 תחת השם "Hudson" על ידי קוהסוקה קאוואגוצ'י בחברת Sun Microsystems. לאחר שאורקל
+                רכשה את Sun, הפרויקט פוצל ושונה שמו ל-Jenkins ב-2011.</p>
+        </div>
+
+        <h3>למה משתמשים ב-Jenkins?</h3>
+        <ul>
+            <li><strong>אוטומציה:</strong> מאפשר להפוך תהליכים ידניים לאוטומטיים</li>
+            <li><strong>אינטגרציה מתמשכת (CI):</strong> בדיקה אוטומטית של שינויים בקוד</li>
+            <li><strong>פריסה מתמשכת (CD):</strong> העברה אוטומטית של קוד לסביבות שונות</li>
+            <li><strong>גמישות:</strong> תומך במגוון רחב של כלים ושפות תכנות</li>
+            <li><strong>הרחבה:</strong> אלפי תוספים (plugins) זמינים להרחבת הפונקציונליות</li>
+            <li><strong>קהילה גדולה:</strong> תמיכה נרחבת וידע רב זמין ברשת</li>
+        </ul>
+
+        <h3>איך Jenkins עובד?</h3>
+        <p>Jenkins פועל כשרת שמריץ תהליכים מוגדרים (ג'ובים) על פי טריגרים שונים. הוא יכול לפעול כך:</p>
+        <ol>
+            <li>מפתח דוחף שינויים למאגר קוד (כמו Git)</li>
+            <li>Jenkins מזהה את השינוי (באמצעות webhook או סריקה תקופתית)</li>
+            <li>Jenkins מריץ ג'וב שמוגדר מראש (למשל: בניית הקוד, הרצת בדיקות)</li>
+            <li>Jenkins מדווח על תוצאות התהליך (הצלחה/כישלון)</li>
+            <li>במקרה של הצלחה, Jenkins יכול להמשיך לשלבים הבאים (למשל: פריסה לסביבת בדיקות)</li>
+        </ol>
+
+        <div class="interactive-demo">
+            <h3>הדגמה: תהליך בסיסי ב-Jenkins</h3>
+            <p>לחצו על השלבים השונים כדי לראות מה קורה בכל שלב:</p>
+
+            <div class="pipeline-visual">
+                <div class="pipeline-stage" data-stage="commit" style="left: 5%; top: 60px;">דחיפת קוד</div>
+                <div class="pipeline-arrow" style="left: 15%; width: 15%;"></div>
+
+                <div class="pipeline-stage" data-stage="build" style="left: 30%; top: 60px;">בנייה</div>
+                <div class="pipeline-arrow" style="left: 40%; width: 15%;"></div>
+
+                <div class="pipeline-stage" data-stage="test" style="left: 55%; top: 60px;">בדיקות</div>
+                <div class="pipeline-arrow" style="left: 65%; width: 15%;"></div>
+
+                <div class="pipeline-stage" data-stage="deploy" style="left: 80%; top: 60px;">פריסה</div>
+            </div>
+
+            <div id="commit-info" class="stage-info">
+                <h3>דחיפת קוד</h3>
+                <p>מפתח מסיים לכתוב קוד ודוחף אותו למאגר הקוד (Git, SVN וכו'). פעולה זו מפעילה טריגר ב-Jenkins.</p>
+                <p>דוגמה לפקודה:</p>
+                <div class="code-example">git push origin main</div>
+            </div>
+
+            <div id="build-info" class="stage-info">
+                <h3>בנייה (Build)</h3>
+                <p>Jenkins מושך את הקוד העדכני ומבצע תהליך בנייה. זה יכול לכלול קומפילציה, יצירת חבילות וכו'.</p>
+                <p>דוגמה לפקודות בשלב זה:</p>
+                <div class="code-example">npm install npm run build</div>
+            </div>
+
+            <div id="test-info" class="stage-info">
+                <h3>בדיקות (Test)</h3>
+                <p>Jenkins מריץ בדיקות אוטומטיות על הקוד כדי לוודא שהוא עובד כמצופה ושלא נוצרו באגים חדשים.</p>
+                <p>דוגמה לפקודות בשלב זה:</p>
+                <div class="code-example">npm test npm run lint</div>
+            </div>
+
+            <div id="deploy-info" class="stage-info">
+                <h3>פריסה (Deploy)</h3>
+                <p>אם כל הבדיקות עברו בהצלחה, Jenkins מפרס את הקוד לסביבה הרלוונטית (פיתוח, בדיקות, ייצור).</p>
+                <p>דוגמה לפקודות בשלב זה:</p>
+                <div class="code-example">ssh user@server 'cd /app && git pull' docker-compose up -d</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- מושגים מרכזיים -->
+    <section id="concepts" class="content-section">
+        <h2>מושגים מרכזיים ב-Jenkins</h2>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">J</div>
+                Job (ג'וב)
+            </h3>
+            <p>ג'וב הוא תהליך מוגדר שמריצים ב-Jenkins. זהו הבסיס לכל פעולה אוטומטית במערכת.</p>
+            <p><strong>סוגי ג'ובים:</strong></p>
+            <ul>
+                <li><strong>Freestyle:</strong> ג'וב פשוט שמוגדר דרך ממשק המשתמש</li>
+                <li><strong>Pipeline:</strong> ג'וב מורכב שמוגדר באמצעות קוד</li>
+                <li><strong>Multi-configuration:</strong> ג'וב שרץ במספר קונפיגורציות שונות</li>
+                <li><strong>Folder:</strong> מאפשר ארגון של ג'ובים בתיקיות</li>
+                <li><strong>Multi-branch Pipeline:</strong> פייפליין שרץ על מספר ענפים (branches) במאגר הקוד</li>
+            </ul>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">P</div>
+                Pipeline
+            </h3>
+            <p>פייפליין הוא סדרה של שלבים (Stages) שמגדירים תהליך CI/CD שלם. הוא מאפשר להגדיר את כל התהליך כקוד
+                (Pipeline as Code) בקובץ Jenkinsfile.</p>
+            <p><strong>יתרונות:</strong></p>
+            <ul>
+                <li>הגדרת התהליך כקוד שניתן לשמור במאגר</li>
+                <li>חלוקה לוגית לשלבים (Stages)</li>
+                <li>תמיכה בתהליכים מקבילים</li>
+                <li>ויזואליזציה טובה של התהליך</li>
+            </ul>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">F</div>
+                Jenkinsfile
+            </h3>
+            <p>קובץ טקסט (בדרך כלל בשפת Groovy) שמכיל את הגדרת הפייפליין. הקובץ נשמר במאגר הקוד ומגדיר את כל השלבים
+                והפעולות שיש לבצע.</p>
+            <p><strong>דוגמה בסיסית:</strong></p>
+            <div class="code-example">pipeline {
+                agent any
+
+                stages {
+                stage('Build') {
+                steps {
+                sh 'npm install'
+                sh 'npm run build'
+                }
+                }
+                stage('Test') {
+                steps {
+                sh 'npm test'
+                }
+                }
+                stage('Deploy') {
+                steps {
+                sh 'npm run deploy'
+                }
+                }
+                }
+                }
+            </div>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">S</div>
+                Stage / Step
+            </h3>
+            <p><strong>Stage (שלב):</strong> חלק לוגי בפייפליין שמכיל צעדים קשורים (למשל: בנייה, בדיקות, פריסה).</p>
+            <p><strong>Step (צעד):</strong> פעולה בודדת בתוך שלב (למשל: הרצת פקודה, הורדת קוד ממאגר).</p>
+            <p>הפרדה זו מאפשרת ארגון ברור של התהליך וויזואליזציה טובה יותר.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">A</div>
+                Agent
+            </h3>
+            <p>Agent הוא מחשב (שרת או מכונה וירטואלית) ש-Jenkins משתמש בו כדי להריץ ג'ובים. ניתן להגדיר סוגים שונים של
+                agents:</p>
+            <ul>
+                <li><strong>any:</strong> כל agent זמין</li>
+                <li><strong>none:</strong> לא משתמש ב-agent (למשל בפייפליין שמגדיר רק את המבנה)</li>
+                <li><strong>label:</strong> agent עם תווית מסוימת</li>
+                <li><strong>docker:</strong> מיכל דוקר</li>
+                <li><strong>kubernetes:</strong> פוד ב-Kubernetes</li>
+            </ul>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">N</div>
+                Node
+            </h3>
+            <p>Node הוא מחשב שמחובר לשרת Jenkins ויכול להריץ ג'ובים. יכול להיות ה-master (כיום נקרא controller) או slave
+                (כיום נקרא agent).</p>
+            <p><strong>סוגי Nodes:</strong></p>
+            <ul>
+                <li><strong>Controller (Master):</strong> השרת המרכזי שמנהל את התהליכים</li>
+                <li><strong>Agent (Slave):</strong> שרת משני שמריץ ג'ובים</li>
+            </ul>
+            <p>שימוש במספר nodes מאפשר הרצת ג'ובים במקביל ושיפור הביצועים.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">P</div>
+                Plugin (תוסף)
+            </h3>
+            <p>Jenkins תומך באלפי תוספים שמרחיבים את הפונקציונליות שלו. תוספים מאפשרים אינטגרציה עם כלים וטכנולוגיות
+                שונות.</p>
+            <p><strong>תוספים נפוצים:</strong></p>
+            <ul>
+                <li><strong>Git:</strong> אינטגרציה עם מאגרי Git</li>
+                <li><strong>Docker:</strong> תמיכה בבניית ופריסת מיכלי Docker</li>
+                <li><strong>Pipeline:</strong> תמיכה בפייפליינים</li>
+                <li><strong>Blue Ocean:</strong> ממשק משתמש מודרני</li>
+                <li><strong>JUnit:</strong> תמיכה בדוחות בדיקות</li>
+                <li><strong>Slack:</strong> שליחת התראות ל-Slack</li>
+            </ul>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">B</div>
+                Build
+            </h3>
+            <p>Build הוא הרצה בודדת של ג'וב או פייפליין. לכל build יש מספר ייחודי והוא שומר את התוצאות, הלוגים
+                והארטיפקטים שנוצרו במהלך ההרצה.</p>
+            <p>ניתן לראות את היסטוריית ה-builds של כל ג'וב ולנתח את התוצאות והמגמות לאורך זמן.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">W</div>
+                Workspace
+            </h3>
+            <p>Workspace הוא תיקייה זמנית על ה-agent שבה נשמרים הקבצים במהלך ההרצה של ג'וב. זהו המקום שבו Jenkins מוריד
+                את הקוד ממאגר הקוד ומבצע את הפעולות השונות.</p>
+            <p>כל ג'וב מקבל workspace משלו, וניתן לנקות אותו בין הרצות כדי לחסוך מקום.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">S</div>
+                SCM (Source Control Management)
+            </h3>
+            <p>Jenkins משתלב עם מערכות ניהול קוד כמו Git, SVN ואחרות. אינטגרציה זו מאפשרת ל-Jenkins למשוך את הקוד העדכני
+                ולהגיב לשינויים במאגר.</p>
+            <p>ניתן להגדיר טריגרים שיפעילו ג'ובים כאשר יש שינויים במאגר הקוד.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">T</div>
+                Trigger
+            </h3>
+            <p>Trigger הוא אירוע שגורם להרצה אוטומטית של ג'וב. קיימים מספר סוגי טריגרים:</p>
+            <ul>
+                <li><strong>Poll SCM:</strong> בדיקה תקופתית של שינויים במאגר הקוד</li>
+                <li><strong>Webhook:</strong> הפעלה על ידי שירות חיצוני (למשל GitHub)</li>
+                <li><strong>Cron:</strong> הפעלה על פי לוח זמנים מוגדר</li>
+                <li><strong>Upstream/Downstream:</strong> הפעלה לאחר סיום של ג'וב אחר</li>
+                <li><strong>Manual:</strong> הפעלה ידנית על ידי משתמש</li>
+            </ul>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">B</div>
+                Blue Ocean
+            </h3>
+            <p>Blue Ocean הוא ממשק משתמש מודרני ל-Jenkins שמציג את הפייפליינים בצורה גרפית ברורה. הוא מאפשר ניווט קל
+                יותר ומספק חוויית משתמש משופרת.</p>
+            <p>Blue Ocean מתמקד בפייפליינים ומציג את השלבים השונים, הזמנים והתוצאות בצורה ויזואלית.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">A</div>
+                Artifact
+            </h3>
+            <p>Artifact הוא תוצר של הרצת ג'וב (למשל: קובץ JAR, חבילת NPM, דוח בדיקות) שנשמר להורדה או הפצה. Jenkins
+                מאפשר לשמור ארטיפקטים ולהשתמש בהם בג'ובים אחרים.</p>
+            <p>ארטיפקטים מאפשרים העברת תוצרים בין שלבים שונים בתהליך ושמירה על היסטוריה של הבניות.</p>
+        </div>
+    </section>
+
+    <!-- פייפליינים -->
+    <section id="pipelines" class="content-section">
+        <h2>פייפליינים ב-Jenkins</h2>
+
+        <h3>מהם פייפליינים?</h3>
+        <p>פייפליינים (Pipelines) הם למעשה "צינורות" או "קווי ייצור" דיגיטליים שמגדירים סדרה של שלבים אוטומטיים בתהליך
+            פיתוח התוכנה.</p>
+        <p>דמיינו מפעל שבו המוצר עובר בין תחנות שונות בפס הייצור - כל תחנה מבצעת פעולה מסוימת על המוצר עד שהוא מוכן.
+            באופן דומה, פייפליין בג'נקינס מעביר את קוד התוכנה דרך שלבים שונים.</p>
+
+        <h3>סוגי פייפליינים</h3>
+        <p>ב-Jenkins קיימים שני סוגים עיקריים של פייפליינים:</p>
+        <ul>
+            <li><strong>Declarative Pipeline:</strong> תחביר פשוט יותר שמבוסס על מבנה מוגדר מראש</li>
+            <li><strong>Scripted Pipeline:</strong> תחביר גמיש יותר שמבוסס על שפת Groovy</li>
+        </ul>
+
+        <h3>מבנה בסיסי של פייפליין</h3>
+        <div class="code-example">pipeline {
+            agent any // איפה להריץ את הפייפליין
+
+            stages { // הגדרת השלבים
+            stage('Build') { // שלב הבנייה
+            steps { // הצעדים בשלב
+            echo 'בונה את הפרויקט...'
+            sh 'npm install'
+            sh 'npm run build'
+            }
+            }
+
+            stage('Test') { // שלב הבדיקות
+            steps {
+            echo 'בודק את הפרויקט...'
+            sh 'npm test'
+            }
+            }
+
+            stage('Deploy') { // שלב הפריסה
+            steps {
+            echo 'מפרס את הפרויקט...'
+            sh 'npm run deploy'
+            }
+            }
+            }
+
+            post { // פעולות לאחר סיום הפייפליין
+            success {
+            echo 'הפייפליין הושלם בהצלחה!'
+            }
+            failure {
+            echo 'הפייפליין נכשל!'
+            }
+            }
+            }
+        </div>
+
+        <h3>רכיבים מרכזיים בפייפליין</h3>
+        <ul>
+            <li><strong>pipeline:</strong> הבלוק העליון שמכיל את כל הגדרות הפייפליין</li>
+            <li><strong>agent:</strong> מגדיר איפה הפייפליין ירוץ</li>
+            <li><strong>stages:</strong> מכיל את כל השלבים של הפייפליין</li>
+            <li><strong>stage:</strong> מגדיר שלב בודד בפייפליין</li>
+            <li><strong>steps:</strong> מגדיר את הפעולות שיש לבצע בשלב</li>
+            <li><strong>post:</strong> מגדיר פעולות שיש לבצע לאחר סיום הפייפליין</li>
+        </ul>
+
+        <h3>פייפליין מתקדם יותר</h3>
+        <div class="code-example">pipeline {
+            agent {
+            docker {
+            image 'node:14'
+            }
+            }
+
+            environment {
+            HOME = '.'
+            NPM_CONFIG_CACHE = "${env.WORKSPACE}/.npm"
+            }
+
+            stages {
+            stage('Checkout') {
+            steps {
+            checkout scm
+            }
+            }
+
+            stage('Install') {
+            steps {
+            sh 'npm ci'
+            }
+            }
+
+            stage('Lint') {
+            steps {
+            sh 'npm run lint'
+            }
+            }
+
+            stage('Test') {
+            steps {
+            sh 'npm test'
+            }
+            post {
+            always {
+            junit 'test-results/*.xml'
+            }
+            }
+            }
+
+            stage('Build') {
+            steps {
+            sh 'npm run build'
+            }
+            }
+
+            stage('Deploy') {
+            when {
+            branch 'main'
+            }
+            steps {
+            sh 'npm run deploy'
+            }
+            }
+            }
+
+            post {
+            success {
+            slackSend channel: '#builds',
+            color: 'good',
+            message: "הבנייה הצליחה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            }
+            failure {
+            slackSend channel: '#builds',
+            color: 'danger',
+            message: "הבנייה נכשלה: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            }
+            always {
+            archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+            cleanWs()
+            }
+            }
+            }
+        </div>
+
+        <h3>תכונות מתקדמות בפייפליינים</h3>
+        <ul>
+            <li><strong>Parallel:</strong> הרצת שלבים במקביל</li>
+            <li><strong>When:</strong> הרצת שלב רק בתנאים מסוימים</li>
+            <li><strong>Parameters:</strong> הגדרת פרמטרים לפייפליין</li>
+            <li><strong>Input:</strong> בקשת קלט מהמשתמש במהלך הפייפליין</li>
+            <li><strong>Shared Libraries:</strong> שימוש בספריות משותפות</li>
+        </ul>
+
+        <h3>דוגמה לפייפליין עם הרצה במקביל</h3>
+        <div class="code-example">pipeline {
+            agent any
+
+            stages {
+            stage('Build') {
+            steps {
+            echo 'בונה את הפרויקט...'
+            }
+            }
+
+            stage('Test') {
+            parallel {
+            stage('Unit Tests') {
+            steps {
+            echo 'מריץ בדיקות יחידה...'
+            }
+            }
+            stage('Integration Tests') {
+            steps {
+            echo 'מריץ בדיקות אינטגרציה...'
+            }
+            }
+            stage('Performance Tests') {
+            steps {
+            echo 'מריץ בדיקות ביצועים...'
+            }
+            }
+            }
+            }
+
+            stage('Deploy') {
+            steps {
+            echo 'מפרס את הפרויקט...'
+            }
+            }
+            }
+            }
+        </div>
+
+        <h3>שימוש ב-Jenkinsfile</h3>
+        <p>הדרך המומלצת לעבוד עם פייפליינים היא באמצעות קובץ Jenkinsfile שנשמר במאגר הקוד. יתרונות הגישה:</p>
+        <ul>
+            <li>הגדרת הפייפליין כקוד (Pipeline as Code)</li>
+            <li>גרסאות ומעקב אחר שינויים</li>
+            <li>סקירת קוד (Code Review) על הפייפליין</li>
+            <li>שימוש חוזר ושיתוף של פייפליינים</li>
+        </ul>
+    </section>
+
+    <!-- תוספים -->
+    <section id="plugins" class="content-section">
+        <h2>תוספים (Plugins) ב-Jenkins</h2>
+
+        <h3>מהם תוספים?</h3>
+        <p>תוספים (Plugins) הם הרחבות ל-Jenkins שמוסיפות פונקציונליות חדשה או משפרות את הפונקציונליות הקיימת. Jenkins
+            מגיע עם מספר תוספים בסיסיים, אך ניתן להתקין אלפי תוספים נוספים.</p>
+
+        <h3>תוספים נפוצים</h3>
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">G</div>
+                Git Plugin
+            </h3>
+            <p>מאפשר אינטגרציה עם מאגרי Git. זהו אחד התוספים הנפוצים ביותר והוא מאפשר ל-Jenkins למשוך קוד ממאגרי Git
+                ולהגיב לשינויים בהם.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">P</div>
+                Pipeline Plugin
+            </h3>
+            <p>מאפשר שימוש בפייפליינים ב-Jenkins. זהו תוסף מרכזי שמספק את התשתית לפייפליינים ואת התמיכה בקובצי
+                Jenkinsfile.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">D</div>
+                Docker Plugin
+            </h3>
+            <p>מאפשר שימוש במיכלי Docker כ-agents וכן בניית ופריסת מיכלי Docker. תוסף זה שימושי מאוד בסביבות מודרניות
+                שמשתמשות ב-Docker.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">B</div>
+                Blue Ocean Plugin
+            </h3>
+            <p>מספק ממשק משתמש מודרני וויזואלי ל-Jenkins, עם דגש על פייפליינים. הממשק מאפשר ניווט קל יותר וחוויית משתמש
+                משופרת.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">J</div>
+                JUnit Plugin
+            </h3>
+            <p>מאפשר הצגה וניתוח של תוצאות בדיקות JUnit. תוסף זה שימושי מאוד לפרויקטים שמשתמשים בבדיקות אוטומטיות.</p>
+        </div>
+
+        <div class="concept-card">
+            <h3>
+                <div class="concept-icon">S</div>
+                Slack Notification Plugin
+            </h3>
+            <p>מאפשר שליחת התראות ל-Slack על אירועים ב-Jenkins (למשל: בנייה הצליחה/נכשלה). תוסף זה מאפשר אינטגרציה טובה
+                יותר עם צוותי פיתוח.</p>
+        </div>
+
+        <h3>התקנת תוספים</h3>
+        <p>ניתן להתקין תוספים ב-Jenkins בשתי דרכים עיקריות:</p>
+        <ol>
+            <li><strong>דרך ממשק המשתמש:</strong> Manage Jenkins > Manage Plugins > Available</li>
+            <li><strong>באמצעות Jenkins CLI:</strong> שימוש בפקודה <code>jenkins-cli.jar install-plugin</code></li>
+        </ol>
+
+        <h3>ניהול תוספים</h3>
+        <p>ניהול נכון של תוספים חשוב לשמירה על יציבות ואבטחה של שרת Jenkins:</p>
+        <ul>
+            <li>עדכון תוספים באופן קבוע</li>
+            <li>הסרת תוספים שאינם בשימוש</li>
+            <li>בדיקת תאימות בין תוספים</li>
+            <li>גיבוי הגדרות לפני התקנת תוספים חדשים</li>
+        </ul>
+    </section>
+
+    <!-- תרגילים -->
+    <section id="exercises" class="exercise-section">
+        <h2>תרגילים אינטראקטיביים</h2>
+
+        <div class="exercise-tabs">
+            <button class="exercise-tab active" data-exercise="quiz">חידון מושגים</button>
+            <button class="exercise-tab" data-exercise="pipeline">השלמת פייפליין</button>
+
+        </div>
+
+        <div id="quiz" class="exercise-content active">
+            <h3>חידון מושגים ב-Jenkins</h3>
+            <p>ענה על השאלות הבאות כדי לבדוק את הידע שלך:</p>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="quiz-progress"></div>
+            </div>
+
+            <div class="quiz-container" id="quiz-container">
+                <!-- שאלות יתווספו כאן על ידי JavaScript -->
+            </div>
+
+            <div class="quiz-controls">
+                <button id="quiz-prev" class="demo-button" disabled>הקודם</button>
+                <button id="quiz-next" class="demo-button">הבא</button>
+                <div id="quiz-error" class="quiz-error" style="display: none;"></div>
+
+                <button id="quiz-submit" class="demo-button" style="display: none;">סיים</button>
+            </div>
+
+            <div class="completion-message" id="quiz-completion">
+                <h3>כל הכבוד!</h3>
+                <p>סיימת את החידון בהצלחה. הציון שלך: <span id="quiz-score">0</span>%</p>
+                <button id="quiz-retry">נסה שוב</button>
+            </div>
+        </div>
+
+        <div id="pipeline" class="exercise-content">
+            <h3>השלמת פייפליין</h3>
+            <p>גרור את חלקי הקוד למקומות המתאימים בפייפליין:</p>
+
+            <div class="pipeline-exercise">
+                <div class="pipeline-instructions">
+                    <p><strong>משימה:</strong> השלם את הפייפליין על ידי גרירת החלקים הנכונים למקומות המסומנים.</p>
+                </div>
+
+                <div class="pipeline-drag-container">
+                    <h4>חלקי קוד זמינים:</h4>
+                    <div class="pipeline-pieces" id="pipeline-pieces">
+                        <!-- חלקי קוד יתווספו כאן על ידי JavaScript -->
+                    </div>
+                </div>
+
+                <div class="pipeline-editor-container">
+                    <h4>הפייפליין שלך:</h4>
+                    <div class="pipeline-editor" id="pipeline-editor">
+                        <pre class="code-line">pipeline {</pre>
+                        <pre class="code-line">    agent any</pre>
+                        <pre class="code-line">    </pre>
+                        <pre class="code-line">    stages {</pre>
+                        <div class="drop-zone" data-position="1">
+                            <div class="drop-placeholder">גרור לכאן את שלב ה-Checkout</div>
+                        </div>
+                        <div class="drop-zone" data-position="2">
+                            <div class="drop-placeholder">גרור לכאן את שלב ה-Build</div>
+                        </div>
+                        <div class="drop-zone" data-position="3">
+                            <div class="drop-placeholder">גרור לכאן את שלב ה-Test</div>
+                        </div>
+                        <div class="drop-zone" data-position="4">
+                            <div class="drop-placeholder">גרור לכאן את שלב ה-Deploy</div>
+                        </div>
+                        <pre class="code-line">    }</pre>
+                        <pre class="code-line">}</pre>
+                    </div>
+                </div>
+
+                <div class="demo-controls">
+                    <button id="check-pipeline" class="demo-button">בדוק פייפליין</button>
+                    <button id="reset-pipeline" class="demo-button">אפס</button>
+                    <button id="show-hint" class="demo-button">הצג רמז</button>
+                </div>
+
+                <div class="pipeline-validation" id="pipeline-validation"></div>
+
+                <div class="pipeline-hint" id="pipeline-hint">
+                    <h4>רמז:</h4>
+                    <ul>
+                        <li>שלב ה-Checkout צריך למשוך את הקוד ממאגר Git</li>
+                        <li>שלב ה-Build צריך להתקין חבילות ולבנות את הפרויקט</li>
+                        <li>שלב ה-Test צריך להריץ בדיקות</li>
+                        <li>שלב ה-Deploy צריך לרוץ רק אם הענף הוא main</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
 
-<!-- טופס נסתר שישלח את ההשלמה -->
-<form id="quiz-completion-form" action="{% url 'update_jenkins_quiz_completion' %}" method="POST" target="hidden_iframe">
-    {% csrf_token %}
-    <input type="hidden" name="complete_quiz" value="true">
+    </section>
+</div>
+
+
+
+<form id="quiz-completion-form" method="post" action="{% url 'update_jenkins_quiz_completion' %}">
+  {% csrf_token %}
+  <input type="hidden" name="correct_question_ids" id="correct-question-ids">
 </form>
 
-<!-- iframe נסתר לביצוע הבקשה -->
-<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 
-    <footer>
-        <p>© 2025 לומדה אינטראקטיבית - Jenkins</p>
-    </footer>
+<footer>
+    <p>© 2025 לומדה אינטראקטיבית - Jenkins</p>
+</footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ניווט בין חלקים
-            const navTabs = document.querySelectorAll('.nav-tab');
-            const contentSections = document.querySelectorAll('.content-section');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ניווט בין חלקים
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const contentSections = document.querySelectorAll('.content-section');
 
-            navTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // הסרת מחלקה פעילה מכל הלשוניות
-                    navTabs.forEach(t => t.classList.remove('active'));
-
-                    // הוספת מחלקה פעילה ללשונית שנלחצה
-                    this.classList.add('active');
-
-                    // הסתרת כל החלקים
-                    contentSections.forEach(section => section.classList.remove('active'));
-
-                    // הצגת החלק המתאים
-                    const sectionId = this.getAttribute('data-section');
-                    document.getElementById(sectionId).classList.add('active');
-                });
-            });
-
-            // מעבר בין מצב לימוד למצב תרגול
-            const learnModeButton = document.getElementById('learn-mode');
-            const practiceModeButton = document.getElementById('practice-mode');
-            const exerciseSection = document.querySelector('.exercise-section');
-
-            learnModeButton.addEventListener('click', function() {
-                learnModeButton.classList.add('active');
-                practiceModeButton.classList.remove('active');
-                exerciseSection.classList.remove('active');
-
-                // הצגת החלק האחרון שהיה פעיל
-                const activeTab = document.querySelector('.nav-tab.active');
-                const sectionId = activeTab.getAttribute('data-section');
-                if (sectionId !== 'exercises') {
-                    document.getElementById(sectionId).classList.add('active');
-                } else {
-                    // אם היינו בחלק התרגילים, נעבור לחלק המבוא
-                    navTabs.forEach(t => t.classList.remove('active'));
-                    document.querySelector('[data-section="intro"]').classList.add('active');
-                    contentSections.forEach(section => section.classList.remove('active'));
-                    document.getElementById('intro').classList.add('active');
-                }
-            });
-
-            practiceModeButton.addEventListener('click', function() {
-                practiceModeButton.classList.add('active');
-                learnModeButton.classList.remove('active');
-
-                // הסתרת כל החלקים והצגת חלק התרגילים
-                contentSections.forEach(section => section.classList.remove('active'));
-                exerciseSection.classList.add('active');
-
-                // עדכון הלשונית הפעילה
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // הסרת מחלקה פעילה מכל הלשוניות
                 navTabs.forEach(t => t.classList.remove('active'));
-                document.querySelector('[data-section="exercises"]').classList.add('active');
+
+                // הוספת מחלקה פעילה ללשונית שנלחצה
+                this.classList.add('active');
+
+                // הסתרת כל החלקים
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // הצגת החלק המתאים
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
             });
+        });
 
-            // פונקציונליות של שלבי הפייפליין
-            const pipelineStages = document.querySelectorAll('.pipeline-stage');
-            pipelineStages.forEach(stage => {
-                stage.addEventListener('click', function() {
-                    // הסרת מחלקה פעילה מכל השלבים
-                    pipelineStages.forEach(s => s.classList.remove('active'));
+        // מעבר בין מצב לימוד למצב תרגול
+        const learnModeButton = document.getElementById('learn-mode');
+        const practiceModeButton = document.getElementById('practice-mode');
+        const exerciseSection = document.querySelector('.exercise-section');
 
-                    // הוספת מחלקה פעילה לשלב שנלחץ
-                    this.classList.add('active');
+        learnModeButton.addEventListener('click', function() {
+            learnModeButton.classList.add('active');
+            practiceModeButton.classList.remove('active');
+            exerciseSection.classList.remove('active');
 
-                    // הסתרת כל מידע על שלבים
-                    const stageInfos = document.querySelectorAll('.stage-info');
-                    stageInfos.forEach(info => info.classList.remove('active'));
-
-                    // הצגת המידע המתאים לשלב
-                    const stageId = this.getAttribute('data-stage');
-                    document.getElementById(stageId + '-info').classList.add('active');
-                });
-            });
-
-            // הפעלת השלב הראשון כברירת מחדל
-            if (pipelineStages.length > 0) {
-                pipelineStages[0].click();
+            // הצגת החלק האחרון שהיה פעיל
+            const activeTab = document.querySelector('.nav-tab.active');
+            const sectionId = activeTab.getAttribute('data-section');
+            if (sectionId !== 'exercises') {
+                document.getElementById(sectionId).classList.add('active');
+            } else {
+                // אם היינו בחלק התרגילים, נעבור לחלק המבוא
+                navTabs.forEach(t => t.classList.remove('active'));
+                document.querySelector('[data-section="intro"]').classList.add('active');
+                contentSections.forEach(section => section.classList.remove('active'));
+                document.getElementById('intro').classList.add('active');
             }
+        });
 
-            // ניווט בין תרגילים
-            const exerciseTabs = document.querySelectorAll('.exercise-tab');
-            const exerciseContents = document.querySelectorAll('.exercise-content');
+        practiceModeButton.addEventListener('click', function() {
+            practiceModeButton.classList.add('active');
+            learnModeButton.classList.remove('active');
 
-            exerciseTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // הסרת מחלקה פעילה מכל הלשוניות
-                    exerciseTabs.forEach(t => t.classList.remove('active'));
+            // הסתרת כל החלקים והצגת חלק התרגילים
+            contentSections.forEach(section => section.classList.remove('active'));
+            exerciseSection.classList.add('active');
 
-                    // הוספת מחלקה פעילה ללשונית שנלחצה
-                    this.classList.add('active');
+            // עדכון הלשונית הפעילה
+            navTabs.forEach(t => t.classList.remove('active'));
+            document.querySelector('[data-section="exercises"]').classList.add('active');
+        });
 
-                    // הסתרת כל התרגילים
-                    exerciseContents.forEach(content => content.classList.remove('active'));
+        // פונקציונליות של שלבי הפייפליין
+        const pipelineStages = document.querySelectorAll('.pipeline-stage');
+        pipelineStages.forEach(stage => {
+            stage.addEventListener('click', function() {
+                // הסרת מחלקה פעילה מכל השלבים
+                pipelineStages.forEach(s => s.classList.remove('active'));
 
-                    // הצגת התרגיל המתאים
-                    const exerciseId = this.getAttribute('data-exercise');
-                    document.getElementById(exerciseId).classList.add('active');
-                });
+                // הוספת מחלקה פעילה לשלב שנלחץ
+                this.classList.add('active');
+
+                // הסתרת כל מידע על שלבים
+                const stageInfos = document.querySelectorAll('.stage-info');
+                stageInfos.forEach(info => info.classList.remove('active'));
+
+                // הצגת המידע המתאים לשלב
+                const stageId = this.getAttribute('data-stage');
+                document.getElementById(stageId + '-info').classList.add('active');
             });
+        });
 
-            // חידון מושגים
-            const quizContainer = document.getElementById('quiz-container');
-            const quizPrevButton = document.getElementById('quiz-prev');
-            const quizNextButton = document.getElementById('quiz-next');
-            const quizSubmitButton = document.getElementById('quiz-submit');
-            const quizProgress = document.getElementById('quiz-progress');
-            const quizCompletion = document.getElementById('quiz-completion');
-            const quizScore = document.getElementById('quiz-score');
+        // הפעלת השלב הראשון כברירת מחדל
+        if (pipelineStages.length > 0) {
+            pipelineStages[0].click();
+        }
 
-            // שאלות לחידון
-           const quizQuestions = [
-    {% for question in student_jenkins_quiz_exercise %}
-    {
-        question: "{{ question.quiz.question|escapejs }}",
-        options: [
-            "{{ question.quiz.option1|escapejs }}",
-            "{{ question.quiz.option2|escapejs }}",
-            "{{ question.quiz.option3|escapejs }}",
-            "{{ question.quiz.option4|escapejs }}"
-        ],
-        correctAnswer: "{{ question.quiz.answer|escapejs }}"
-    }{% if not forloop.last %},{% endif %}
-    {% endfor %}
+        // ניווט בין תרגילים
+        const exerciseTabs = document.querySelectorAll('.exercise-tab');
+        const exerciseContents = document.querySelectorAll('.exercise-content');
+
+        exerciseTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // הסרת מחלקה פעילה מכל הלשוניות
+                exerciseTabs.forEach(t => t.classList.remove('active'));
+
+                // הוספת מחלקה פעילה ללשונית שנלחצה
+                this.classList.add('active');
+
+                // הסתרת כל התרגילים
+                exerciseContents.forEach(content => content.classList.remove('active'));
+
+                // הצגת התרגיל המתאים
+                const exerciseId = this.getAttribute('data-exercise');
+                document.getElementById(exerciseId).classList.add('active');
+            });
+        });
+
+        // חידון מושגים
+        const quizContainer = document.getElementById('quiz-container');
+        const quizPrevButton = document.getElementById('quiz-prev');
+        const quizNextButton = document.getElementById('quiz-next');
+        const quizSubmitButton = document.getElementById('quiz-submit');
+        const quizProgress = document.getElementById('quiz-progress');
+        const quizCompletion = document.getElementById('quiz-completion');
+        const quizScore = document.getElementById('quiz-score');
+
+        // שאלות לחידון
+       const quizQuestions = [
+{% for question in student_jenkins_quiz_exercise %}
+{    id: "{{ question.id }}",
+    question: "{{ question.quiz.question|escapejs }}",
+    options: [
+        "{{ question.quiz.option1|escapejs }}",
+        "{{ question.quiz.option2|escapejs }}",
+        "{{ question.quiz.option3|escapejs }}",
+        "{{ question.quiz.option4|escapejs }}"
+    ],
+    correctAnswer: "{{ question.quiz.answer|escapejs }}"
+}{% if not forloop.last %},{% endif %}
+{% endfor %}
 ];
 
-            let currentQuestionIndex = 0;
-            let userAnswers = new Array(quizQuestions.length).fill(null);
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizQuestions.length).fill(null);
 
-            // פונקציה להצגת שאלה נוכחית
-            function showCurrentQuestion() {
-                const question = quizQuestions[currentQuestionIndex];
+        // פונקציה להצגת שאלה נוכחית
+        function showCurrentQuestion() {
+            const question = quizQuestions[currentQuestionIndex];
 
-                let questionHTML = `
-                    <div class="quiz-question">
-                        <h4>${currentQuestionIndex + 1}. ${question.question}</h4>
-                        <div class="quiz-options">
-                `;
+            let questionHTML = `
+                <div class="quiz-question">
+                    <h4>${currentQuestionIndex + 1}. ${question.question}</h4>
+                    <div class="quiz-options">
+            `;
 
-                question.options.forEach((option, index) => {
-                    const isSelected = userAnswers[currentQuestionIndex] === index;
-                    const selectedClass = isSelected ? 'selected' : '';
-                    questionHTML += `
-                        <div class="quiz-option ${selectedClass}" data-index="${index}">
-                            ${option}
-                        </div>
-                    `;
-                });
-
+            question.options.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestionIndex] === index;
+                const selectedClass = isSelected ? 'selected' : '';
                 questionHTML += `
-                        </div>
-                        <div class="quiz-feedback"></div>
+                    <div class="quiz-option ${selectedClass}" data-index="${index}">
+                        ${option}
                     </div>
                 `;
+            });
 
-                quizContainer.innerHTML = questionHTML;
+            questionHTML += `
+                    </div>
+                    <div class="quiz-feedback"></div>
+                </div>
+            `;
 
-                // הוספת מאזיני אירועים לאפשרויות
-                const quizOptions = document.querySelectorAll('.quiz-option');
-                quizOptions.forEach(option => {
-                    option.addEventListener('click', function() {
-                        const optionIndex = parseInt(this.getAttribute('data-index'));
-                        userAnswers[currentQuestionIndex] = optionIndex;
+            quizContainer.innerHTML = questionHTML;
 
-                        // עדכון המחלקה של האפשרות שנבחרה
-                        quizOptions.forEach(opt => opt.classList.remove('selected'));
-                        this.classList.add('selected');
-                    });
+            // הוספת מאזיני אירועים לאפשרויות
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            quizOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const optionIndex = parseInt(this.getAttribute('data-index'));
+                    userAnswers[currentQuestionIndex] = optionIndex;
+
+                    // עדכון המחלקה של האפשרות שנבחרה
+                    quizOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
                 });
-
-                // עדכון כפתורי הניווט
-                quizPrevButton.disabled = currentQuestionIndex === 0;
-
-                if (currentQuestionIndex === quizQuestions.length - 1) {
-                    quizNextButton.style.display = 'none';
-                    quizSubmitButton.style.display = 'block';
-                } else {
-                    quizNextButton.style.display = 'block';
-                    quizSubmitButton.style.display = 'none';
-                }
-
-                // עדכון סרגל התקדמות
-                const progressPercentage = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
-                quizProgress.style.width = `${progressPercentage}%`;
-            }
-
-            // הצגת השאלה הראשונה
-            showCurrentQuestion();
-
-            // מאזיני אירועים לכפתורי הניווט
-            quizPrevButton.addEventListener('click', function() {
-                if (currentQuestionIndex > 0) {
-                    currentQuestionIndex--;
-                    showCurrentQuestion();
-                }
             });
 
-            quizNextButton.addEventListener('click', function() {
-                if (currentQuestionIndex < quizQuestions.length - 1) {
-                    currentQuestionIndex++;
-                    showCurrentQuestion();
-                }
-            });
+            // עדכון כפתורי הניווט
+            quizPrevButton.disabled = currentQuestionIndex === 0;
 
-           quizSubmitButton.addEventListener('click', function () {
-           if (userAnswers.includes(null)) {
-              alert("אנא ענה על כל השאלות לפני הגשה.");
-              return;
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                quizNextButton.style.display = 'none';
+                quizSubmitButton.style.display = 'block';
+            } else {
+                quizNextButton.style.display = 'block';
+                quizSubmitButton.style.display = 'none';
             }
 
-  let correctAnswers = 0;
-  userAnswers.forEach((answer, index) => {
-    if (
-      quizQuestions[index].options[answer] === quizQuestions[index].correctAnswer
-    ) {
-      correctAnswers++;
-    }
-  });
+            // עדכון סרגל התקדמות
+            const progressPercentage = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            quizProgress.style.width = `${progressPercentage}%`;
+        }
 
-  const scorePercentage = Math.round(
-    (correctAnswers / quizQuestions.length) * 100
-  );
-  quizScore.textContent = scorePercentage;
+        // הצגת השאלה הראשונה
+        showCurrentQuestion();
 
-  quizCompletion.classList.add('show');
+        // מאזיני אירועים לכפתורי הניווט
+        quizPrevButton.addEventListener('click', function() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showCurrentQuestion();
+            }
+        });
 
-if (scorePercentage === 100){
-    quizCompletion.querySelector('h3').textContent = "כל הכבוד! סיימת את החידון בהצלחה!";
+        quizNextButton.addEventListener('click', function() {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                showCurrentQuestion();
+            }
+        });
+
+       quizSubmitButton.addEventListener('click', function () {
+       if (userAnswers.includes(null)) {
+          alert("אנא ענה על כל השאלות לפני הגשה.");
+          return;
+        }
+
+        let correctAnswers = 0;
+        let correctQuestionIds = [];  // כאן נשמור את מזהי השאלות הנכונות
+
+        userAnswers.forEach((answer, index) => {
+        if (
+          quizQuestions[index].options[answer] === quizQuestions[index].correctAnswer
+        ) {
+          correctAnswers++;
+          correctQuestionIds.push(quizQuestions[index].id);  // שמירת המזהה של השאלה
+        }
+        });
+
+        const scorePercentage = Math.round(
+        (correctAnswers / quizQuestions.length) * 100
+        );
+        quizScore.textContent = scorePercentage;
+
+        quizCompletion.classList.add('show');
+
+        if (scorePercentage === 100){
+            quizCompletion.querySelector('h3').textContent = "כל הכבוד! סיימת את החידון בהצלחה!";
 
 
-       // שלח את הטופס הנסתר
-    document.getElementById('quiz-completion-form').submit();
+                     }
+        else {
+            quizCompletion.querySelector('h3').textContent = "סיימת את החידון!";
+            }
+             // שלח את הטופס הנסתר
+
+        // שליחת התשובות הנכונות תמיד:
+const form = document.getElementById('quiz-completion-form');
+const hiddenInput = document.createElement('input');
+hiddenInput.type = 'hidden';
+hiddenInput.name = 'correct_question_ids';
+hiddenInput.value = correctQuestionIds.join(',');  // לדוגמה: "3,7,9"
+form.appendChild(hiddenInput);
 
 
-  } else {
-    quizCompletion.querySelector('h3').textContent = "סיימת את החידון!";
-  }
+// המתנה של 3 שניות לפני שליחת הטופס
+setTimeout(() => {
+    form.submit();
+}, 3000);  // 3000 מילישניות = 3 שניות
 
-  // הסתרת כפתורי הניווט
-  quizPrevButton.style.display = 'none';
-  quizNextButton.style.display = 'none';
-  quizSubmitButton.style.display = 'none';
+        // הסתרת כפתורי הניווט
+        quizPrevButton.style.display = 'none';
+        quizNextButton.style.display = 'none';
+        quizSubmitButton.style.display = 'none';
 
-  // הצגת כפתור חזרה לחידון
-  quizRetryButton.style.display = 'block';
+        // הצגת כפתור חזרה לחידון
+        quizRetryButton.style.display = 'block';
 
 
-});
+        });
 
 
 
 const quizRetryButton = document.getElementById('quiz-retry');
 
 quizRetryButton.addEventListener('click', function () {
-  currentQuestionIndex = 0;
-  userAnswers = new Array(quizQuestions.length).fill(null);
+currentQuestionIndex = 0;
+userAnswers = new Array(quizQuestions.length).fill(null);
 
-  // הסתרת סיום החידון
-  quizCompletion.classList.remove('show');
+// הסתרת סיום החידון
+quizCompletion.classList.remove('show');
 
-  // איפוס הסרגל
-  quizProgress.style.width = '0%';
+// איפוס הסרגל
+quizProgress.style.width = '0%';
 
-  // הצגת השאלה הראשונה מחדש
-  showCurrentQuestion();
+// הצגת השאלה הראשונה מחדש
+showCurrentQuestion();
 });
 
 
 
-            // תרגיל השלמת פייפליין
-            const pipelinePieces = document.getElementById('pipeline-pieces');
+        // תרגיל השלמת פייפליין
+        const pipelinePieces = document.getElementById('pipeline-pieces');
 const pipelineEditor = document.getElementById('pipeline-editor');
 const checkPipelineButton = document.getElementById('check-pipeline');
 const resetPipelineButton = document.getElementById('reset-pipeline');
@@ -1812,42 +1848,42 @@ const dropZones = document.querySelectorAll('.drop-zone');
 
 // חלקי קוד לגרירה
 const pipelineCodePieces = [
-    {
-        id: 'deploy',
-        code: `        stage('Deploy') {
-            when {
-                branch 'main'
-            }
-            steps {
-                sh 'npm run deploy'
-            }
-        }`
-    },
-    {
-        id: 'test',
-        code: `        stage('Test') {
-            steps {
-                sh 'npm test'
-            }
-        }`
-    },
-    {
-        id: 'build',
-        code: `        stage('Build') {
-            steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }`
-    },
-    {
-        id: 'checkout',
-        code: `        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }`
-    }
+{
+    id: 'deploy',
+    code: `        stage('Deploy') {
+        when {
+            branch 'main'
+        }
+        steps {
+            sh 'npm run deploy'
+        }
+    }`
+},
+{
+    id: 'test',
+    code: `        stage('Test') {
+        steps {
+            sh 'npm test'
+        }
+    }`
+},
+{
+    id: 'build',
+    code: `        stage('Build') {
+        steps {
+            sh 'npm install'
+            sh 'npm run build'
+        }
+    }`
+},
+{
+    id: 'checkout',
+    code: `        stage('Checkout') {
+        steps {
+            checkout scm
+        }
+    }`
+}
 ];
 
 
@@ -1860,161 +1896,70 @@ const shuffledPieces = [...pipelineCodePieces].sort(() => Math.random() - 0.5);
 
 // יצירת חלקי קוד לגרירה
 shuffledPieces.forEach(piece => {
-    const pieceElement = document.createElement('div');
-    pieceElement.className = 'pipeline-piece';
-    pieceElement.textContent = piece.code;
-    pieceElement.setAttribute('data-id', piece.id);
-    pieceElement.setAttribute('draggable', 'true');
+const pieceElement = document.createElement('div');
+pieceElement.className = 'pipeline-piece';
+pieceElement.textContent = piece.code;
+pieceElement.setAttribute('data-id', piece.id);
+pieceElement.setAttribute('draggable', 'true');
 
-    pieceElement.addEventListener('dragstart', function(e) {
-        this.classList.add('dragging');
-        e.dataTransfer.setData('text/plain', this.getAttribute('data-id'));
-    });
+pieceElement.addEventListener('dragstart', function(e) {
+    this.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', this.getAttribute('data-id'));
+});
 
-    pieceElement.addEventListener('dragend', function() {
-        this.classList.remove('dragging');
-    });
+pieceElement.addEventListener('dragend', function() {
+    this.classList.remove('dragging');
+});
 
-    pipelinePieces.appendChild(pieceElement);
+pipelinePieces.appendChild(pieceElement);
 });
 
 // הגדרת אזורי יעד לשחרור
 dropZones.forEach(zone => {
-    zone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('highlight');
-    });
-
-    zone.addEventListener('dragleave', function() {
-        this.classList.remove('highlight');
-    });
-
-    zone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('highlight');
-
-        const pieceId = e.dataTransfer.getData('text/plain');
-        const piece = document.querySelector(`.pipeline-piece[data-id="${pieceId}"]`);
-
-        if (piece) {
-            // בדיקה אם האזור כבר מכיל חלק קוד
-            if (this.querySelector('.pipeline-piece')) {
-                return; // אם כן, לא מאפשרים שחרור
-            }
-
-            // העתקת חלק הקוד לאזור היעד
-            const clonedPiece = piece.cloneNode(true);
-            clonedPiece.setAttribute('draggable', 'false');
-
-            // הסרת הודעת הפלייסהולדר
-            const placeholder = this.querySelector('.drop-placeholder');
-            if (placeholder) {
-                placeholder.remove();
-            }
-
-            this.appendChild(clonedPiece);
-            this.classList.add('filled');
-
-            // הסתרת החלק המקורי
-            piece.style.display = 'none';
-
-            // הוספת אפשרות להסרה בלחיצה
-            clonedPiece.addEventListener('click', function() {
-                this.remove();
-                zone.classList.remove('filled');
-
-                // הוספת הודעת פלייסהולדר מחדש
-                const newPlaceholder = document.createElement('div');
-                newPlaceholder.className = 'drop-placeholder';
-
-                const position = zone.getAttribute('data-position');
-                if (position === '1') {
-                    newPlaceholder.textContent = 'גרור לכאן את שלב ה-Checkout';
-                } else if (position === '2') {
-                    newPlaceholder.textContent = 'גרור לכאן את שלב ה-Build';
-                } else if (position === '3') {
-                    newPlaceholder.textContent = 'גרור לכאן את שלב ה-Test';
-                } else if (position === '4') {
-                    newPlaceholder.textContent = 'גרור לכאן את שלב ה-Deploy';
-                }
-
-                zone.appendChild(newPlaceholder);
-
-                // הצגת החלק המקורי מחדש
-                piece.style.display = 'block';
-            });
-        }
-    });
+zone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('highlight');
 });
 
-// בדיקת תשובות
-checkPipelineButton.addEventListener('click', function() {
-    const filledZones = document.querySelectorAll('.drop-zone.filled');
-
-    if (filledZones.length < 4) {
-        pipelineValidation.textContent = 'יש להשלים את כל השלבים בפייפליין.';
-        pipelineValidation.classList.remove('valid');
-        pipelineValidation.classList.add('invalid');
-        pipelineValidation.style.display = 'block';
-        return;
-    }
-
-    // בדיקת סדר השלבים
-    const zone1 = document.querySelector('.drop-zone[data-position="1"]');
-    const zone2 = document.querySelector('.drop-zone[data-position="2"]');
-    const zone3 = document.querySelector('.drop-zone[data-position="3"]');
-    const zone4 = document.querySelector('.drop-zone[data-position="4"]');
-
-    const piece1 = zone1.querySelector('.pipeline-piece');
-    const piece2 = zone2.querySelector('.pipeline-piece');
-    const piece3 = zone3.querySelector('.pipeline-piece');
-    const piece4 = zone4.querySelector('.pipeline-piece');
-
-    const isCorrect =
-        piece1 && piece1.getAttribute('data-id') === 'checkout' &&
-        piece2 && piece2.getAttribute('data-id') === 'build' &&
-        piece3 && piece3.getAttribute('data-id') === 'test' &&
-        piece4 && piece4.getAttribute('data-id') === 'deploy';
-
-    if (isCorrect) {
-        pipelineValidation.textContent = 'כל הכבוד! הפייפליין שלך נכון ומסודר בסדר הנכון.';
-        pipelineValidation.classList.remove('invalid');
-        pipelineValidation.classList.add('valid');
-    } else {
-        let errorMessage = 'יש שגיאות בפייפליין:';
-
-        if (!piece1 || piece1.getAttribute('data-id') !== 'checkout') {
-            errorMessage += ' השלב הראשון צריך להיות Checkout.';
-        }
-        if (!piece2 || piece2.getAttribute('data-id') !== 'build') {
-            errorMessage += ' השלב השני צריך להיות Build.';
-        }
-        if (!piece3 || piece3.getAttribute('data-id') !== 'test') {
-            errorMessage += ' השלב השלישי צריך להיות Test.';
-        }
-        if (!piece4 || piece4.getAttribute('data-id') !== 'deploy') {
-            errorMessage += ' השלב הרביעי צריך להיות Deploy.';
-        }
-
-        pipelineValidation.textContent = errorMessage;
-        pipelineValidation.classList.remove('valid');
-        pipelineValidation.classList.add('invalid');
-    }
-
-    pipelineValidation.style.display = 'block';
+zone.addEventListener('dragleave', function() {
+    this.classList.remove('highlight');
 });
 
-// איפוס תרגיל
-resetPipelineButton.addEventListener('click', function() {
-    // הסרת כל החלקים שהושמו
-    document.querySelectorAll('.drop-zone .pipeline-piece').forEach(item => item.remove());
+zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('highlight');
 
-    // איפוס מצב אזורי היעד
-    dropZones.forEach(zone => {
-        zone.classList.remove('filled');
+    const pieceId = e.dataTransfer.getData('text/plain');
+    const piece = document.querySelector(`.pipeline-piece[data-id="${pieceId}"]`);
 
-        // הוספת הודעת פלייסהולדר מחדש
-        if (!zone.querySelector('.drop-placeholder')) {
+    if (piece) {
+        // בדיקה אם האזור כבר מכיל חלק קוד
+        if (this.querySelector('.pipeline-piece')) {
+            return; // אם כן, לא מאפשרים שחרור
+        }
+
+        // העתקת חלק הקוד לאזור היעד
+        const clonedPiece = piece.cloneNode(true);
+        clonedPiece.setAttribute('draggable', 'false');
+
+        // הסרת הודעת הפלייסהולדר
+        const placeholder = this.querySelector('.drop-placeholder');
+        if (placeholder) {
+            placeholder.remove();
+        }
+
+        this.appendChild(clonedPiece);
+        this.classList.add('filled');
+
+        // הסתרת החלק המקורי
+        piece.style.display = 'none';
+
+        // הוספת אפשרות להסרה בלחיצה
+        clonedPiece.addEventListener('click', function() {
+            this.remove();
+            zone.classList.remove('filled');
+
+            // הוספת הודעת פלייסהולדר מחדש
             const newPlaceholder = document.createElement('div');
             newPlaceholder.className = 'drop-placeholder';
 
@@ -2030,150 +1975,241 @@ resetPipelineButton.addEventListener('click', function() {
             }
 
             zone.appendChild(newPlaceholder);
+
+            // הצגת החלק המקורי מחדש
+            piece.style.display = 'block';
+        });
+    }
+});
+});
+
+// בדיקת תשובות
+checkPipelineButton.addEventListener('click', function() {
+const filledZones = document.querySelectorAll('.drop-zone.filled');
+
+if (filledZones.length < 4) {
+    pipelineValidation.textContent = 'יש להשלים את כל השלבים בפייפליין.';
+    pipelineValidation.classList.remove('valid');
+    pipelineValidation.classList.add('invalid');
+    pipelineValidation.style.display = 'block';
+    return;
+}
+
+// בדיקת סדר השלבים
+const zone1 = document.querySelector('.drop-zone[data-position="1"]');
+const zone2 = document.querySelector('.drop-zone[data-position="2"]');
+const zone3 = document.querySelector('.drop-zone[data-position="3"]');
+const zone4 = document.querySelector('.drop-zone[data-position="4"]');
+
+const piece1 = zone1.querySelector('.pipeline-piece');
+const piece2 = zone2.querySelector('.pipeline-piece');
+const piece3 = zone3.querySelector('.pipeline-piece');
+const piece4 = zone4.querySelector('.pipeline-piece');
+
+const isCorrect =
+    piece1 && piece1.getAttribute('data-id') === 'checkout' &&
+    piece2 && piece2.getAttribute('data-id') === 'build' &&
+    piece3 && piece3.getAttribute('data-id') === 'test' &&
+    piece4 && piece4.getAttribute('data-id') === 'deploy';
+
+if (isCorrect) {
+    pipelineValidation.textContent = 'כל הכבוד! הפייפליין שלך נכון ומסודר בסדר הנכון.';
+    pipelineValidation.classList.remove('invalid');
+    pipelineValidation.classList.add('valid');
+} else {
+    let errorMessage = 'יש שגיאות בפייפליין:';
+
+    if (!piece1 || piece1.getAttribute('data-id') !== 'checkout') {
+        errorMessage += ' השלב הראשון צריך להיות Checkout.';
+    }
+    if (!piece2 || piece2.getAttribute('data-id') !== 'build') {
+        errorMessage += ' השלב השני צריך להיות Build.';
+    }
+    if (!piece3 || piece3.getAttribute('data-id') !== 'test') {
+        errorMessage += ' השלב השלישי צריך להיות Test.';
+    }
+    if (!piece4 || piece4.getAttribute('data-id') !== 'deploy') {
+        errorMessage += ' השלב הרביעי צריך להיות Deploy.';
+    }
+
+    pipelineValidation.textContent = errorMessage;
+    pipelineValidation.classList.remove('valid');
+    pipelineValidation.classList.add('invalid');
+}
+
+pipelineValidation.style.display = 'block';
+});
+
+// איפוס תרגיל
+resetPipelineButton.addEventListener('click', function() {
+// הסרת כל החלקים שהושמו
+document.querySelectorAll('.drop-zone .pipeline-piece').forEach(item => item.remove());
+
+// איפוס מצב אזורי היעד
+dropZones.forEach(zone => {
+    zone.classList.remove('filled');
+
+    // הוספת הודעת פלייסהולדר מחדש
+    if (!zone.querySelector('.drop-placeholder')) {
+        const newPlaceholder = document.createElement('div');
+        newPlaceholder.className = 'drop-placeholder';
+
+        const position = zone.getAttribute('data-position');
+        if (position === '1') {
+            newPlaceholder.textContent = 'גרור לכאן את שלב ה-Checkout';
+        } else if (position === '2') {
+            newPlaceholder.textContent = 'גרור לכאן את שלב ה-Build';
+        } else if (position === '3') {
+            newPlaceholder.textContent = 'גרור לכאן את שלב ה-Test';
+        } else if (position === '4') {
+            newPlaceholder.textContent = 'גרור לכאן את שלב ה-Deploy';
         }
-    });
 
-    // הצגת כל החלקים המקוריים מחדש
-    document.querySelectorAll('.pipeline-pieces .pipeline-piece').forEach(piece => {
-        piece.style.display = 'block';
-    });
+        zone.appendChild(newPlaceholder);
+    }
+});
 
-    // הסתרת הודעת אימות
-    pipelineValidation.style.display = 'none';
+// הצגת כל החלקים המקוריים מחדש
+document.querySelectorAll('.pipeline-pieces .pipeline-piece').forEach(piece => {
+    piece.style.display = 'block';
+});
 
-    // הסתרת הרמז
-    pipelineHint.classList.remove('show');
+// הסתרת הודעת אימות
+pipelineValidation.style.display = 'none';
+
+// הסתרת הרמז
+pipelineHint.classList.remove('show');
 });
 
 // הצגת רמז
 showHintButton.addEventListener('click', function() {
-    pipelineHint.classList.toggle('show');
+pipelineHint.classList.toggle('show');
 });
 
-            // תרגיל גרור ושחרר
-            const dragContainer = document.getElementById('drag-container');
-            const dropTargets = document.querySelectorAll('.drop-target');
-            const checkDragDropButton = document.getElementById('check-drag-drop');
-            const resetDragDropButton = document.getElementById('reset-drag-drop');
-            const dragDropCompletion = document.getElementById('drag-drop-completion');
+        // תרגיל גרור ושחרר
+        const dragContainer = document.getElementById('drag-container');
+        const dropTargets = document.querySelectorAll('.drop-target');
+        const checkDragDropButton = document.getElementById('check-drag-drop');
+        const resetDragDropButton = document.getElementById('reset-drag-drop');
+        const dragDropCompletion = document.getElementById('drag-drop-completion');
 
-            // פריטים לגרירה
-            const dragItems = [
-                { text: 'Stage', category: 'pipeline' },
-                { text: 'Step', category: 'pipeline' },
-                { text: 'Jenkinsfile', category: 'pipeline' },
-                { text: 'Post', category: 'pipeline' },
-                { text: 'Node', category: 'agent' },
-                { text: 'Master/Controller', category: 'agent' },
-                { text: 'Slave/Agent', category: 'agent' },
-                { text: 'Workspace', category: 'agent' },
-                { text: 'Git Plugin', category: 'plugin' },
-                { text: 'Docker Plugin', category: 'plugin' },
-                { text: 'Blue Ocean', category: 'plugin' },
-                { text: 'Pipeline Plugin', category: 'plugin' }
-            ];
+        // פריטים לגרירה
+        const dragItems = [
+            { text: 'Stage', category: 'pipeline' },
+            { text: 'Step', category: 'pipeline' },
+            { text: 'Jenkinsfile', category: 'pipeline' },
+            { text: 'Post', category: 'pipeline' },
+            { text: 'Node', category: 'agent' },
+            { text: 'Master/Controller', category: 'agent' },
+            { text: 'Slave/Agent', category: 'agent' },
+            { text: 'Workspace', category: 'agent' },
+            { text: 'Git Plugin', category: 'plugin' },
+            { text: 'Docker Plugin', category: 'plugin' },
+            { text: 'Blue Ocean', category: 'plugin' },
+            { text: 'Pipeline Plugin', category: 'plugin' }
+        ];
 
-            // ערבוב הפריטים
-            const shuffledItems = [...dragItems].sort(() => Math.random() - 0.5);
+        // ערבוב הפריטים
+        const shuffledItems = [...dragItems].sort(() => Math.random() - 0.5);
 
-            // יצירת פריטים לגרירה
-            shuffledItems.forEach(item => {
-                const dragItem = document.createElement('div');
-                dragItem.className = 'draggable';
-                dragItem.textContent = item.text;
-                dragItem.setAttribute('data-category', item.category);
-                dragItem.setAttribute('draggable', 'true');
+        // יצירת פריטים לגרירה
+        shuffledItems.forEach(item => {
+            const dragItem = document.createElement('div');
+            dragItem.className = 'draggable';
+            dragItem.textContent = item.text;
+            dragItem.setAttribute('data-category', item.category);
+            dragItem.setAttribute('draggable', 'true');
 
-                dragItem.addEventListener('dragstart', function(e) {
-                    this.classList.add('dragging');
-                    e.dataTransfer.setData('text/plain', this.textContent);
-                    e.dataTransfer.setData('category', this.getAttribute('data-category'));
-                });
-
-                dragItem.addEventListener('dragend', function() {
-                    this.classList.remove('dragging');
-                });
-
-                dragContainer.appendChild(dragItem);
+            dragItem.addEventListener('dragstart', function(e) {
+                this.classList.add('dragging');
+                e.dataTransfer.setData('text/plain', this.textContent);
+                e.dataTransfer.setData('category', this.getAttribute('data-category'));
             });
 
-            // הגדרת אזורי יעד לשחרור
+            dragItem.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+
+            dragContainer.appendChild(dragItem);
+        });
+
+        // הגדרת אזורי יעד לשחרור
+        dropTargets.forEach(target => {
+            target.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('highlight');
+            });
+
+            target.addEventListener('dragleave', function() {
+                this.classList.remove('highlight');
+            });
+
+            target.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('highlight');
+
+                const text = e.dataTransfer.getData('text/plain');
+                const category = e.dataTransfer.getData('category');
+                const draggable = document.querySelector(`.draggable[data-category="${category}"][draggable="true"]:not(.dropped)`);
+
+                if (draggable) {
+                    const droppedItem = document.createElement('div');
+                    droppedItem.className = 'dropped-item';
+                    droppedItem.innerHTML = `${text} <span class="remove">×</span>`;
+                    droppedItem.setAttribute('data-category', category);
+
+                    droppedItem.querySelector('.remove').addEventListener('click', function() {
+                        droppedItem.remove();
+                        draggable.style.display = 'block';
+                        draggable.classList.remove('dropped');
+                    });
+
+                    this.appendChild(droppedItem);
+                    draggable.style.display = 'none';
+                    draggable.classList.add('dropped');
+                }
+            });
+        });
+
+        // בדיקת תשובות
+        checkDragDropButton.addEventListener('click', function() {
+            let allCorrect = true;
+
             dropTargets.forEach(target => {
-                target.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.classList.add('highlight');
-                });
+                const targetCategory = target.getAttribute('data-category');
+                const droppedItems = target.querySelectorAll('.dropped-item');
 
-                target.addEventListener('dragleave', function() {
-                    this.classList.remove('highlight');
-                });
-
-                target.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.classList.remove('highlight');
-
-                    const text = e.dataTransfer.getData('text/plain');
-                    const category = e.dataTransfer.getData('category');
-                    const draggable = document.querySelector(`.draggable[data-category="${category}"][draggable="true"]:not(.dropped)`);
-
-                    if (draggable) {
-                        const droppedItem = document.createElement('div');
-                        droppedItem.className = 'dropped-item';
-                        droppedItem.innerHTML = `${text} <span class="remove">×</span>`;
-                        droppedItem.setAttribute('data-category', category);
-
-                        droppedItem.querySelector('.remove').addEventListener('click', function() {
-                            droppedItem.remove();
-                            draggable.style.display = 'block';
-                            draggable.classList.remove('dropped');
-                        });
-
-                        this.appendChild(droppedItem);
-                        draggable.style.display = 'none';
-                        draggable.classList.add('dropped');
+                droppedItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+                    if (itemCategory !== targetCategory) {
+                        allCorrect = false;
+                        item.style.backgroundColor = 'var(--jenkins-red)';
+                    } else {
+                        item.style.backgroundColor = 'var(--jenkins-green)';
                     }
                 });
             });
 
-            // בדיקת תשובות
-            checkDragDropButton.addEventListener('click', function() {
-                let allCorrect = true;
-
-                dropTargets.forEach(target => {
-                    const targetCategory = target.getAttribute('data-category');
-                    const droppedItems = target.querySelectorAll('.dropped-item');
-
-                    droppedItems.forEach(item => {
-                        const itemCategory = item.getAttribute('data-category');
-                        if (itemCategory !== targetCategory) {
-                            allCorrect = false;
-                            item.style.backgroundColor = 'var(--jenkins-red)';
-                        } else {
-                            item.style.backgroundColor = 'var(--jenkins-green)';
-                        }
-                    });
-                });
-
-                if (allCorrect && document.querySelectorAll('.dropped-item').length >= 8) {
-                    dragDropCompletion.classList.add('show');
-                }
-            });
-
-            // איפוס תרגיל
-            resetDragDropButton.addEventListener('click', function() {
-                // הסרת כל הפריטים שהושמו
-                document.querySelectorAll('.dropped-item').forEach(item => item.remove());
-
-                // הצגת כל הפריטים לגרירה מחדש
-                document.querySelectorAll('.draggable').forEach(item => {
-                    item.style.display = 'block';
-                    item.classList.remove('dropped');
-                });
-
-                // הסתרת הודעת סיום
-                dragDropCompletion.classList.remove('show');
-            });
+            if (allCorrect && document.querySelectorAll('.dropped-item').length >= 8) {
+                dragDropCompletion.classList.add('show');
+            }
         });
-    </script>
+
+        // איפוס תרגיל
+        resetDragDropButton.addEventListener('click', function() {
+            // הסרת כל הפריטים שהושמו
+            document.querySelectorAll('.dropped-item').forEach(item => item.remove());
+
+            // הצגת כל הפריטים לגרירה מחדש
+            document.querySelectorAll('.draggable').forEach(item => {
+                item.style.display = 'block';
+                item.classList.remove('dropped');
+            });
+
+            // הסתרת הודעת סיום
+            dragDropCompletion.classList.remove('show');
+        });
+    });
+</script>
 </body>
 </html>

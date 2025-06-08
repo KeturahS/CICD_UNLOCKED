@@ -8,7 +8,6 @@ from django.contrib import messages
 import logging
 from .models import PipelineTemplate, StudentPipelineAttempt
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -66,8 +65,6 @@ def update_command_attempts_status(request):
     return redirect('GitScenarioExercise')
 
 
-
-
 def GitExercise1_view(request):
     return render(request, 'GitExercises/section1_questions.html')
 
@@ -86,31 +83,44 @@ def GitScenarioExercise(request):
     return render(request, 'GitExercises/GitScenarioExercise.html', context)
 
 
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from .models import StudentJenkinsQuizExercise
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import StudentJenkinsQuizExercise
 
+
+@csrf_exempt  # במידת הצורך בלבד
 @login_required
 def update_jenkins_quiz_completion(request):
-    if request.method == 'POST' and request.POST.get('complete_quiz') == 'true':
-        student = request.user.student_profile
-        StudentJenkinsQuizExercise.objects.filter(student=student).update(completed=True)
-        # ניתן להפנות חזרה לעמוד התוצאות או לעמוד אחר
-        # חזרה לעמוד של השאלות או החומר של שלב 4
-        student_jenkins_quiz_exercise = StudentJenkinsQuizExercise.objects.filter(student=request.user.student_profile)
+    if request.method == 'POST':
+        question_ids = request.POST.get('correct_question_ids', '')
+        id_list = [int(qid) for qid in question_ids.split(',') if qid.isdigit()]
+        print("DEBUG question_ids:", question_ids)
+        print("DEBUG id_list:", id_list)
 
-        context = {
-            'student_jenkins_quiz_exercise': student_jenkins_quiz_exercise,
-        }
-        return render(request, 'JenkinsExercises/jenkins_questions.html')
-    return render(request, 'JenkinsExercises/section4_questions.html')
+        StudentJenkinsQuizExercise.objects.filter(student=request.user.student_profile).update(
+            completed=False)
 
+        for qid in id_list:
+            quiz_status = StudentJenkinsQuizExercise.objects.get(student=request.user.student_profile, quiz_id=qid)
+            print(f"DEBUG: Question ID: {qid}, Question Text: {quiz_status.quiz.question}")
+
+            quiz_status.completed = True
+            quiz_status.save()
+
+        # חזרה לדף ממנו הגיע המשתמש
+        return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+    return redirect('home')
 
 
 from App_SetUp.models import StudentProfile
 from django.shortcuts import render
+
 
 def jenkins_questions_view(request):
     try:
@@ -129,10 +139,8 @@ def jenkins_questions_view(request):
     })
 
 
-
-
-
 import re
+
 
 def validate_pipeline(code):
     if not code:
@@ -157,7 +165,6 @@ def validate_pipeline(code):
         return False
 
     return True
-
 
 
 def get_random_unsolved_pipeline(user):
