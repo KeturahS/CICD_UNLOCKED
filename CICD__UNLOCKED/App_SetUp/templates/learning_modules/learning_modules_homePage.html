@@ -4,101 +4,361 @@
 
 {% block content %}
 <style>
-  body {
-    background-color: #0f172a;
-    font-family: 'Assistant', sans-serif;
+  /* Main Content Styling */
+  .learning-main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    min-height: calc(100vh - 140px);
   }
 
-  .intro-box {
-    max-width: 900px;
-    margin: 60px auto;
-    background: #1e293b;
-    padding: 50px 40px;
-    border-radius: 16px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  /* Hero Section */
+  .hero-section {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 60px 40px;
+    margin-bottom: 40px;
     text-align: center;
-    animation: fadeIn 1s ease-in-out;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
   }
 
-  .intro-title {
-    font-size: 3em;
-    background: linear-gradient(90deg, #60a5fa, #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  /* Background decoration */
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+  }
+
+  .hero-title {
+    font-size: 3.5em;
     font-weight: bold;
     margin-bottom: 30px;
+    background: linear-gradient(135deg, #00d4ff, #8b5cf6, #06b6d4);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientMove 3s ease-in-out infinite;
+    text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
   }
 
-  .intro-text {
-    font-size: 1.4em;
-    color: #f1f5f9;
-    margin-bottom: 20px;
+  .hero-subtitle {
+    font-size: 1.3em;
+    color: #e2e8f0;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .module-links {
-    margin-top: 50px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .btn-module {
-    background:linear-gradient(to right, #004b93, #6c1cb1);
-    color: white;
-    padding: 16px 32px;
+  .hero-description {
     font-size: 1.1em;
-    border: none;
-    border-radius: 14px;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+    line-height: 1.7;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-cta {
+    font-size: 1.2em;
+    color: #00d4ff;
+    font-weight: 600;
+    margin-bottom: 40px;
+  }
+
+  /* Modules Grid */
+  .modules-container {
+    margin-top: 50px;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  /* Module Cards */
+  .module-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
     text-decoration: none;
+    color: white;
+    display: block;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .module-card:hover::before {
+    left: 100%;
+  }
+
+  .module-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+  }
+
+  /* Git Module */
+  .module-card.git {
+    background: linear-gradient(135deg, rgba(240, 101, 67, 0.1), rgba(255, 255, 255, 0.05));
+  }
+
+  .module-card.git:hover {
+    box-shadow: 0 20px 40px rgba(240, 101, 67, 0.3);
+    border-color: rgba(240, 101, 67, 0.5);
+  }
+
+  /* Jenkins Module */
+  .module-card.jenkins {
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.1), rgba(255, 255, 255, 0.05));
+  }
+
+  .module-card.jenkins:hover {
+    box-shadow: 0 20px 40px rgba(13, 148, 136, 0.3);
+    border-color: rgba(13, 148, 136, 0.5);
+  }
+
+  /* Docker Module */
+  .module-card.docker {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(255, 255, 255, 0.05));
+  }
+
+  .module-card.docker:hover {
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.5);
+  }
+
+  .module-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0.9;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-    min-width: 220px;
   }
 
-  .btn-module:hover {
-    background-color: #4f46e5;
-    transform: translateY(-3px);
+  .module-card:hover .module-icon {
+    transform: scale(1.1);
+    opacity: 1;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  .module-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: white;
+  }
+
+  .module-description {
+    color: #cbd5e1;
+    line-height: 1.6;
+    font-size: 0.95em;
+  }
+
+  /* No Access Message */
+  .no-access-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    color: #fca5a5;
+    font-size: 1.1em;
+    margin-top: 40px;
+    backdrop-filter: blur(10px);
+  }
+
+  .no-access-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes gradientMove {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .learning-main-content {
+      padding: 20px 15px;
+    }
+
+    .hero-section {
+      padding: 40px 25px;
+      margin-bottom: 30px;
+    }
+
+    .hero-title {
+      font-size: 2.5em;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1em;
+    }
+
+    .hero-description {
+      font-size: 1em;
+    }
+
+    .modules-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .module-card {
+      padding: 25px;
+    }
+
+    .module-icon {
+      font-size: 3em;
+    }
+
+    .module-title {
+      font-size: 1.5em;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2em;
+    }
+
+    .hero-subtitle {
+      font-size: 1em;
+    }
+
+    .module-card {
+      padding: 20px;
+    }
   }
 </style>
 
-<div class="intro-box">
-  <h1 class="intro-title"> ברוך הבא ללומדת ה־CI/CD</h1>
+<div class="learning-main-content">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1 class="hero-title">ברוך הבא ללומדת ה־CI/CD</h1>
 
-  <p class="intro-text">
-    בלומדה זו תלמד בצורה אינטראקטיבית על הכלים הנפוצים בעולם הפיתוח המודרני:<br>
-    <strong>Git</strong>, <strong>Jenkins</strong> ו־<strong>Docker</strong>.
-  </p>
-  <p class="intro-text">
-    כל מודול כולל סרטונים קצרים, שאלות לתרגול והסברים שיעזרו לך להבין את התהליך מאחורי Continuous Integration ו־Continuous Deployment.
-  </p>
-  <p class="intro-text">
-    בחר את המודול שתרצה ללמוד ממנו:
-  </p>
+    <p class="hero-subtitle">
+      בלומדה זו תלמד בצורה אינטראקטיבית על הכלים הנפוצים בעולם הפיתוח המודרני
+    </p>
 
-  <div class="module-links">
+    <p class="hero-description">
+      כל מודול כולל סרטונים קצרים, שאלות לתרגול והסברים שיעזרו לך להבין את התהליך מאחורי
+      <strong>Continuous Integration</strong> ו־<strong>Continuous Deployment</strong>
+    </p>
+
+    <p class="hero-cta">בחר את המודול שתרצה ללמוד ממנו:</p>
+  </div>
+
+  <!-- Modules Container -->
+  <div class="modules-container">
     {% with visible_modules|default:"" as vm %}
+
+    <!-- Check if user has access to any modules -->
     {% if 'git' not in vm and 'jenkins' not in vm and 'docker' not in vm %}
-    <p class="intro-text" style="color: #f87171;">אין לך הרשאות לגשת למודולים אלה.</p>
+      <div class="no-access-message">
+        <span class="no-access-icon">🔒</span>
+        <h3>אין לך הרשאות לגשת למודולים</h3>
+        <p>אנא פנה למנהל המערכת לקבלת גישה למודולי הלמידה</p>
+      </div>
+    {% else %}
+
+      <!-- Modules Grid -->
+      <div class="modules-grid">
+
+        {% if 'git' in visible_modules %}
+        <a href="{% url 'git_module' %}" class="module-card git" aria-label="מודול Git">
+          <span class="module-icon">🌿</span>
+          <h2 class="module-title">Git</h2>
+          <p class="module-description">
+            למד על בקרת גרסאות עם Git - הכלי הבסיסי לניהול קוד ושיתוף פעולה בצוותי פיתוח
+          </p>
+        </a>
+        {% endif %}
+
+        {% if 'jenkins' in visible_modules %}
+        <a href="{% url 'jenkins_module' %}" class="module-card jenkins" aria-label="מודול Jenkins">
+          <span class="module-icon">⚙️</span>
+          <h2 class="module-title">Jenkins</h2>
+          <p class="module-description">
+            גלה כיצד לבנות צינורות CI/CD אוטומטיים עם Jenkins לפריסה מהירה ובטוחה
+          </p>
+        </a>
+        {% endif %}
+
+        {% if 'docker' in visible_modules %}
+        <a href="{% url 'docker_module' %}" class="module-card docker" aria-label="מודול Docker">
+          <span class="module-icon">🐳</span>
+          <h2 class="module-title">Docker</h2>
+          <p class="module-description">
+            התמחה בקונטיינריזציה עם Docker - טכנולוגיה שמאפשרת פריסה עקבית בכל סביבה
+          </p>
+        </a>
+        {% endif %}
+
+      </div>
     {% endif %}
     {% endwith %}
-
-
-    {% if 'git' in visible_modules %}
-      <a href="{% url 'git_module' %}" class="btn-module" aria-label="מודול Git">  Git</a>
-    {% endif %}
-    {% if 'jenkins' in visible_modules %}
-      <a href="{% url 'jenkins_module' %}" class="btn-module" aria-label="מודול Jenkins">️  Jenkins</a>
-    {% endif %}
-    {% if 'docker' in visible_modules %}
-      <a href="{% url 'docker_module' %}" class="btn-module" aria-label="מודול Docker">  Docker</a>
-    {% endif %}
-
   </div>
 </div>
+
 {% endblock %}

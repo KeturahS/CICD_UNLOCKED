@@ -85,16 +85,32 @@
                 z-index: 1000;
             }
 
-            .nav-link {
-                display: block;
-                color: white;
-                text-decoration: none;
-                padding: 10px 0;
-                font-size: 14px;
-                transition: color 0.3s ease;
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
             }
+
+            .nav-link {
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
             .nav-link:hover {
-                color: #00d4ff;
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .nav-link.active {
+                background: linear-gradient(135deg, #8b5cf6, #06b6d4);
             }
 
             .nav-icons {
@@ -442,7 +458,7 @@
                 <div class="empty-card-placeholder">תוכן יוצג כאן בקרוב</div>
             </div>
 
-            
+
             <div class="main-card award-section">
                 <div class="award-icon">🏆</div>
                 <div class="award-title">רמה</div>
