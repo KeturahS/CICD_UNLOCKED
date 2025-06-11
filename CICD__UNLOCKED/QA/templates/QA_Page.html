@@ -1,354 +1,421 @@
 {% extends 'base.html' %}
 
-
-
 {% block content %}
-    <style>
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial;
-        }
+<style>
+    /* Main Content Styling */
+    .qa-main-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-        body {
-            background-color: #0e0e14;
-            color: white;
-            min-height: 100vh;
-            overflow: hidden; /* מונע גלילה */
-            padding: 30px; /* פדינג לכל העמוד */
-        }
+    .qa-header {
+        text-align: right;
+        margin-bottom: 30px;
+    }
 
-        /* Main Content - ממורכז באמצע הדף */
-        .main-content {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            height: calc(100vh - 60px - 40px); /* גובה מחושב עם התחשבות בפדינג של הגוף ורווח בתחתית */
-            display: flex;
-            flex-direction: column;
-            background-color: #0e0e14;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-            margin-bottom: 40px; /* רווח בתחתית המסך */
-        }
+    .qa-welcome {
+        font-size: 32px;
+        font-weight: bold;
+        color: #00d4ff;
+        margin-bottom: 10px;
+    }
 
-        .header {
-            text-align: right;
-            margin-bottom: 20px;
-            padding: 20px 30px 0;
-        }
+    .qa-subtitle {
+        color: #c5c5d0;
+        font-size: 18px;
+    }
 
-        .date {
-            color: #8a8a9a;
-            font-size: 25px;
-            margin-bottom: 10px;
-        }
+    /* Search Container */
+    .qa-search-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
 
-        .welcome {
-            font-size: 25px;
-            margin-bottom: 20px;
-        }
+    .search-form {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
 
-        /* Search Box */
-        .search-container {
-            background-color: #1a1a24;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 0 30px 20px;
-            display: flex;
-            align-items: center;
-        }
+    .search-icon {
+        font-size: 24px;
+        color: #8b5cf6;
+    }
 
-        .search-icon {
-            margin-left: 15px;
-            color: #8a41ff;
-            font-size: 25px;
-        }
+    .qa-search-input {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 12px 20px;
+        color: white;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+        min-width: 250px;
+    }
 
-        .search-input {
-            background-color: #232330;
-            border: 1px solid #2a2a35;
-            border-radius: 5px;
-            padding: 12px 40px;
-            color: white;
-            font-size: 25px;
-            outline: none;
-            width: 200%;
-        }
+    .qa-search-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
 
-        .search-input::placeholder {
-            color: #8a8a9a;
-        }
+    .qa-search-input:focus {
+        border-color: #8b5cf6;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    }
 
-        .search-input:focus {
-            border-color: #8a41ff;
-        }
+    .search-button {
+        background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
 
-        /* Content Layout - שני חלקים זה לצד זה */
-        .content-layout {
-            display: flex;
-            flex: 1;
-            gap: 20px;
-            padding: 0 30px 30px;
-            height: calc(100vh - 180px - 60px - 40px); /* גובה מחושב כדי להתאים למסך אחד עם פדינג ורווח בתחתית */
-        }
+    .search-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+    }
 
-        /* FAQ Section */
-        .faq-container {
-            background-color: #1a1a24;
-            border-radius: 10px;
-            padding: 20px;
-            flex: 3; /* תופס יותר מקום מאשר החלק השמאלי */
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            order: 2; /* שינוי סדר - FAQ יהיה בצד ימין */
-        }
+    /* Content Layout */
+    .qa-content-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        align-items: start;
+    }
 
-        .faq-title {
-            font-size: 27px;
-            margin-bottom: 20px;
-            color: white;
-            text-align: right;
-        }
+    /* FAQ Container */
+    .qa-faq-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
 
-        /* FAQ Scroll Container - קונטיינר פנימי עם גלילה */
-        .faq-scroll-container {
-            flex: 1;
-            overflow-y: auto;
-            padding-left: 5px; /* מרווח מהצד השמאלי */
-            direction: rtl; /* חשוב לסרגל גלילה בצד ימין */
-            padding-right: 5px; /* מרווח מהצד הימני */
-        }
+    .qa-faq-title {
+        font-size: 24px;
+        color: #00d4ff;
+        margin-bottom: 25px;
+        text-align: right;
+        font-weight: bold;
+    }
 
-        /* Custom Scrollbar - בצד ימין לעברית */
-        .faq-scroll-container::-webkit-scrollbar {
-            width: 10px;
-        }
+    .qa-faq-scroll-container {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 10px;
+        direction: rtl;
+    }
 
-        .faq-scroll-container::-webkit-scrollbar-track {
-            background: #232330;
-            border-radius: 10px;
-        }
+    /* Custom Scrollbar */
+    .qa-faq-scroll-container::-webkit-scrollbar {
+        width: 8px;
+    }
 
-        .faq-scroll-container::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #8a41ff, #00e1ff);
-            border-radius: 10px;
-        }
+    .qa-faq-scroll-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
 
-        .faq-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #00e1ff, #8a41ff);
-        }
+    .qa-faq-scroll-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        border-radius: 10px;
+    }
 
-        .faq-item {
-            background-color: #232330;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
+    .qa-faq-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+    }
 
-        .faq-question {
-            padding: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            position: relative;
-            border-bottom: 1px solid #2a2a35;
-            font-size: 25px;
-        }
+    /* FAQ Items */
+    .qa-faq-item {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
 
-        .faq-question::after {
-            content: "+";
-            position: absolute;
-            left: 15px;
-            font-size: 25px;
-            color: #00e1ff;
-        }
+    .qa-faq-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(139, 92, 246, 0.1);
+        border-color: rgba(139, 92, 246, 0.3);
+    }
 
-        .faq-answer {
-            padding: 15px;
-            line-height: 1.6;
-            color: #c5c5d0;
-            font-size: 25px;
-        }
+    .qa-faq-question {
+        padding: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        position: relative;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 16px;
+        color: white;
+        transition: all 0.3s ease;
+    }
 
-        /* Contact Section - עכשיו בצד שמאל */
-        .contact-container {
-            background-color: #1a1a24;
-            border-radius: 10px;
-            padding: 25px;
-            flex: 1; /* תופס פחות מקום מאשר החלק הימני */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            order: 1; /* שינוי סדר - Contact יהיה בצד שמאל */
-        }
+    .qa-faq-question:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #00d4ff;
+    }
 
-        .contact-title {
-            font-size: 25px;
-            margin-bottom: 20px;
-        }
+    .qa-faq-question::after {
+        content: "+";
+        position: absolute;
+        left: 20px;
+        font-size: 20px;
+        color: #8b5cf6;
+        transition: all 0.3s ease;
+    }
 
-        .contact-text {
-            color: #c5c5d0;
-            margin-bottom: 15px; /* מרווח קטן יותר לפני הכפתור */
-            line-height: 1.6;
-            font-size: 25px;
-        }
+    .qa-faq-question.active::after {
+        content: "−";
+        color: #06b6d4;
+    }
 
-        .contact-button {
-            background: linear-gradient(135deg, #8b5cf6, #00e1ff);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            display: inline-block;
-            text-decoration: none;
-            font-size: 20px;
-            transition: transform 0.2s ease;
-            margin-top: 5px; /* מרווח קטן מהטקסט */
-        }
+    .qa-faq-answer {
+        padding: 20px;
+        line-height: 1.7;
+        color: #c5c5d0;
+        font-size: 15px;
+        display: none;
+    }
 
-        .contact-button:hover {
-            background: linear-gradient(135deg, #00e1ff, #8b5cf6);
-        }
+    .qa-faq-answer.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
 
-        /* Grid Layout for FAQ items */
-        .faq-grid {
-            display: grid;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Contact Container */
+    .qa-contact-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        height: fit-content;
+        position: sticky;
+        top: 120px;
+    }
+
+    .qa-contact-title {
+        font-size: 20px;
+        color: #00d4ff;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .qa-contact-text {
+        color: #c5c5d0;
+        margin-bottom: 25px;
+        line-height: 1.6;
+        font-size: 14px;
+    }
+
+    .qa-contact-button {
+        background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .qa-contact-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        color: white;
+    }
+
+    /* Grid for FAQ items */
+    .qa-faq-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Search Results Styling */
+    .search-results-section {
+        margin-bottom: 30px;
+    }
+
+    .search-results-title {
+        color: #06b6d4;
+        font-size: 18px;
+        margin-bottom: 15px;
+        text-align: right;
+    }
+
+    .no-results {
+        text-align: center;
+        color: #c5c5d0;
+        font-style: italic;
+        padding: 40px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .qa-content-layout {
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 20px;
         }
 
-        @media (min-width: 768px) {
-            .faq-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+        .qa-contact-container {
+            position: static;
+            margin-bottom: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .qa-main-content {
+            padding: 15px;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 900px) {
-            body {
-                padding: 15px;
-                overflow-y: auto;
-            }
-
-            .main-content {
-                height: auto;
-                margin-bottom: 30px; /* רווח בתחתית במסכים קטנים */
-            }
-
-            .content-layout {
-                flex-direction: column;
-                height: auto;
-                padding: 0 15px 15px;
-            }
-
-            .faq-container, .contact-container {
-                width: 100%;
-                order: 0; /* מבטל את סדר הפריסה במסכים קטנים */
-            }
-
-            .contact-container {
-                margin-bottom: 15px; /* מרווח בין הקונטיינרים במסכים קטנים */
-            }
-
-            .faq-container {
-                max-height: 60vh;
-            }
-
-            .header, .search-container {
-                padding: 15px;
-                margin: 0 15px 15px;
-            }
+        .search-form {
+            flex-direction: column;
+            align-items: stretch;
         }
-    </style>
 
-<body>
-<!-- Main Content -->
-<div class="main-content">
-    <div class="header">
-        <h1 class="welcome">שאלות ותשובות נפוצות</h1>
+        .qa-search-input {
+            min-width: auto;
+            width: 100%;
+        }
+
+        .qa-faq-container,
+        .qa-contact-container {
+            padding: 20px;
+        }
+
+        .qa-faq-scroll-container {
+            max-height: 50vh;
+        }
+
+        .qa-welcome {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="qa-main-content">
+    <div class="qa-header">
+        <h1 class="qa-welcome">שאלות ותשובות נפוצות</h1>
+        <p class="qa-subtitle">מצא תשובות לשאלות הנפוצות ביותר</p>
     </div>
 
-    <!-- Search Box -->
-    <div class="search-container">
-        <div class="search-icon">🔍</div>
-        <form method="POST">
+    <!-- Search Container -->
+    <div class="qa-search-container">
+        <form method="POST" class="search-form">
             {% csrf_token %}
-            <input type="text" name="search_query" class="search-input" placeholder="חפש שאלה..."/>
-            <button type="submit" class="contact-button" > כל השאלות</button>
+            <div class="search-icon">🔍</div>
+            <input type="text" name="search_query" class="qa-search-input" placeholder="חפש שאלה..." value="{{ request.POST.search_query }}"/>
+            <button type="submit" class="search-button">חיפוש</button>
         </form>
-
-
     </div>
 
-    <!-- Content Layout - מחלק את המסך לשני חלקים -->
-    <div class="content-layout">
-        <!-- FAQ Section - בצד ימין -->
-        <div class="faq-container">
-
-
-            <!-- קונטיינר פנימי עם גלילה בצד ימין -->
-            <div class="faq-scroll-container">
-                <div class="faq-grid">
-
-                    <!-- Filtered Results -->
-                    {% if filtered_faqs %}
-                    <h2 class="faq-title">שאלות מסוננות</h2>
-                    <br> </br>
-                    <div style="margin-top: 20px; text-align: right; width: 100%;">
-                        <h3 style="margin-bottom: 10px;">תוצאות חיפוש:</h3>
-                        <div class="faq-grid">
-                            {% for faq in filtered_faqs %}
-                            <div class="faq-item">
-                                <div class="faq-question">{{ faq.question }}</div>
-                                <div class="faq-answer">{{ faq.answer }}</div>
-                            </div>
-                            {% empty %}
-                            <p>לא נמצאו תוצאות.</p>
-                            {% endfor %}
+    <!-- Content Layout -->
+    <div class="qa-content-layout">
+        <!-- FAQ Section -->
+        <div class="qa-faq-container">
+            <div class="qa-faq-scroll-container">
+                <!-- Filtered Results -->
+                {% if filtered_faqs %}
+                <div class="search-results-section">
+                    <h2 class="search-results-title">תוצאות חיפוש עבור: "{{ request.POST.search_query }}"</h2>
+                    <div class="qa-faq-grid">
+                        {% for faq in filtered_faqs %}
+                        <div class="qa-faq-item">
+                            <div class="qa-faq-question" onclick="toggleAnswer(this)">{{ faq.question }}</div>
+                            <div class="qa-faq-answer">{{ faq.answer }}</div>
                         </div>
+                        {% empty %}
+                        <div class="no-results">
+                            <p>לא נמצאו תוצאות חיפוש. נסה מילות חיפוש אחרות.</p>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endif %}
+                </div>
+                {% endif %}
 
-                    <!-- All FAQs -->
-                    {% if not filtered_faqs %}
-
-                    <br> </br>
-                    <h2 class="faq-title">שאלות נפוצות</h2>
-
-                    <br> </br>
+                <!-- All FAQs -->
+                {% if not filtered_faqs %}
+                <h2 class="qa-faq-title">כל השאלות הנפוצות</h2>
+                <div class="qa-faq-grid">
                     {% for faq in faqs %}
-                    <div class="faq-item">
-                        <div class="faq-question">{{ faq.question }}</div>
-                        <div class="faq-answer"> {{ faq.answer }}</div>
+                    <div class="qa-faq-item">
+                        <div class="qa-faq-question" onclick="toggleAnswer(this)">{{ faq.question }}</div>
+                        <div class="qa-faq-answer">{{ faq.answer }}</div>
                     </div>
                     {% endfor %}
-                    {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
 
-        <!-- Contact Section - בצד שמאל -->
-        <div class="contact-container">
-            <h2 class="contact-title">לא מצאת תשובה לשאלה שלך?</h2>
-            <h2 class="contact-text">
+        <!-- Contact Section -->
+        <div class="qa-contact-container">
+            <h2 class="qa-contact-title">לא מצאת תשובה?</h2>
+            <p class="qa-contact-text">
                 צוות התמיכה שלנו זמין לענות על כל שאלה. אנחנו כאן כדי לעזור לך להצליח בלימודים שלך.
-            </h2>
-            <a href="{% url 'contact_us' %}" class="contact-button">צור קשר עם צוות התמיכה</a>
+            </p>
+            <a href="{% url 'contact_us' %}" class="qa-contact-button">צור קשר עם צוות התמיכה</a>
         </div>
     </div>
 </div>
-</body>
 
+<script>
+function toggleAnswer(questionElement) {
+    const answerElement = questionElement.nextElementSibling;
+    const isCurrentlyOpen = answerElement.classList.contains('show');
 
+    // Close all other answers
+    document.querySelectorAll('.qa-faq-answer.show').forEach(answer => {
+        answer.classList.remove('show');
+        answer.previousElementSibling.classList.remove('active');
+    });
 
+    // Toggle current answer if it wasn't already open
+    if (!isCurrentlyOpen) {
+        answerElement.classList.add('show');
+        questionElement.classList.add('active');
+    }
+}
 
-{%endblock%}
+// Close answers when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.qa-faq-item')) {
+        document.querySelectorAll('.qa-faq-answer.show').forEach(answer => {
+            answer.classList.remove('show');
+            answer.previousElementSibling.classList.remove('active');
+        });
+    }
+});
+</script>
+
+{% endblock %}

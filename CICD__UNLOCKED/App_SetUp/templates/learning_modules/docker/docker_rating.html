@@ -3,117 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <title>דירוג לומדת Docker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: 'Assistant', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #2c3e50;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #f1f5f9;
             min-height: 100vh;
-            padding: 50px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 30px;
-            color: #0d3b66;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        form {
+        .rating-container {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            max-width: 650px;
-            background: white;
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow: 0 12px 30px rgba(0, 123, 255, 0.2);
-            animation: fadeIn 0.6s ease-in-out;
+            max-width: 700px;
+            animation: fadeInUp 0.8s ease-out;
         }
 
-        label {
+        .rating-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #38bdf8, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
+            line-height: 1.2;
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        .rating-form {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow:
+                0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(148, 163, 184, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rating-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .rating-form > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        .form-label {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 8px;
+            color: #e2e8f0;
+            margin-bottom: 12px;
             display: block;
+            text-align: right;
         }
 
-        select, textarea {
+        .rating-select {
             width: 100%;
-            padding: 12px;
-            margin-top: 6px;
-            border: 1px solid #cce5ff;
+            padding: 16px 20px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
             border-radius: 12px;
-            background-color: #f7fbff;
+            color: #f1f5f9;
             font-size: 16px;
-            transition: 0.3s ease;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: left 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px 12px;
+            padding-left: 40px;
         }
 
-        select:focus, textarea:focus {
+        .rating-select:focus {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0,123,255,0.2);
+            color: #f8fafc;
         }
 
-        textarea {
+        .rating-select option {
+            background: #1e293b;
+            color: #f1f5f9;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .rating-textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
+            color: #f1f5f9;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
             resize: vertical;
-            min-height: 80px;
+            min-height: 120px;
+            line-height: 1.6;
         }
 
-        button {
-            background-color: #0d6efd;
+        .rating-textarea:focus {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+            outline: none;
+            color: #f8fafc;
+        }
+
+        .rating-textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             font-size: 18px;
-            padding: 12px 30px;
+            font-weight: 700;
+            padding: 16px 40px;
             border: none;
-            border-radius: 30px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        button:hover {
-            background-color: #084cdf;
-            transform: translateY(-2px);
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-10px);
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(75, 85, 99, 0.7);
+            color: #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            backdrop-filter: blur(10px);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: rgba(75, 85, 99, 0.9);
+            transform: translateY(-1px);
+            color: #f1f5f9;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(75, 85, 99, 0.4);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
             }
-            100% {
+
+            .rating-title {
+                font-size: 2.5rem;
+                margin-bottom: 30px;
+            }
+
+            .rating-form {
+                padding: 30px 25px;
+            }
+
+            .back-btn {
+                top: 15px;
+                right: 15px;
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
+        @keyframes floating {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Star rating visual enhancement */
+        .star-preview {
+            font-size: 24px;
+            margin-top: 8px;
+            color: #fbbf24;
+            text-align: right;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .star-preview.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
+    <a href="#" onclick="history.back(); return false;" class="back-btn">
+        <span>↩️</span>
+        חזרה
+    </a>
 
-    <h1>דרג את לומדת Docker ⭐</h1>
+    <div class="rating-container">
+        <h1 class="rating-title">
+            דרג את לומדת Docker
+            <span style="font-size: 0.8em;">🐳</span>
+        </h1>
 
-    <form method="post">
-        {% csrf_token %}
+        <form method="post" class="rating-form">
+            {% csrf_token %}
 
-        <label for="rating">בחר דירוג:</label>
-        <select name="rating" id="rating" required>
-            <option value="">בחר דירוג</option>
-            <option value="1">⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="3">⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="5">⭐⭐⭐⭐⭐</option>
-        </select>
+            <div class="form-group">
+                <label for="rating" class="form-label">בחר דירוג:</label>
+                <select name="rating" id="rating" class="rating-select" required>
+                    <option value="">בחר דירוג</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+                <div id="starPreview" class="star-preview"></div>
+            </div>
 
-        <label for="comment" style="margin-top: 20px;">הוסף הערה:</label>
-        <textarea name="comment" id="comment" placeholder="הוסף הערה ללומדה..."></textarea>
+            <div class="form-group">
+                <label for="comment" class="form-label">הוסף הערה (אופציונלי):</label>
+                <textarea
+                    name="comment"
+                    id="comment"
+                    class="rating-textarea"
+                    placeholder="שתף אותנו במחשבות שלך על הלומדה... מה אהבת? מה אפשר לשפר?"
+                ></textarea>
+            </div>
 
-        <div style="text-align: center; margin-top: 30px;">
-            <button type="submit">שלח דירוג 🚀</button>
-        </div>
-    </form>
+            <div class="submit-container">
+                <button type="submit" class="submit-btn">
+                    <span>🚀</span>
+                    שלח דירוג
+                </button>
+            </div>
+        </form>
+    </div>
 
+    <script>
+        // Add star preview functionality
+        const ratingSelect = document.getElementById('rating');
+        const starPreview = document.getElementById('starPreview');
+
+        ratingSelect.addEventListener('change', function() {
+            const rating = this.value;
+            if (rating) {
+                const stars = '⭐'.repeat(parseInt(rating));
+                starPreview.textContent = stars;
+                starPreview.classList.add('show');
+            } else {
+                starPreview.classList.remove('show');
+            }
+        });
+
+        // Add form validation
+        document.querySelector('.rating-form').addEventListener('submit', function(e) {
+            const rating = document.getElementById('rating').value;
+            if (!rating) {
+                e.preventDefault();
+                alert('אנא בחר דירוג לפני השליחה');
+                document.getElementById('rating').focus();
+            }
+        });
+    </script>
 </body>
 </html>

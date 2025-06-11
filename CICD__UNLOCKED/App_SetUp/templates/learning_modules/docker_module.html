@@ -3,91 +3,457 @@
 {% block title %} לומדת Docker - אינטראקטיבית ודיגיטלית{% endblock %}
 
 {% block content %}
-<div class="container mt-4" style="color: #f1f1f1; font-family: 'Assistant', sans-serif;">
-  <div style="max-width: 1000px; margin: auto; padding: 40px; background-color: #111827; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;">
+<style>
+  .docker-page {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    min-height: 100vh;
+    font-family: 'Assistant', sans-serif;
+    padding: 20px 0;
+  }
 
+  .docker-main-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .docker-hero-card {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 24px;
+    padding: 50px 40px;
+    text-align: center;
+    box-shadow:
+      0 25px 50px -12px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(148, 163, 184, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .docker-hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .docker-hero-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .docker-title {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #38bdf8, #8b5cf6, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 24px;
+    text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
+    line-height: 1.2;
+  }
+
+  .docker-subtitle {
+    font-size: 1.3rem;
+    color: #cbd5e1;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .docker-description {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    background: rgba(56, 189, 248, 0.05);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 30px 0;
+    line-height: 1.7;
+  }
+
+  .docker-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin: 40px 0;
+  }
+
+  .docker-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    padding: 16px 32px;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .docker-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .docker-btn:hover::before {
+    left: 100%;
+  }
+
+  .docker-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .docker-btn.secondary {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.3);
+  }
+
+  .docker-btn.secondary:hover {
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.4);
+  }
+
+  .docker-btn.tertiary {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    box-shadow: 0 8px 32px rgba(168, 85, 247, 0.3);
+  }
+
+  .docker-btn.tertiary:hover {
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4);
+  }
+
+  .docker-accessibility-section {
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  .docker-accessibility-btn {
+    background: rgba(75, 85, 99, 0.7);
+    color: #e2e8f0;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    backdrop-filter: blur(10px);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .docker-accessibility-btn:hover {
+    background: rgba(75, 85, 99, 0.9);
+    transform: translateY(-1px);
+    color: #f1f5f9;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(75, 85, 99, 0.4);
+  }
+
+  .docker-accessibility-btn.active {
+    background: rgba(156, 163, 175, 0.9);
+    color: #1f2937;
+  }
+
+  .docker-notes-section {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    margin-top: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .docker-notes-header {
+    font-size: 24px;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .docker-form-label {
+    color: #e2e8f0;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 16px;
+    display: block;
+  }
+
+  .docker-form-control {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    color: #f1f5f9;
+    padding: 16px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .docker-form-control:focus {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+    outline: none;
+    color: #f8fafc;
+  }
+
+  .docker-form-control::placeholder {
+    color: #94a3b8;
+  }
+
+  .docker-save-btn {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .docker-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(34, 197, 94, 0.4);
+    background: linear-gradient(135deg, #16a34a, #15803d);
+  }
+
+  .docker-icon {
+    font-size: 1.2em;
+  }
+
+  .docker-content-wrapper {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .docker-hero-card {
+      padding: 30px 20px;
+    }
+
+    .docker-title {
+      font-size: 2.2rem;
+    }
+
+    .docker-subtitle {
+      font-size: 1.1rem;
+    }
+
+    .docker-buttons-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .docker-btn {
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
+    }
+
+    .docker-notes-section {
+      padding: 24px;
+    }
+  }
+
+  /* Animations */
+  @keyframes dockerFadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes dockerFloating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .docker-hero-card {
+    animation: dockerFadeInUp 0.8s ease-out;
+  }
+
+  .docker-notes-section {
+    animation: dockerFadeInUp 0.8s ease-out 0.3s both;
+  }
+
+  .docker-title {
+    animation: dockerFloating 6s ease-in-out infinite;
+  }
+</style>
+
+<div class="docker-page">
+  <div class="docker-main-container">
     {% if not request.GET.step %}
-      <h1 style="font-size: 2.5em; color: #38bdf8; margin-bottom: 20px;">
-         לומדת Docker אינטראקטיבית <span style="color: #facc15"></span>
-      </h1>
+      <div class="docker-hero-card">
+        <h1 class="docker-title">
+          לומדת Docker אינטראקטיבית
+          <span class="docker-icon">🐳</span>
+        </h1>
 
-      <p style="font-size: 1.2em; color: #d1d5db;">
-        כאן תלמדו בצורה חווייתית מהו Docker, כיצד עובדים קונטיינרים, איך יוצרים אותם, ואיך הכלי הזה משפיע על עולם הפיתוח המודרני.
-      </p>
+        <p class="docker-subtitle">
+          כאן תלמדו בצורה חווייתית מהו Docker, כיצד עובדים קונטיינרים, איך יוצרים אותם, ואיך הכלי הזה משפיע על עולם הפיתוח המודרני.
+        </p>
 
-      <p style="font-size: 1em; color: #93c5fd; margin-top: 30px;">
-        במהלך הלימוד יופיעו סרטונים הקשורים למודול הנוכחי. בעבור כל סרטון יהיו 2 נקודות עצירה שבהן תתבקשו לענות על שאלה הקשורה לנאמר.<br>
-        אין מה לדאוג – אין ציון על השאלה 😊
-      </p>
+        <div class="docker-description">
+          <strong>💡 איך זה עובד?</strong><br>
+          במהלך הלימוד יופיעו סרטונים הקשורים למודול הנוכחי. בעבור כל סרטון יהיו 2 נקודות עצירה שבהן תתבקשו לענות על שאלה הקשורה לנאמר.<br>
+          <em>אין מה לדאוג – אין ציון על השאלה 😊</em>
+        </div>
 
-      <div style="text-align: center; margin-top: 30px;">
-        <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}"
-           style="background-color: #6366f1; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-           מודולים לימודיים
-        </a>
+        <div class="docker-buttons-container">
+          <a href="?step=1{% if request.GET.accessible %}&accessible=1{% endif %}" class="docker-btn">
+            <span class="docker-icon">📚</span>
+            מודולים לימודיים
+          </a>
 
-        <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}"
-           style="background-color: #7c3aed; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-           תרגולים
-        </a>
+          <a href="?step=2q{% if request.GET.accessible %}&accessible=1{% endif %}" class="docker-btn secondary">
+            <span class="docker-icon">💪</span>
+            תרגולים
+          </a>
 
-        <a href="{% url 'docker_rating' %}"
-           style="background-color: #a855f7; color: white; padding: 14px 28px; font-size: 18px; border-radius: 12px; display: inline-block; margin: 10px;">
-           דירוג הלומדה
-        </a>
+          <a href="{% url 'docker_rating' %}" class="docker-btn tertiary">
+            <span class="docker-icon">⭐</span>
+            דירוג הלומדה
+          </a>
+        </div>
+
+        <div class="docker-accessibility-section">
+          {% if not request.GET.accessible %}
+            <a href="?accessible=1" class="docker-accessibility-btn">
+              <span>♿</span>
+              מצב נגישות מופעל
+            </a>
+          {% else %}
+            <a href="?" class="docker-accessibility-btn active">
+              <span>↩️</span>
+              חזרה למצב רגיל
+            </a>
+          {% endif %}
+        </div>
       </div>
 
-      <div style="text-align: center; margin-top: 25px;">
-        {% if not request.GET.accessible %}
-          <a href="?accessible=1" class="btn-next" style="background-color: #4b5563; color: white; padding: 10px 20px; border-radius: 10px; font-size: 16px;">
-             מצב נגישות מופעל
-          </a>
-        {% else %}
-          <a href="?" class="btn-next" style="background-color: #9ca3af; color: black; padding: 10px 20px; border-radius: 10px; font-size: 16px;">
-            חזרה למצב רגיל
-          </a>
+      <div class="docker-notes-section">
+        <div class="docker-notes-header">
+          <span>📝</span>
+          הערות אישיות
+        </div>
+
+        <form method="post" action="{% url 'add_student_note' %}">
+          {% csrf_token %}
+          <input type="hidden" name="module" value="Docker">
+          <div class="mb-3">
+            <label for="id_content" class="docker-form-label">רשום לעצמך הערה:</label>
+            <textarea name="content" class="docker-form-control" rows="4" placeholder="מה למדת? מה חשוב לזכור? רשימות משימות..."></textarea>
+          </div>
+          <button type="submit" class="docker-save-btn">
+            <span>💾</span>
+            שמור הערה
+          </button>
+        </form>
+      </div>
+
+    {% else %}
+      <!-- Content sections for steps -->
+      <div class="docker-content-wrapper">
+        {% if request.GET.step == '1' %}
+          {% if request.GET.accessible %}
+            {% include 'learning_modules/docker/accessible/section1.html' with video=video podcasts=podcasts completed=completed %}
+          {% else %}
+            {% include 'learning_modules/docker/section1.html' with video=video podcasts=podcasts completed=completed %}
+          {% endif %}
+
+        {% elif request.GET.step == '2' %}
+          {% if request.GET.accessible %}
+            {% include 'learning_modules/docker/accessible/section2.html' with video=video podcasts=podcasts completed=completed %}
+          {% else %}
+            {% include 'learning_modules/docker/section2.html' with video=video podcasts=podcasts completed=completed %}
+          {% endif %}
+
+        {% elif request.GET.step == '2q' %}
+          {% include 'DockerExercises/section2_questions.html' %}
+
+        {% elif request.GET.step == '3' %}
+          {% if request.GET.accessible %}
+            {% if presentations %}
+              {% include 'learning_modules/docker/accessible/section3.html' with presentation=presentations.0 %}
+            {% endif %}
+          {% else %}
+            {% if presentations %}
+              {% include 'learning_modules/docker/section3.html' with presentation=presentations.0 %}
+            {% endif %}
+          {% endif %}
         {% endif %}
       </div>
 
-    {% elif request.GET.step == '1' %}
-      {% if request.GET.accessible %}
-        {% include 'learning_modules/docker/accessible/section1.html' with video=video podcasts=podcasts completed=completed %}
-      {% else %}
-        {% include 'learning_modules/docker/section1.html' with video=video podcasts=podcasts completed=completed %}
-      {% endif %}
+      <!-- Notes section for other pages -->
+      <div class="docker-notes-section">
+        <div class="docker-notes-header">
+          <span>📝</span>
+          הערות אישיות
+        </div>
 
-    {% elif request.GET.step == '2' %}
-      {% if request.GET.accessible %}
-        {% include 'learning_modules/docker/accessible/section2.html' with video=video podcasts=podcasts completed=completed %}
-      {% else %}
-        {% include 'learning_modules/docker/section2.html' with video=video podcasts=podcasts completed=completed %}
-      {% endif %}
-
-    {% elif request.GET.step == '2q' %}
-      {% include 'DockerExercises/section2_questions.html' %}
-
-    {% elif request.GET.step == '3' %}
-      {% if request.GET.accessible %}
-        {% if presentations %}
-          {% include 'learning_modules/docker/accessible/section3.html' with presentation=presentations.0 %}
-        {% endif %}
-      {% else %}
-        {% if presentations %}
-          {% include 'learning_modules/docker/section3.html' with presentation=presentations.0 %}
-        {% endif %}
-      {% endif %}
+        <form method="post" action="{% url 'add_student_note' %}">
+          {% csrf_token %}
+          <input type="hidden" name="module" value="Docker">
+          <div class="mb-3">
+            <label for="id_content" class="docker-form-label">רשום לעצמך הערה:</label>
+            <textarea name="content" class="docker-form-control" rows="4" placeholder="מה למדת? מה חשוב לזכור? רשימות משימות..."></textarea>
+          </div>
+          <button type="submit" class="docker-save-btn">
+            <span>💾</span>
+            שמור הערה
+          </button>
+        </form>
+      </div>
     {% endif %}
-
-    <form method="post" action="{% url 'add_student_note' %}" class="mt-5">
-      {% csrf_token %}
-      <input type="hidden" name="module" value="Docker">
-      <div class="mb-3">
-        <label for="id_content" class="form-label" style="color: #e5e7eb; font-weight: bold;">📝 רשום לעצמך הערה:</label>
-        <textarea name="content" class="form-control" rows="3" placeholder="מה למדת? מה חשוב לזכור?"></textarea>
-      </div>
-      <button type="submit" class="btn" style="background-color: #22c55e; color: white; font-weight: bold; padding: 10px 25px; border-radius: 10px;">שמור הערה</button>
-    </form>
-
   </div>
 </div>
 {% endblock %}
