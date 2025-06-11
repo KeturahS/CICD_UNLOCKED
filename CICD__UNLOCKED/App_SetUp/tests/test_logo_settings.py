@@ -44,7 +44,7 @@ class LogoSettingsTests(TestCase):
         request.user = user
         context = logo_settings_context(request)
 
-        self.assertEqual(context['background_color'], "#f4f7fb")
+        self.assertEqual(context['background_color'], "#0a0e1a")
 
     def test_context_processor_background_for_student(self):
         user = User.objects.create_user(username='studentuser', password='1234')
