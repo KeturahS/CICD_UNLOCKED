@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}תפריט ראשי{% endblock %}
+
+{% block content %}
+<div class="container" style="direction: rtl; font-family: 'Assistant', sans-serif;">
+
+  <div class="content text-center" style="padding: 60px 20px;">
+    <h2 style="font-size: 36px; margin-bottom: 20px; color: #0d3b66;">
+      ברוך הבא למערכת {{ user.username }}
+    </h2>
+    <p style="font-size: 18px; color: '#e8e8e8';">
+      אנא בחר פעולה מתוך התפריט העליון.
+    </p>
+  </div>
+
+  <div style="
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 2px; /* עובי הגבול */
+    border-radius: 20px;
+    background: linear-gradient(90deg, {{ logo_settings.gradient_from }} 7.79%, {{ logo_settings.gradient_to }} 100%);
+">
+
+  <div class="learning-module" onclick="window.location.href='{% url 'learning_home' %}'" style="
+      background: #0a0e1a;
+      border-radius: 18px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+      cursor: pointer;
+      position: relative;
+  ">
+
+    <div class="icon" style="font-size: 48px; margin-bottom: 15px;">📘</div>
+    <h3 style="font-size: 26px; margin-bottom: 10px; color: white;"> ברוך הבא ללומדה</h3>
+    <p style="font-size: 18px; color: white; margin-bottom: 20px;">
+      למד על Git, Jenkins ו-Docker דרך לומדה אינטראקטיבית, מעשית וידידותית למשתמש.
+    </p>
+
+    <button class="start-btn" style="
+        font-size: 16px;
+        padding: 10px 25px;
+        background-image: linear-gradient(to right, #004b93, #6c1cb1);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        transition: background-image 0.3s ease;
+    "
+    onmouseover="this.style.backgroundImage='linear-gradient(to right, #00366d, #531290)'"
+    onmouseout="this.style.backgroundImage='linear-gradient(to right, #004b93, #6c1cb1)'"
+    >
+      🚀 התחל את הלמידה
+    </button>
+
+  </div>
+</div>
+
+</div>
+
+<style>
+
+</style>
+{% endblock %}
