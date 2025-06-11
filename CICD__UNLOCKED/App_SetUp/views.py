@@ -1740,17 +1740,33 @@ def send_message_to_admin(request):
     if not request.user.is_lecturer:
         return redirect('login_view')  # רק מרצה יכול לשלוח
 
+    success_message = None
+    error_message = None
+
     if request.method == 'POST':
         form = LecturerToAdminMessageForm(request.POST)
         if form.is_valid():
-            message = form.save(commit=False)
-            message.sender = request.user
-            message.save()
-            return render(request, 'messages/success.html', {'message': 'הודעתך נשלחה בהצלחה!'})
+            try:
+                message = form.save(commit=False)
+                message.sender = request.user
+                message.save()
+                success_message = 'ההודעה נשלחה בהצלחה!'
+                # Reset form after successful submission
+                form = LecturerToAdminMessageForm()
+            except Exception as e:
+                error_message = 'אירעה שגיאה בשליחת ההודעה. אנא נסה שוב.'
+        else:
+            error_message = 'אנא בדוק את הנתונים שהזנת ונסה שוב.'
     else:
         form = LecturerToAdminMessageForm()
 
-    return render(request, 'messages/send_message_to_admin.html', {'form': form})
+    context = {
+        'form': form,
+        'success_message': success_message,
+        'error_message': error_message
+    }
+
+    return render(request, 'messages/send_message_to_admin.html', context)
 
 
 @staff_member_required

@@ -1,16 +1,81 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Content Block</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-{% block title %}שליחת הודעה לאדמין{% endblock %}
+        .content-block {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
 
-{% block content %}
-<div class="container mt-5" style="max-width: 600px;">
-    <h2 class="mb-4 text-center">📩 שליחת הודעה לאדמין</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+        h2 {
+            color: #00d4ff;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #00d4ff);
+            border: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00d4ff, #06b6d4);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #6b7280, #9ca3af);
+            border: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+        }
+    </style>
+</head>
+<body>
+    <div class="content-block">
+        <h2>📩 שליחת הודעה לאדמין</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary mt-3">שלח הודעה</button>
+            </div>
+        </form>
         <div class="text-center">
-            <button type="submit" class="btn btn-primary mt-3">שלח הודעה</button>
+                <a href="{% url 'lecturer' %}"  class="btn-back">חזור לעמוד המרצה</a>
         </div>
-    </form>
-</div>
-{% endblock %}
+    </div>
+</body>
+</html>
