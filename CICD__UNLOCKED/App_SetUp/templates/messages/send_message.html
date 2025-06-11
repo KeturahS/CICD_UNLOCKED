@@ -3,20 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <title>שליחת הודעה לסטודנט</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h3 {
+            color: #00d4ff;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #00d4ff);
+            border: none;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00d4ff, #06b6d4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        input, textarea, select {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
+            outline: none;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        label {
+            color: #e2e8f0;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 20px;
+        }
+
+        .mb-4 {
+            margin-bottom: 30px;
+        }
+
+        option {
+            background-color: #1a1a2e;
+            color: white;
+        }
+
+        .back-link {
+            background: linear-gradient(135deg,#6b7280, #9ca3af);
+            border: none;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link:hover {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-    <div class="card shadow p-4">
-        <h3 class="mb-4 text-center text-primary">📩 שליחת הודעה לסטודנט</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
+<body>
+    <div class="container">
+        <div class="card">
+            <h3 class="mb-4 text-center">📩 שליחת הודעה לסטודנט</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary">שלח הודעה</button>
+                </div>
+            </form>
             <div class="text-center mt-3">
-                <button type="submit" class="btn btn-primary">שלח הודעה</button>
+                <a class="back-link" href="{% url 'lecturer' %}">חזרה לדף המרצה</a>
             </div>
-        </form>
+        </div>
     </div>
-</div>
 </body>
 </html>

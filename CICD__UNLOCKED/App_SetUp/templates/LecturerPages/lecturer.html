@@ -3,210 +3,594 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דף מרצה</title>
     <style>
-        .navbar {
-            background-color: #2c3e50;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 16px;
-            transition: color 0.3s ease;
-        }
-
-        .navbar a:hover {
-            color: #1abc9c;
-        }
         body {
-            background-color: {{ background_color }};
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 100px;
+            z-index: 999;
+        }
+
+        .logo {
+            font-size: 24px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 80px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        .nav-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            color: #00d4ff;
+        }
+
+        .nav-icon.active {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        }
+
+        .main-content {
+            margin-right: 80px;
+            margin-top: 100px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-text {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle-text {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, #06b6d4, #00d4ff);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(6, 182, 212, 0.3);
+            color: white;
+        }
+
+        .requests-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border-color: transparent;
+            color: white;
+        }
+
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .requests-table th,
+        .requests-table td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .requests-table th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .requests-table td {
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-open {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-resolved {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #06b6d4, #00d4ff);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(6, 182, 212, 0.3);
+            color: white;
+        }
+
+        .logout-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .logout-btn {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            padding: 15px 40px;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(220, 53, 69, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .info-alert {
+            background: rgba(23, 162, 184, 0.1);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .alert-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #17a2b8;
+        }
+
+        .alert-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .alert-list {
+            list-style: none;
+            padding-right: 20px;
+        }
+
+        .alert-list li {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .alert-list li:before {
+            content: "•";
+            color: #17a2b8;
+            font-weight: bold;
+            position: absolute;
+            right: -15px;
+        }
+
+        .no-requests {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-text {
+                font-size: 24px;
+            }
+
+            .sidebar {
+                width: 60px;
+            }
+
+            .main-content {
+                margin-right: 60px;
+                margin-top: 90px;
+            }
+
+            .top-bar {
+                padding: 10px 20px;
+                right: 80px;
+            }
+
+            .profile-picture {
+                width: 40px;
+                height: 40px;
+            }
+
+            .requests-table {
+                font-size: 12px;
+            }
+
+            .requests-table th,
+            .requests-table td {
+                padding: 10px 5px;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href="{% url 'lecturer_profile' %}">פרופיל מרצה</a>
-    </div>
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="mb-0">ברוכים הבאים, {{ user.username }}</h2>
-                    </div>
-                    <div class="card-body">
-                        <h4 class="mb-4">מערכת ניהול מרצים</h4>
-
-                        <div class="row mb-4">
-                            <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">הקורסים שלי</h5>
-                                        <p class="card-text">ניהול וצפייה בקורסים שלך</p>
-                                        <a href="{% url 'lecturer_manage_content' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                        <div class="card-body">
-                                             <h5 class="card-title">שליחת הודעה לאדמין</h5>
-                                                <p class="card-text">פנייה ישירה למנהל האתר</p>
-                                                <a href="{% url 'send_message_to_admin' %}" class="btn btn-outline-primary">כניסה</a>
-                                        </div>
-                                 </div>
-                            </div>
-
-                            <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">מטלות ומבחנים</h5>
-                                        <p class="card-text">ניהול מטלות ובדיקת עבודות</p>
-                                        <a href="{% url 'manage_tasks_and_check_assignments' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">לוח זמנים</h5>
-                                        <p class="card-text">מערכת שעות ואירועים</p>
-                                        <a href="#" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">דירוגי לומדות</h5>
-                                        <p class="card-text">צפייה בדירוגים והערות של סטודנטים</p>
-                                        <a href="{% url 'view_module_ratings' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">שליחת הודעה לסטודנט</h5>
-                                        <p class="card-text">שליחת משוב אישי לסטודנט</p>
-                                        <a href="{% url 'send_private_message' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                             <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">צפייה בהתקדמות הסטודנטים</h5>
-                                        <p class="card-text">קבלת דוחות וגרפים</p>
-                                        <a href="{% url 'monitor_student_git_progress' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                              <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">צפייה בהתקדמות עדכנית של הסטודנטים</h5>
-                                        <p class="card-text">התקדמות בכל המודולים</p>
-                                        <a href="{% url 'monitor_updated_student_progress' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                                <div class="col-md-3 mb-3">
-                                <div class="card text-center bg-light">
-                                    <div class="card-body">
-                                        <h5 class="card-title">FAQ</h5>
-                                        <p class="card-text">ניהול עמוד שאלות ותשובות</p>
-                                        <a href="{% url 'qa:handle_faq' %}" class="btn btn-outline-primary">כניסה</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info">
-                            <h5 class="alert-heading">ברוכים הבאים למערכת!</h5>
-                            <p>זוהי גרסת ביניים של ממשק המרצה. בקרוב יתווספו תכונות נוספות כגון:</p>
-                            <ul>
-                                <li>העלאת חומרי לימוד</li>
-                                <li>תקשורת עם סטודנטים</li>
-                                <li>ניהול ציונים</li>
-                                <li>יצירת משובים</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <form method="post" action="{% url 'index' %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-secondary">התנתקות</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <div class="top-bar">
+        <div class="logo">🎓 מערכת ניהול לימודים</div>
+        <div class="profile-section">
+            <a href="{% url 'lecturer_profile' %}" style="all: unset; cursor: pointer;">
+                <div class="profile-picture">👨‍🏫</div>
+            </a>
         </div>
     </div>
 
-
-
-    <!-- ניהול פניות משתמשים -->
-<div class="card my-4">
-    <div class="card-header">פניות משתמשים</div>
-     <a href="?show=open" class="btn btn-warning">הצג רק פניות פתוחות</a>
-     <a href="{% url 'lecturer' %}" class="btn btn-secondary">הצג את כל הפניות</a>
-    <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>סטודנט</th>
-                    <th>נושא</th>
-                    <th>כותרת</th>
-                    <th>תוכן</th>
-                    <th>תאריך שליחה</th>
-                    <th>סטטוס</th>
-                    <th>פעולה</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for msg in contact_messages %}
-                <tr>
-                    <td>{{ msg.student.username }}</td>
-                    <td>{{ msg.get_category_display }}</td>
-                    <td>{{ msg.subject }}</td>
-                    <td>{{ msg.message|truncatewords:10 }}</td>
-                    <td>{{ msg.created_at|date:"d/m/Y H:i" }}</td>
-                    <td>
-                        {% if msg.is_resolved %}
-                        <span class="badge bg-success">טופל</span>
-                        {% else %}
-                        <span class="badge bg-warning text-dark">פתוח</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if not msg.is_resolved %}
-                            <a href="{% url 'resolve_lecturer_request' msg.id %}" class="btn btn-sm btn-primary">סגור פנייה</a>
-                        {% else %}
-                                ✔️
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr><td colspan="7" class="text-center">אין פניות כרגע</td></tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="sidebar">
+        <div class="nav-icons">
+            <div class="nav-icon active" title="דף הבית">🏠</div>
+            <a href="{% url 'lecturer_manage_content' %}" class="nav-icon" title="ניהול תוכן">📚</a>
+            <a href="{% url 'send_message_to_admin' %}" class="nav-icon" title="הודעה לאדמין">✉️</a>
+            <a href="{% url 'manage_tasks_and_check_assignments' %}" class="nav-icon" title="מטלות ומבחנים">📝</a>
+            <a href="{% url 'view_module_ratings' %}" class="nav-icon" title="דירוגי לומדות">⭐</a>
+            <a href="{% url 'send_private_message' %}" class="nav-icon" title="הודעה לסטודנט">💬</a>
+            <a href="{% url 'monitor_student_git_progress' %}" class="nav-icon" title="התקדמות סטודנטים">📈</a>
+            <a href="{% url 'qa:handle_faq' %}" class="nav-icon" title="FAQ">❓</a>
+        </div>
     </div>
-</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="main-content">
+        <div class="container">
+            <div class="welcome-section">
+                <div class="welcome-text">ברוכים הבאים, {{ user.username }}</div>
+                <div class="subtitle-text">מערכת ניהול מרצים - לוח בקרה מרכזי</div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-icon">📚</div>
+                    <div class="card-title">הקורסים שלי</div>
+                    <div class="card-description">ניהול וצפייה בקורסים שלך</div>
+                    <a href="{% url 'lecturer_manage_content' %}" class="card-button">כניסה</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">✉️</div>
+                    <div class="card-title">שליחת הודעה לאדמין</div>
+                    <div class="card-description">פנייה ישירה למנהל האתר</div>
+                    <a href="{% url 'send_message_to_admin' %}" class="card-button">כניסה</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">📝</div>
+                    <div class="card-title">מטלות ומבחנים</div>
+                    <div class="card-description">ניהול מטלות ובדיקת עבודות</div>
+                    <a href="{% url 'manage_tasks_and_check_assignments' %}" class="card-button">כניסה</a>
+                </div>
+
+                <!--<div class="dashboard-card">
+                    <div class="card-icon">📅</div>
+                    <div class="card-title">לוח זמנים</div>
+                    <div class="card-description">מערכת שעות ואירועים</div>
+                    <a href="#" class="card-button">כניסה</a>
+                </div>-->
+
+                <div class="dashboard-card">
+                    <div class="card-icon">⭐</div>
+                    <div class="card-title">דירוגי לומדות</div>
+                    <div class="card-description">צפייה בדירוגים והערות של סטודנטים</div>
+                    <a href="{% url 'view_module_ratings' %}" class="card-button">כניסה</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">💬</div>
+                    <div class="card-title">שליחת הודעה לסטודנט</div>
+                    <div class="card-description">שליחת משוב אישי לסטודנט</div>
+                    <a href="{% url 'send_private_message' %}" class="card-button">כניסה</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">📈</div>
+                    <div class="card-title">צפייה בהתקדמות הסטודנטים</div>
+                    <div class="card-description">קבלת דוחות וגרפים</div>
+                    <a href="{% url 'monitor_student_git_progress' %}" class="card-button">כניסה</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">התקדמות עדכנית</div>
+                    <div class="card-description">התקדמות בכל המודולים</div>
+                    <a href="{% url 'monitor_updated_student_progress' %}" class="card-button">כניסה</a>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-icon">❓</div>
+                    <div class="card-title">FAQ</div>
+                    <div class="card-description">ניהול עמוד שאלות ותשובות</div>
+                    <a href="{% url 'qa:handle_faq' %}" class="card-button">כניסה</a>
+                </div>
+            </div>
+
+            <div class="info-alert">
+                <div class="alert-title">ברוכים הבאים למערכת!</div>
+                <div class="alert-text">זוהי גרסת ביניים של ממשק המרצה. בקרוב יתווספו תכונות נוספות כגון:</div>
+                <ul class="alert-list">
+                    <li>העלאת חומרי לימוד</li>
+                    <li>תקשורת עם סטודנטים</li>
+                    <li>ניהול ציונים</li>
+                    <li>יצירת משובים</li>
+                </ul>
+            </div>
+
+            <div class="requests-section">
+                <div class="section-title">ניהול פניות משתמשים</div>
+
+                <div class="filter-buttons">
+                    <!--<a href="?show=open" class="filter-btn">הצג רק פניות פתוחות</a>
+                    <a href="{% url 'lecturer' %}" class="filter-btn">הצג את כל הפניות</a>-->
+                </div>
+
+                {% if contact_messages %}
+                <table class="requests-table">
+                    <thead>
+                        <tr>
+                            <th>סטודנט</th>
+                            <th>נושא</th>
+                            <th>כותרת</th>
+                            <th>תוכן</th>
+                            <th>תאריך שליחה</th>
+                            <th>סטטוס</th>
+                            <th>פעולה</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for msg in contact_messages %}
+                        <tr>
+                            <td>{{ msg.student.username }}</td>
+                            <td>{{ msg.get_category_display }}</td>
+                            <td>{{ msg.subject }}</td>
+                            <td>{{ msg.message|truncatewords:10 }}</td>
+                            <td>{{ msg.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if msg.is_resolved %}
+                                <span class="status-badge status-resolved">טופל</span>
+                                {% else %}
+                                <span class="status-badge status-open">פתוח</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not msg.is_resolved %}
+                                <a href="{% url 'resolve_lecturer_request' msg.id %}" class="action-btn">סגור פנייה</a>
+                                {% else %}
+                                ✔️
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="no-requests">אין פניות כרגע</div>
+                {% endif %}
+            </div>
+
+            <div class="logout-section">
+                <form method="post" action="{% url 'index' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">🚪 התנתקות</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

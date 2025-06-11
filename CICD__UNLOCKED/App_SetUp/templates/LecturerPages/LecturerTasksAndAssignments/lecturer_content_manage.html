@@ -2,57 +2,561 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ניהול זמינות מודולים</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Bootstrap RTL -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 100px;
+            z-index: 999;
+        }
+
+        .logo {
+            font-size: 24px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .profile-picture {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 80px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        .nav-icons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            color: #00d4ff;
+        }
+
+        .nav-icon.active {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        }
+
+        .main-content {
+            margin-right: 80px;
+            margin-top: 100px;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+        }
+
+        .modules-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .module-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .module-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .module-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .module-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .module-title {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            width: fit-content;
+        }
+
+        .status-visible {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-hidden {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+            border: 1px solid rgba(156, 163, 175, 0.3);
+        }
+
+        .control-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .visibility-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 14px;
+            width: 100%;
+            max-width: 180px;
+            transition: all 0.3s ease;
+        }
+
+        .visibility-select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .visibility-select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .update-btn {
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .update-btn:active {
+            transform: translateY(0);
+        }
+
+        .no-content {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .no-content-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(156, 163, 175, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            color: #9ca3af;
+        }
+
+        .no-content-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .no-content-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #06b6d4, #00d4ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #00d4ff;
+            font-size: 16px;
+        }
+
+        .header-cell {
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .module-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .table-header {
+                display: none;
+            }
+
+            .control-section {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .visibility-select {
+                max-width: 140px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                top: 120px;
+            }
+
+            .main-content {
+                margin-right: 60px;
+                margin-top: 90px;
+                padding: 15px;
+            }
+
+            .top-bar {
+                padding: 10px 20px;
+                right: 80px;
+            }
+
+            .profile-picture {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .modules-container {
+                padding: 25px 20px;
+            }
+
+            .module-card {
+                padding: 20px;
+                margin-bottom: 15px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .page-subtitle {
+                font-size: 16px;
+            }
+
+            .module-name {
+                font-size: 16px;
+            }
+
+            .module-title {
+                font-size: 14px;
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h2 class="mb-4">ניהול זמינות מודולים</h2>
+    <div class="top-bar">
+        <div class="logo">📚 ניהול מודולים</div>
+        <div class="profile-section">
+            <a href="{% url 'lecturer_profile' %}" style="all: unset; cursor: pointer;">
+                <div class="profile-picture">👨‍🏫</div>
+            </a>
+        </div>
+    </div>
 
-    <table class="table table-bordered text-end">
-        <thead class="table-light">
-            <tr>
-                <th>מודול</th>
-                <th>כותרת</th>
-                <th>מצב נוכחי</th>
-                <th>שינוי זמינות</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="sidebar">
+        <div class="nav-icons">
+            <a href="{% url 'lecturer' %}" class="nav-icon" title="דף הבית">🏠</a>
+            <a href="{% url 'lecturer_profile' %}" class="nav-icon" title="פרופיל מרצה">👤</a>
+            <div class="nav-icon active" title="ניהול זמינות">⚙️</div>
+            <a href="{% url 'send_message_to_admin' %}" class="nav-icon" title="הודעה לאדמין">✉️</a>
+            <a href="{% url 'manage_tasks_and_check_assignments' %}" class="nav-icon" title="מטלות ומבחנים">📝</a>
+            <a href="{% url 'view_module_ratings' %}" class="nav-icon" title="דירוגי לומדות">⭐</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header fade-in">
+            <h1 class="page-title">ניהול זמינות מודולים</h1>
+            <p class="page-subtitle">שלוט בזמינות התכנים שלך ללומדים</p>
+        </div>
+
+        <div class="modules-container fade-in">
+            <div class="table-header">
+                <div class="header-cell">מודול</div>
+                <div class="header-cell">כותרת</div>
+                <div class="header-cell">מצב נוכחי</div>
+                <div class="header-cell">שינוי זמינות</div>
+            </div>
+
             {% for content in contents %}
-            <tr>
-                <td>{{ content.get_module_display }}</td>
-                <td>{{ content.title }}</td>
-                <td>
+            <div class="module-card">
+                <div class="module-info">
+                    <div class="module-name">{{ content.get_module_display }}</div>
+                    <div class="module-title">{{ content.title }}</div>
+                </div>
+
+                <div class="module-info">
+                    <div class="module-title">{{ content.title }}</div>
+                </div>
+
+                <div>
                     {% if content.visibility_mode == "immediate" %}
-                        <span class="text-success">גלוי</span>
+                        <div class="status-badge status-visible">
+                            <span>🟢</span>
+                            <span>גלוי</span>
+                        </div>
                     {% else %}
-                        <span class="text-muted">מוסתר</span>
+                        <div class="status-badge status-hidden">
+                            <span>⚫</span>
+                            <span>מוסתר</span>
+                        </div>
                     {% endif %}
-                </td>
-                <td>
-                    <form method="post" action="{% url 'update_module_visibility' content.id %}">
+                </div>
+
+                <div class="control-section">
+                    <form method="post" action="{% url 'update_module_visibility' content.id %}" style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
                         {% csrf_token %}
-                        <select name="visibility_mode" class="form-select mb-2" onchange="toggleDateTime(this, '{{ content.id }}')">
-                            <option value="immediate">הפעלה מיידית</option>
-                            <option value="hidden">הסתרה</option>
+                        <select name="visibility_mode" class="visibility-select" onchange="toggleDateTime(this, '{{ content.id }}')">
+                            <option value="immediate" {% if content.visibility_mode == "immediate" %}selected{% endif %}>הפעלה מיידית</option>
+                            <option value="hidden" {% if content.visibility_mode == "hidden" %}selected{% endif %}>הסתרה</option>
                         </select>
-                        <button type="submit" class="btn btn-sm btn-primary">עדכן</button>
+                        <button type="submit" class="update-btn">עדכן</button>
                     </form>
-                </td>
-            </tr>
+                </div>
+            </div>
             {% empty %}
-            <tr><td colspan="4">לא קיימים תכנים</td></tr>
+            <div class="no-content">
+                <div class="no-content-icon">📚</div>
+                <div class="no-content-text">לא קיימים תכנים</div>
+                <div class="no-content-subtitle">צור תכנים חדשים כדי לנהל את הזמינות שלהם</div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
 
-    <a href="{% url 'lecturer' %}" class="btn btn-secondary mt-4">חזרה לדף הבית</a>
-</div>
+        <div style="text-align: center;">
+            <a href="{% url 'lecturer' %}" class="back-button">
+                <span>🔙</span>
+                <span>חזרה לדף הבית</span>
+            </a>
+        </div>
+    </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleDateTime(selectElement, contentId) {
+            // Add visual feedback when changing selection
+            selectElement.style.background = 'rgba(139, 92, 246, 0.2)';
+            setTimeout(() => {
+                selectElement.style.background = 'rgba(255, 255, 255, 0.05)';
+            }, 300);
+        }
+
+        // Add fade-in animation to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.module-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+        });
+
+        // Add hover effect to form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const button = this.querySelector('.update-btn');
+                button.innerHTML = '<span style="animation: spin 1s linear infinite;">⏳</span> מעדכן...';
+                button.style.pointerEvents = 'none';
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>

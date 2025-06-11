@@ -5,41 +5,86 @@
     <title>כל דירוגי הלומדות</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
             padding: 20px;
+            min-height: 100vh;
+            margin: 0;
         }
+
         h1 {
-            color: #2c3e50;
+            color: #00d4ff;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 25px;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            padding: 15px 12px;
             text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         th {
-            background-color: #3498db;
+            background: linear-gradient(135deg, #06b6d4, #00d4ff);
             color: white;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
+
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: rgba(255, 255, 255, 0.03);
         }
+
+        tr:hover {
+            background-color: rgba(0, 212, 255, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        td {
+            color: #e2e8f0;
+        }
+
         .back-link {
-            margin-top: 20px;
+            margin-top: 30px;
             display: inline-block;
-            color: #3498db;
+            background: linear-gradient(135deg, #6b7280, #9ca3af);
+            color: white;
             text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link:hover {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <h1>כל דירוגי הלומדות</h1>
+    <h1>⭐ כל דירוגי הלומדות</h1>
     <table>
         <tr>
             <th>סטודנט</th>
@@ -58,7 +103,7 @@
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5">לא נמצאו דירוגים.</td>
+            <td colspan="5" class="empty-message">לא נמצאו דירוגים.</td>
         </tr>
         {% endfor %}
     </table>
