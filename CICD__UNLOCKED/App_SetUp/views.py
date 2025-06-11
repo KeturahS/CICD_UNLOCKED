@@ -219,8 +219,7 @@ def lecturer(request):
     return render(request, 'LecturerPages/lecturer.html', {'contact_messages': contact_messages, })
 
 
-def student(request):
-    return render(request, 'StudentPages/student.html')
+
 
 
 @login_required
@@ -554,6 +553,67 @@ def learning_home(request):
     return render(request, 'learning_modules/learning_modules_homePage.html', {
         'visible_modules': visible_modules
     })
+
+@login_required
+def student(request):
+    student = request.user.student_profile
+    target_date = student.target_completion_date
+
+    # Git progress
+    git_total = StudentGitCommandProgress.objects.filter(student=student).count()
+    git_completed = StudentGitCommandProgress.objects.filter(student=student, completed=True).count()
+    git_progress = int((git_completed / git_total) * 100) if git_total > 0 else 0
+
+    # Jenkins progress
+    jenkins_total = StudentJenkinsQuizExercise.objects.filter(student=student).count()
+    jenkins_completed = StudentJenkinsQuizExercise.objects.filter(student=student, completed=True).count()
+    jenkins_progress = int((jenkins_completed / jenkins_total) * 100) if jenkins_total > 0 else 0
+
+    # Git videos & presentations
+    git_vids_total = StudentVideoCompletion.objects.filter(student=student, video__module='Git').count()
+    git_vids_completed = StudentVideoCompletion.objects.filter(student=student, video__module='Git', completed=True).count()
+    git_presentations_total = StudentPresentationCompletion.objects.filter(student=student, presentation__module='Git').count()
+    git_presentations_completed = StudentPresentationCompletion.objects.filter(student=student, presentation__module='Git', completed=True).count()
+    git_general_progress = int(((git_vids_completed + git_presentations_completed) / (git_vids_total + git_presentations_total)) * 100) if (git_vids_total + git_presentations_total) > 0 else 0
+
+    # Jenkins videos & presentations
+    jenkins_vids_total = StudentVideoCompletion.objects.filter(student=student, video__module='Jenkins').count()
+    jenkins_vids_completed = StudentVideoCompletion.objects.filter(student=student, video__module='Jenkins', completed=True).count()
+    jenkins_presentations_total = StudentPresentationCompletion.objects.filter(student=student, presentation__module='Jenkins').count()
+    jenkins_presentations_completed = StudentPresentationCompletion.objects.filter(student=student, presentation__module='Jenkins', completed=True).count()
+    jenkins_general_progress = int(((jenkins_vids_completed + jenkins_presentations_completed) / (jenkins_vids_total + jenkins_presentations_total)) * 100) if (jenkins_vids_total + jenkins_presentations_total) > 0 else 0
+
+    # Docker videos & presentations
+    docker_vids_total = StudentVideoCompletion.objects.filter(student=student, video__module='Docker').count()
+    docker_vids_completed = StudentVideoCompletion.objects.filter(student=student, video__module='Docker', completed=True).count()
+    docker_presentations_total = StudentPresentationCompletion.objects.filter(student=student, presentation__module='Docker').count()
+    docker_presentations_completed = StudentPresentationCompletion.objects.filter(student=student, presentation__module='Docker', completed=True).count()
+    docker_general_progress = int(((docker_vids_completed + docker_presentations_completed) / (docker_vids_total + docker_presentations_total)) * 100) if (docker_vids_total + docker_presentations_total) > 0 else 0
+
+    context = {
+        'target_date': target_date,
+        'git_progress': git_progress,
+        'jenkins_progress': jenkins_progress,
+        'git_general_progress': git_general_progress,
+        'jenkins_general_progress': jenkins_general_progress,
+        'docker_general_progress': docker_general_progress,
+        'git_vids_total': git_vids_total,
+        'git_vids_completed': git_vids_completed,
+        'git_presentations_total': git_presentations_total,
+        'git_presentations_completed': git_presentations_completed,
+        'jenkins_vids_total': jenkins_vids_total,
+        'jenkins_vids_completed': jenkins_vids_completed,
+        'jenkins_presentations_total': jenkins_presentations_total,
+        'jenkins_presentations_completed': jenkins_presentations_completed,
+        'docker_vids_total': docker_vids_total,
+        'docker_vids_completed': docker_vids_completed,
+        'docker_presentations_total': docker_presentations_total,
+        'docker_presentations_completed': docker_presentations_completed,
+
+    }
+
+    return render(request, 'StudentPages/student.html', context)
+
 
 
 @login_required

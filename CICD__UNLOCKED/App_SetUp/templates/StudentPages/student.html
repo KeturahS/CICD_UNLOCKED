@@ -1,64 +1,463 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>דף סטודנט</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-{% block title %}תפריט ראשי{% endblock %}
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+                color: white;
+                min-height: 100vh;
+                padding: 20px;
+            }
 
-{% block content %}
-<div class="container" style="direction: rtl; font-family: 'Assistant', sans-serif;">
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
 
-  <div class="content text-center" style="padding: 60px 20px;">
-    <h2 style="font-size: 36px; margin-bottom: 20px; color: #0d3b66;">
-      ברוך הבא למערכת CiCd Unlocked
-    </h2>
-    <p style="font-size: 18px; color: '#e8e8e8';">
-      אנא בחר פעולה מתוך התפריט העליון.
-    </p>
-  </div>
+            .top-bar {
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 15px 30px;
+                margin-bottom: 40px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                right: 100px;
+                z-index: 999;
+            }
 
-  <div style="
-    max-width: 600px;
-    margin: 60px auto;
-    padding: 2px; /* עובי הגבול */
-    border-radius: 20px;
-    background: linear-gradient(90deg, {{ logo_settings.gradient_from }} 7.79%, {{ logo_settings.gradient_to }} 100%);
-">
+            .logo {
+                font-size: {{ logo_settings.font_size }}px;
+                color: #00d4ff;
+                font-weight: bold;
+            }
 
-  <div class="learning-module" onclick="window.location.href='{% url 'learning_home' %}'" style="
-      background: #0a0e1a;
-      border-radius: 18px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
-      cursor: pointer;
-      position: relative;
-  ">
+            a .profile-picture {
+                cursor: pointer;
+            }
 
-    <div class="icon" style="font-size: 48px; margin-bottom: 15px;">📘</div>
-    <h3 style="font-size: 26px; margin-bottom: 10px; color: white;">ברוך הבא ללומדה</h3>
-    <p style="font-size: 18px; color: white; margin-bottom: 20px;">
-      למד על Git, Jenkins ו-Docker דרך לומדה אינטראקטיבית, מעשית וידידותית למשתמש.
-    </p>
+            .profile-picture {
+                width: 50px;
+                height: 50px;
+                background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-size: 20px;
+                transition: all 0.3s ease;
+            }
 
-    <button class="start-btn" style="
-        font-size: 16px;
-        padding: 10px 25px;
-        background-image: linear-gradient(to right, #004b93, #6c1cb1);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        transition: background-image 0.3s ease;
-    "
-    onmouseover="this.style.backgroundImage='linear-gradient(to right, #00366d, #531290)'"
-    onmouseout="this.style.backgroundImage='linear-gradient(to right, #004b93, #6c1cb1)'"
-    >
-      🚀 התחל את הלמידה
-    </button>
+            .profile-picture:hover {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+            }
 
-  </div>
-</div>
+            .sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100vh;
+                width: 80px;
+                background: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                z-index: 1000;
+            }
 
-</div>
+            .nav-link {
+                display: block;
+                color: white;
+                text-decoration: none;
+                padding: 10px 0;
+                font-size: 14px;
+                transition: color 0.3s ease;
+            }
+            .nav-link:hover {
+                color: #00d4ff;
+            }
 
-<style>
+            .nav-icons {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
 
-</style>
-{% endblock %}
+            .nav-icon {
+                width: 50px;
+                height: 50px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .nav-icon:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .nav-icon.active {
+                background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            }
+
+            .main-content {
+                margin-right: 80px;
+                margin-top: 100px;
+            }
+
+            .welcome-section {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .welcome-text {
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+
+            .date-text {
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+                margin-bottom: 40px;
+            }
+
+            .stat-card {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 20px;
+                padding: 30px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transition: all 0.3s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                background: rgba(255, 255, 255, 0.08);
+            }
+
+            .progress-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .progress-circle {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+                position: relative;
+
+            }
+
+            .progress-circle-inner {
+                width: 90px;
+                height: 90px;
+                background: rgba(26, 26, 46, 0.9);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            .progress-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .progress-subtitle {
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .chart-card {
+                position: relative;
+                overflow: hidden;
+            }
+
+            .chart-title {
+                font-size: 18px;
+                margin-bottom: 20px;
+            }
+
+            .chart-area {
+                height: 100px;
+                background: linear-gradient(45deg, rgba(6, 182, 212, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+                border-radius: 10px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .chart-line {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 60%;
+                background: linear-gradient(45deg, #06b6d4, #8b5cf6);
+                clip-path: polygon(0% 100%, 20% 80%, 40% 60%, 60% 40%, 80% 20%, 100% 0%, 100% 100%, 0% 100%);
+            }
+
+            .main-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 30px;
+                margin-bottom: 40px;
+            }
+
+            .main-card {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 20px;
+                padding: 40px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                min-height: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                transition: all 0.3s ease;
+            }
+
+            .main-card:hover {
+                transform: translateY(-5px);
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(139, 92, 246, 0.3);
+            }
+
+            .cta-button {
+                background: linear-gradient(135deg, #06b6d4, #00d4ff);
+                color: white;
+                border: none;
+                padding: 20px 60px;
+                font-size: 20px;
+                font-weight: bold;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin: 40px auto;
+                display: block;
+            }
+
+            .cta-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3);
+            }
+
+            .award-section {
+                text-align: center;
+            }
+
+            .award-icon {
+                width: 80px;
+                height: 80px;
+                background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+                border-radius: 50%;
+                margin: 0 auto 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 30px;
+            }
+
+            .award-title {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .award-description {
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.7);
+                line-height: 1.5;
+            }
+
+            .empty-card-placeholder {
+                color: rgba(255, 255, 255, 0.3);
+                font-size: 16px;
+                border: 2px dashed rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                padding: 20px;
+            }
+
+            @media (max-width: 768px) {
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .main-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .welcome-text {
+                    font-size: 24px;
+                }
+
+                .sidebar {
+                    width: 60px;
+                }
+
+                .main-content {
+                    margin-right: 60px;
+                    margin-top: 90px;
+                }
+
+                .top-bar {
+                    padding: 10px 20px;
+                    right: 80px;
+                }
+
+                .profile-picture {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="top-bar">
+            <div class="logo" style="
+                background: linear-gradient(90deg, {{ logo_settings.gradient_from }}, 7.79%, {{ logo_settings.gradient_to }});
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;">{{ logo_settings.text }}</div>
+            <a href="{% url 'student_profile' %}" style="all: unset; cursor: pointer;">
+                <div class="profile-picture">👤</div>
+            </a>
+        </div>
+
+        <div class="sidebar">
+            <!--<div class="nav-icons">
+                <div class="nav-icon active">🏠</div>
+                <div class="nav-icon">🎓</div>
+                <div class="nav-icon">📚</div>
+                <div class="nav-icon">💻</div>
+            </div>-->
+            <div class="nav-icons">
+                <a href="{% url 'student' %}" class="nav-icon active" title="דף הבית">🏠</a>
+                <a href="{% url 'contact_us' %}" class="nav-icon" title="צור קשר עם צוות האתר">✉️</a>
+                <a href="{% url 'student_progress' %}" class="nav-icon" title="התקדמות בלמידה">📈</a>
+                <a href="{% url 'view_student_notes' %}" class="nav-icon" title="ההערות שלי">📝</a>
+                <a href="{% url 'view_my_messages' %}" class="nav-icon" title="הודעות שלי">📬</a>
+                <a href="{% url 'student_messages' %}" class="nav-icon" title="פניות שלי">📨</a>
+                <a href="{% url 'qa:QA_Page' %}" class="nav-icon" title="שאלות ותשובות">❓</a>
+                <a href="{% url 'index' %}" class="nav-icon" title="התנתקות">🔓</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="container">
+                <div class="top-bar">
+                    <div class="logo" style="
+                        background: linear-gradient(90deg, {{ logo_settings.gradient_from }}, 7.79%, {{ logo_settings.gradient_to }});
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;">{{ logo_settings.text }}</div>
+                    <a href="{% url 'student_profile' %}" style="all: unset; cursor: pointer;">
+                            <div class="profile-picture">👤</div>
+                    </a>
+                </div>
+
+            <div class="welcome-section">
+                <div class="welcome-text">שלום, {{ user.username }} כיף לראות אותך!</div>
+                <div class="date-text">תאריך היעד שלך להשלמת הלומדה: {{ target_date }}</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card progress-card">
+                    {% if git_general_progress == 100 %}
+                    <div class="progress-circle" style="background: conic-gradient(from 0deg, #06b6d4 0%, #06b6d4 100%, rgba(255,255,255,0.1) 100%);">
+                    {% else %}
+                    <div class="progress-circle" style="background: conic-gradient(from 0deg, #06b6d4 0%, #8b5cf6 {{ git_general_progress }}%, rgba(255,255,255,0.1) {{ git_general_progress }}%);">
+                    {% endif %}
+                        <div class="progress-circle-inner">{{ git_general_progress }}%</div>
+                    </div>
+                    <div class="progress-title">Git</div>
+                    <div class="progress-subtitle">{{ git_vids_completed }}/{{ git_vids_total }} סרטונים ומצגות</div>
+                </div>
+
+                <div class="stat-card progress-card">
+                    {% if jenkins_general_progress == 100 %}
+                    <div class="progress-circle" style="background: conic-gradient(from 0deg, #06b6d4 0%, #06b6d4 100%, rgba(255,255,255,0.1) 100%);">
+                    {% else %}
+                    <div class="progress-circle" style="background: conic-gradient(from 0deg, #06b6d4 0%, #8b5cf6 {{ jenkins_general_progress }}%, rgba(255,255,255,0.1) {{ jenkins_general_progress }}%);">
+                    {% endif %}
+                        <div class="progress-circle-inner">{{ jenkins_general_progress }}%</div>
+                    </div>
+                    <div class="progress-title">Jenkins</div>
+                    <div class="progress-subtitle">{{ jenkins_vids_completed }}/{{ jenkins_vids_total }} סרטונים ומצגות</div>
+                </div>
+
+                <div class="stat-card progress-card">
+                    {% if docker_general_progress == 100 %}
+                    <div class="progress-circle" style="background: conic-gradient(from 0deg, #06b6d4 0%, #06b6d4 100%, rgba(255,255,255,0.1) 100%);">
+                    {% else %}
+                    <div class="progress-circle" style="background: conic-gradient(from 0deg, #06b6d4 0%, #8b5cf6 {{ docker_general_progress }}%, rgba(255,255,255,0.1) {{ docker_general_progress }}%);">
+                    {% endif %}
+                        <div class="progress-circle-inner">{{ docker_general_progress }}%</div>
+                    </div>
+                    <div class="progress-title">Docker</div>
+                    <div class="progress-subtitle">{{ docker_vids_completed }}/{{ docker_vids_total }} סרטונים ומצגות</div>
+                </div>
+
+            </div>
+
+        <!--<div class="main-grid">
+            <div class="main-card">
+                <div class="empty-card-placeholder">תוכן יוצג כאן בקרוב</div>
+            </div>
+
+            
+            <div class="main-card award-section">
+                <div class="award-icon">🏆</div>
+                <div class="award-title">רמה</div>
+                <div class="award-description">
+                    אתה ברמת התחלת ועכיו<br>
+                    תוכל את הכלים<br>
+                    במידת רב כבר הגדיל מידעות<br>
+                    יותר מפעמים.
+                </div>
+            </div>
+        </div>-->
+
+            <form action="{% url 'learning_home' %}" method="get" style="display:inline;">
+                <button class="cta-button">🎓 כניסה ללומדות</button>
+            </form>
+        </div>
+    </body>
+</html>

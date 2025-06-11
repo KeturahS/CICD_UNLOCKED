@@ -9,7 +9,7 @@ def logo_settings_context(request):
         if hasattr(user, 'is_admin') and user.is_admin:
             background_color = "#0a0e1a"
         elif hasattr(user, 'is_lecturer') and user.is_lecturer:
-            background_color = "#f4f7fb"
+            background_color = "#0a0e1a"
         elif hasattr(user, 'is_student') and user.is_student:
             background_color = "#0a0e1a"
 
