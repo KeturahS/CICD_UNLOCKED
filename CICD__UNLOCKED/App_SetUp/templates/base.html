@@ -41,7 +41,6 @@
             font-size: 24px;
             color: #00d4ff;
             font-weight: bold;
-            text-decoration: none;
         }
 
         .nav-links {
@@ -197,8 +196,10 @@
 </head>
 <body>
 <div class="top-bar">
-    <div class="logo">
-        CiCd Unlocked
+    <div class="logo" style="
+                background: linear-gradient(90deg, {{ logo_settings.gradient_from }}, 7.79%, {{ logo_settings.gradient_to }});
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;">{{ logo_settings.text }}
     </div>
 
     <div class="nav-links">
