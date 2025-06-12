@@ -66,44 +66,50 @@
 
 <h1>ניטור התקדמות סטודנטים</h1>
 
-<!-- טופס בחירת סטודנט לגרפים -->
-<form method="get">
+<!-- טופס בחירת סטודנט -->
+<form method="get" id="student-form">
     <label for="student">בחר סטודנט לגרפים:</label>
     <select name="student" id="student">
         {% for student in student_list %}
-            <option value="{{ student }}" {% if selected_student == student %}selected{% endif %}>
-                {{ student }}
-            </option>
+            <option value="{{ student }}" {% if selected_student == student %}selected{% endif %}>{{ student }}</option>
         {% endfor %}
     </select>
-    <button type="submit">הצג גרפים</button>
+    <input type="hidden" name="table_filter" value="{{ filter }}">
 </form>
+
+<script>
+    // שליחה אוטומטית כשמשנים סטודנט
+    document.getElementById('student').addEventListener('change', function () {
+        document.getElementById('student-form').submit();
+    });
+</script>
 
 <!-- גרפים -->
 <div class="graphs">
     <h2>📊 גרף עמודות - סטודנט נבחר</h2>
     {% if bar_graph %}
-        <img src="data:image/png;base64,{{ bar_graph }}" alt="Bar Graph">
+        <img src="data:image/png;base64,{{ bar_graph }}" alt="Bar graph of {{ selected_student }}" title="ניסיונות לפי פקודה">
     {% else %}
         <p>לא נמצאו נתונים להצגה.</p>
     {% endif %}
 
     <h2>🥧 גרף עוגה - סטודנט נבחר</h2>
     {% if pie_chart %}
-        <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
+        <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie chart of {{ selected_student }}" title="יחס בין פקודות שבוצעו ללא שבוצעו">
     {% else %}
         <p>לא נמצאו נתונים להצגה.</p>
     {% endif %}
 </div>
 
-<!-- טופס סינון סטודנטים לטבלה -->
+<!-- טופס סינון טבלה -->
 <form method="get">
     <label for="table_filter">סנן טבלה לפי:</label>
     <select name="table_filter" id="table_filter">
         <option value="">-- ללא --</option>
-        <option value="best" {% if table_filter == "best" %}selected{% endif %}>המצטיינים</option>
-        <option value="struggle" {% if table_filter == "struggle" %}selected{% endif %}>המתקשים</option>
+        <option value="best" {% if filter == "best" %}selected{% endif %}>המצטיינים</option>
+        <option value="struggle" {% if filter == "struggle" %}selected{% endif %}>המתקשים</option>
     </select>
+    <input type="hidden" name="student" value="{{ selected_student }}">
     <button type="submit">סנן טבלה</button>
 </form>
 
@@ -129,7 +135,7 @@
                     <td>{{ student.total_attempts }}</td>
                     <td>{{ student.total_completed }}</td>
                     <td>{{ student.avg_attempts|floatformat:2 }}</td>
-                    <td>
+                    <td title="סטטוס ביצוע">
                         {% if student.avg_attempts > 2.5 or student.avg_attempts == 0 %}
                             🚨 מתקשה
                         {% else %}
@@ -146,7 +152,8 @@
         <br>
         <form method="post" action="{% url 'download_student_report' %}">
             {% csrf_token %}
-            <input type="hidden" name="table_filter" value="{{ table_filter }}">
+            <input type="hidden" name="table_filter" value="{{ filter }}">
+            <input type="hidden" name="student" value="{{ selected_student }}">
             <button type="submit">📥 הורד דו"ח כקובץ CSV</button>
         </form>
     {% else %}
